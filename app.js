@@ -50,32 +50,39 @@ const userRoles = {
  
 /*********** All route from here ********/
 app.get("/",function(req, res){
-    res.render("login");
+    if(req.user){
+        res.redirect("/" + req.user.role +"home");
+    }else{
+        res.render("login");
+    }
 })
 
-app.get("/home", function(req,res){
-    User.find({role:"student"}, function(err,foundStudents){
-        if(err){
-            console.log(err);
-        }else{
-            res.render("home",{myname:req.user.fullname, allStudents:foundStudents, myrole:req.user.role});
-        }
-    })
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/");
 })
+
+// app.get("/home", function(req,res){
+//     User.find({role:"student"}, function(err,foundStudents){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             res.render("home",{myname:req.user.fullname, allStudents:foundStudents, myrole:req.user.role});
+//         }
+//     })
+// })
 
 app.get("/studentHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
-        res.redirect("/");
+        res.redirect("/logout");
     }else{
-        console.log(req.user.role);
-        console.log(req.user.username);
         res.render("studentHome", {myname:req.user.fullname});
     }
 })
 
 app.get("/registrarHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'registrar'){
-        res.redirect("/");
+        res.redirect("/logout");
     }else{
         res.render("registrarHome", {myname:req.user.fullname});
     }
@@ -83,7 +90,7 @@ app.get("/registrarHome",function(req,res){
 
 app.get("/visitorHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role !='visitor'){
-        res.redirect("/");
+        res.redirect("/logout");
     }else{
         res.render("visitorHome", {myname:req.user.fullname});
     }
@@ -91,7 +98,7 @@ app.get("/visitorHome",function(req,res){
 
 app.get("/instructorHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role !='instructor'){
-        res.redirect("/");
+        res.redirect("/logout");
     }else{
         res.render("instructorHome", {myname:req.user.fullname});
     }
