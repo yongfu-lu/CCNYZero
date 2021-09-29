@@ -50,10 +50,27 @@ const userRoles = {
 }
  
 /*********** All route from here ********/
+
+//if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",function(req, res){
     if(req.user){
         res.redirect("/" + req.user.role +"home");
     }else{
+        User.find({role:"student"}, function(err,foundStudents){
+            if(err){
+                console.log(err);
+            }else{
+                res.render("visitorHome",{ allStudents:foundStudents});
+            }
+        })
+    }
+})
+
+//if user already login, redirect to their homepage, no need to log in again
+app.get("/login", function(req,res){
+    if(req.user){
+        res.redirect("/" + req.user.role +"home");
+    } else{
         res.render("login");
     }
 })
@@ -63,16 +80,7 @@ app.get("/logout", function(req, res){
     res.redirect("/");
 })
 
-// app.get("/home", function(req,res){
-//     User.find({role:"student"}, function(err,foundStudents){
-//         if(err){
-//             console.log(err);
-//         }else{
-//             res.render("home",{myname:req.user.fullname, allStudents:foundStudents, myrole:req.user.role});
-//         }
-//     })
-// })
-
+//if non-student user try to access student homepage by typing url in the broswer, user will be directed to visitor homepage 
 app.get("/studentHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
@@ -89,13 +97,6 @@ app.get("/registrarHome",function(req,res){
     }
 })
 
-app.get("/visitorHome",function(req,res){
-    if(!req.isAuthenticated() || req.user.role !='visitor'){
-        res.redirect("/logout");
-    }else{
-        res.render("visitorHome", {myname:req.user.fullname});
-    }
-})
 
 app.get("/instructorHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role !='instructor'){
@@ -105,25 +106,8 @@ app.get("/instructorHome",function(req,res){
     }
 })
 
-app.get("/register",function(req, res){
-    res.render("register");
-})
 
-
-app.post("/register", function(req, res){
-    //when user register, default role is visotor, default GPA is 3.0
-    User.register({username:req.body.username, fullname:req.body.fullname,role:userRoles.visitor,GPA:3.0}, req.body.password, function(err,user){
-        if(err){
-            console.log(err);
-            res.redirect("/register");
-        }else{
-                res.redirect("/");
-        }
-    })
-})
-
-
-app.post("/", function(req,res){
+app.post("/login", function(req,res){
     const user = new User({
         username: req.body.username,
         password: req.body.password
@@ -147,6 +131,14 @@ app.post("/", function(req,res){
     })
 })
 
+
+app.get("/applyStudent", function(req,res){
+    res.render("applyStudent");
+})
+
+app.get("/applyInstructor", function(req,res){
+    res.render("applyInstructor");
+})
 
 app.listen(3000, function(){
     console.log("Server is running on part 3000");
