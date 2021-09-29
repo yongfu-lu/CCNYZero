@@ -37,16 +37,17 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
+/**************** add and update data for testing here **********/
+
+//this object is created for avoiding typo purpose. Used when create new users
 const userRoles = {
     registrar: "registrar",
     instructor: "instructor",
     student:"student",
     visitor:"visitor"
 }
-/**************** add and update data for testing here **********/
-
  
-
 /*********** All route from here ********/
 app.get("/",function(req, res){
     res.render("login");
@@ -57,30 +58,58 @@ app.get("/home", function(req,res){
         if(err){
             console.log(err);
         }else{
-            res.render("home",{myname:req.user.fullname, allStudents:foundStudents});
+            res.render("home",{myname:req.user.fullname, allStudents:foundStudents, myrole:req.user.role});
         }
     })
-    
+})
+
+app.get("/studentHome",function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'student'){
+        res.redirect("/");
+    }else{
+        console.log(req.user.role);
+        console.log(req.user.username);
+        res.render("studentHome", {myname:req.user.fullname});
+    }
+})
+
+app.get("/registrarHome",function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar'){
+        res.redirect("/");
+    }else{
+        res.render("registrarHome", {myname:req.user.fullname});
+    }
+})
+
+app.get("/visitorHome",function(req,res){
+    if(!req.isAuthenticated() || req.user.role !='visitor'){
+        res.redirect("/");
+    }else{
+        res.render("visitorHome", {myname:req.user.fullname});
+    }
+})
+
+app.get("/instructorHome",function(req,res){
+    if(!req.isAuthenticated() || req.user.role !='instructor'){
+        res.redirect("/");
+    }else{
+        res.render("instructorHome", {myname:req.user.fullname});
+    }
 })
 
 app.get("/register",function(req, res){
     res.render("register");
 })
 
-app.get("/test", function(req,res){
-    res.render("test", {myname: req.user.fullname});
-})
-
 
 app.post("/register", function(req, res){
-    User.register({username:req.body.username}, req.body.password, function(err,user){
+    //when user register, default role is visotor, default GPA is 3.0
+    User.register({username:req.body.username, fullname:req.body.fullname,role:userRoles.visitor,GPA:3.0}, req.body.password, function(err,user){
         if(err){
             console.log(err);
             res.redirect("/register");
         }else{
-            passport.authenticate("local")(req, res, function(){
                 res.redirect("/");
-            })
         }
     })
 })
@@ -97,9 +126,14 @@ app.post("/", function(req,res){
             console.log(err);
         }else{
             passport.authenticate("local")(req, res, function(){
-                console.log(user.username);
-                res.redirect("/home");
                 
+                User.findOne({username:user.username}, function(err, foundUser){
+                    if(err){
+                        console.log(err)
+                    }else{
+                        res.redirect("/" + foundUser.role +"home");
+                    }
+                })
             })
         }
     })

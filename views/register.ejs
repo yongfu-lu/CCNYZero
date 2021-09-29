@@ -10,11 +10,11 @@
     <h1>Please register CCNY Account</h1>
 
     <form action="/register" method ="post">
-        
-        <input type="email" name="username" placeholder="email address">
-        <input type="password" name="password" placeholder="password">
+        <input type="text" name="fullname" placeholder="your name" required>
+        <input type="email" name="username" placeholder="email address" required>
+        <input type="password" name="password" placeholder="password" required>
         <button type="submit" > register</button>
     </form>
-    <a href="/login">Go to login page</a>
+    <a href="/">Go to login page</a>
 </body>
 </html>
