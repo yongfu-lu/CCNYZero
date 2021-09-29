@@ -7,6 +7,7 @@ const session = require('express-session');
 const passport = require('passport');
 const passportLocalMongoose = require("passport-local-mongoose");
 const schema = require(__dirname + "/schema.js");
+const emailer = require(__dirname + "/emailer.js");
 
 const app = express();
 
