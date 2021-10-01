@@ -8,6 +8,7 @@ const passport = require('passport');
 const passportLocalMongoose = require("passport-local-mongoose");
 const schema = require(__dirname + "/schema.js");
 const emailer = require(__dirname + "/emailer.js");
+const query = require(__dirname + "/query.js");
 
 const app = express();
 
@@ -38,9 +39,6 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
-/**************** add and update data for testing here **********/
-
 //this object is created for avoiding typo purpose. Used when create new users
 const userRoles = {
     registrar: "registrar",
@@ -48,21 +46,21 @@ const userRoles = {
     student:"student",
     visitor:"visitor"
 }
- 
+
+/**************** add and update data for testing here **********/
+
+
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
-app.get("/",function(req, res){
+app.get("/",async function(req, res){
     if(req.user){
         res.redirect("/" + req.user.role +"home");
     }else{
-        User.find({role:"student"}, function(err,foundStudents){
-            if(err){
-                console.log(err);
-            }else{
-                res.render("visitorHome",{ allStudents:foundStudents});
-            }
-        })
+        var topStudents = await query.getTopStudents(User);
+        var topClasses = await query.getTopClasses(Class);
+        var worstClasses = await query.getWorstClasses(Class);
+        res.render("visitorHome",{ topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
     }
 })
 
