@@ -21,6 +21,19 @@ exports.getClassSchema = function(){
 }
 
 
+exports.getApplicantSchema = function(){
+    console.log("This is applicant schema from schema.js")
+    return new mongoose.Schema ({
+        email:String,
+        fullname:String,
+        role:String,        //admin, student, instructor, visitor
+        major: String,
+        GPA:Number,
+        decided: Boolean   //only show undecided application to admin's message box
+    });
+
+}
+
 exports.getUserSchema = function(){
     console.log("This is user schema from schema.js")
     return new mongoose.Schema ({

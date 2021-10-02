@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminMessage</title>
+</head>
+<body>
+    <h1>Hello TeamQ, this is your message box</h1>
+    <br><br>
+    <h3>Below are new student applications</h3>
+    <% for(var i = 0; i<applications.length; i++){ %>
+        <div>
+            <form action="/adminMessage" method="post">
+                <input type="hidden" name="fullname" value= <%= applications[i].fullname %> >
+                <input type="hidden" name="email" value= <%= applications[i].email %> >
+                <input type="hidden" name="role" value= <%= applications[i].role %>  >
+                <p> Applicant Name: <%= applications[i].fullname %> --- GPA: <%= applications[i].GPA %> </p>
+            
+                <button type="submit" name="dicision" value="accept"> Accept</button> 
+                <button type="submit" name ="dicision" value="reject">Reject</button>
+            </form>
+            
+        </div>
+    <%} %> 
+</body>
+</html>

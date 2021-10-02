@@ -29,16 +29,22 @@ mongoose.connect("mongodb+srv://TeamQ:brooklyn2021@cluster0.w84rk.mongodb.net/CC
 
 const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
+const applicantSchema = schema.getApplicantSchema();
 
 userSchema.plugin(passportLocalMongoose);
 
 const User = new mongoose.model("User", userSchema);
 const Class = new mongoose.model("Class", classSchema);
+const Applicant = new mongoose.model("Applicant", applicantSchema);
+
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+var topStudents;
+var topClasses;
+var worstClasses;
 //this object is created for avoiding typo purpose. Used when create new users
 const userRoles = {
     registrar: "registrar",
@@ -46,7 +52,6 @@ const userRoles = {
     student:"student",
     visitor:"visitor"
 }
-
 /**************** add and update data for testing here **********/
 
 
@@ -57,9 +62,9 @@ app.get("/",async function(req, res){
     if(req.user){
         res.redirect("/" + req.user.role +"home");
     }else{
-        var topStudents = await query.getTopStudents(User);
-        var topClasses = await query.getTopClasses(Class);
-        var worstClasses = await query.getWorstClasses(Class);
+         topStudents = await query.getTopStudents(User);
+         topClasses = await query.getTopClasses(Class);
+         worstClasses = await query.getWorstClasses(Class);
         res.render("visitorHome",{ topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
     }
 })
@@ -91,7 +96,9 @@ app.get("/registrarHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'registrar'){
         res.redirect("/logout");
     }else{
-        res.render("registrarHome", {myname:req.user.fullname});
+        //res.render("registrarHome", {myname:req.user.fullname});
+        res.render("registrarHome",{ myname:req.user.fullname, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
+
     }
 })
 
@@ -130,14 +137,66 @@ app.post("/login", function(req,res){
 })
 
 
-app.get("/applyStudent", function(req,res){
+
+// ********************** apply-related methods *******************
+app.get("/applyStudent", function(req, res) {
     res.render("applyStudent");
-})
-
-app.get("/applyInstructor", function(req,res){
+  })
+  
+app.get("/applyInstructor", function(req, res) {
     res.render("applyInstructor");
+  })
+  
+  
+ app.post("/applyStudent", function(req, res) {
+
+    const newApplicant = new Applicant({
+      email: req.body.applicantEmail,
+      fullname: req.body.applicantName,
+      major: req.body.major,
+      role:"student",
+      GPA: req.body.applicantGPA,
+      decided: false
+    });
+    newApplicant.save(function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Add a new applicant successfully.");
+        res.redirect("/");
+      }
+    });
+  });
+
+
+/**************************** MessageBox related methods */
+app.get("/adminMessage", async function(req,res){
+    console.log(req.user.role + " going to message box");
+    var applications = await query.getApplications(Applicant);
+    res.render("adminMessage", {applications:applications});
 })
 
+//when admin make dicision about applications
+app.post("/adminMessage", function(req,res){
+    var dicision = req.body.dicision;
+    if(dicision == "reject"){
+        emailer.sendRejectEmail(req.body.email,req.body.fullname);
+        res.redirect("/adminMessage");
+    }else{
+        emailer.sendAcceptEmail(req.body.email,req.body.fullname, User);
+        Applicant.findOneAndUpdate({email:req.body.email, role:req.body.role},{decided:true}, function(err){
+            if(err){
+                console.log(err)
+            }else{
+                res.redirect("/adminMessage");
+            }
+        })
+    }
+})
+
+
+
+/** server port **/
 app.listen(3000, function(){
     console.log("Server is running on part 3000");
 })

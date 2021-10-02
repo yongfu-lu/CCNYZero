@@ -3,13 +3,16 @@ const schema = require(__dirname + "/schema.js");
 
 const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
+const applicantSchema = schema.getApplicantSchema();
+
 
 exports.getTopStudents = getTopStudents;
 exports.getTopClasses = getTopClasses;
 exports.getWorstClasses = getWorstClasses;
+exports.getApplications = getApplications;
 
 function sleep() {
-  return new Promise((resolve) => setTimeout(resolve, 200));
+  return new Promise((resolve) => setTimeout(resolve, 500));
 }
 
 async function getTopStudents(User) {
@@ -55,10 +58,21 @@ async function getWorstClasses(Class) {
           console.log(err);
         } else {
           worstClasses = foundClasses;
-          
         }
       });
       await sleep();
       return worstClasses;
   }
   
+  async function getApplications(Applicant) {
+    var applications;
+    Applicant.find({decided:false}, function(err, foundApplications){
+      if(err){
+        console.log(err);
+      }else{
+        applications = foundApplications;
+      }
+    })
+    await sleep();
+    return applications;
+  } 
