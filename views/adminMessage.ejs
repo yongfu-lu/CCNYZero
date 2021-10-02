@@ -10,19 +10,40 @@
     <h1>Hello TeamQ, this is your message box</h1>
     <br><br>
     <h3>Below are new student applications</h3>
-    <% for(var i = 0; i<applications.length; i++){ %>
+    <% for(var i = 0; i<studentApplications.length; i++){ %>
         <div>
             <form action="/adminMessage" method="post">
-                <input type="hidden" name="fullname" value= <%= applications[i].fullname %> >
-                <input type="hidden" name="email" value= <%= applications[i].email %> >
-                <input type="hidden" name="role" value= <%= applications[i].role %>  >
-                <p> Applicant Name: <%= applications[i].fullname %> --- GPA: <%= applications[i].GPA %> </p>
+                <input type="hidden" name="fullname" value= <%= studentApplications[i].fullname %> >
+                <input type="hidden" name="email" value= <%= studentApplications[i].email %> >
+                <input type="hidden" name="GPA" value= <%= studentApplications[i].GPA %>  >
+                <input type="hidden" name="role" value= <%= studentApplications[i].role %>  >
+                <p> Applicant Name: <%= studentApplications[i].fullname %> --- GPA: <%= studentApplications[i].GPA %> </p>
             
                 <button type="submit" name="dicision" value="accept"> Accept</button> 
                 <button type="submit" name ="dicision" value="reject">Reject</button>
             </form>
             
         </div>
-    <%} %> 
+    <%} %>
+    
+    <br>
+    <h3>Below are new instructor applications</h3>
+    <% for(var i = 0; i<instructorApplications.length; i++){ %>
+        <div>
+            <form action="/adminMessage" method="post">
+                <input type="hidden" name="fullname" value= <%= instructorApplications[i].fullname %> >
+                <input type="hidden" name="email" value= <%= instructorApplications[i].email %> >
+                <input type="hidden" name="role" value= <%= instructorApplications[i].role %>  >
+                <p> Applicant Name: <%= instructorApplications[i].fullname %> --- Self-Statement: <%= instructorApplications[i].selfStatement %> </p>
+            
+                <button type="submit" name="dicision" value="accept"> Accept</button> 
+                <button type="submit" name ="dicision" value="reject">Reject</button>
+            </form>
+            
+        </div>
+    <%} %>
+    
+     <br>
+    <a href="/registrarHome">Go back to registrar home</a>
 </body>
 </html>

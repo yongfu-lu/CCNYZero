@@ -7,8 +7,30 @@
     <title>CCNY Zero Home</title>
 </head>
 <body>
-    <h1>Welcome to CCNY, <%= myname %>, this is a student home page</h1>
+    <h1>Welcome to CCNY <%=myname%>, this is CCNYZero Student home page</h1>
     <a href="/logout"> log out </a>
+    <br><br>
+    <h3>I am showing Top 3 students in CCNY: </h3>
+    <% for(var i = 0; i<topStudents.length; i++){ %>
+        <div>
+            <p> <%= topStudents[i].fullname %>  --- GPA: <%= topStudents[i].GPA%></p>
+        </div>
+    <%} %> 
+
+    <h3>I am showing Top 3 classes in CCNY: </h3>
+    <% for(var i = 0; i<topClasses.length; i++){ %>
+        <div>
+            <p> <%= topClasses[i].course_fullname %> --- Instructor:<%= topClasses[i].instructor%> ---rating: <%= topClasses[i].rating%></p>
+        </div>
+    <%} %> 
+
+    <h3>I am showing worst 3 classes in CCNY: </h3>
+    <% for(var i = 0; i<topClasses.length; i++){ %>
+        <div>
+            <p> <%= worstClasses[i].course_fullname %>  ---Instructor:<%= worstClasses[i].instructor%> ---rating: <%= worstClasses[i].rating%></p>
+        </div>
+    <%} %> 
+    
 
 </body>
 </html>

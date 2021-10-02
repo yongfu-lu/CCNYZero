@@ -45,8 +45,9 @@ exports.sendRejectEmail = function(email, name){
     })
 }
 
-exports.sendAcceptEmail = function(email, name, User){
-    var newStudentID = Math.floor(Math.random()*100).toString();
+
+exports.sendAcceptEmail = function(email, name, gpa, User){
+    var newStudentID = Math.floor(Math.random()*1000).toString();
     var newStudentEmail = name+newStudentID+"@ccny";
     var password = "123";
 
@@ -54,7 +55,7 @@ exports.sendAcceptEmail = function(email, name, User){
         from: "ccnyzero@hotmail.com",
         to:email,
         subject:"You are Accepted by CCNY",
-        text:"Congratulations "+ name + "! You are accepted by CCNY. Your student email is "+ newStudentEmail + " and your password is "+ password
+        text:"Congratulations "+ name + "! You are accepted by CCNY. Your CCNY ID is "+ newStudentID + ". Your CCNY email is "+ newStudentEmail + " and your password is "+ password
     };
 
     tranporter.sendMail(options, function(err,info){
@@ -68,12 +69,14 @@ exports.sendAcceptEmail = function(email, name, User){
     User.register({
         username:newStudentEmail,
         fullname:name,
-        role:"student"
+        role:"student",
+        GPA:gpa,
+        firstLogin:true,
         }, password, function(err,user){
             if(err){
                 console.log(err);
             }else{
-            console.log("new student has been added")
+            console.log("new CCNY User has been added")
             }
      })
      

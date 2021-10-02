@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
+
 <body>
-    <h1>you can apply to be a CCNY Instructor in this page</h1>
+  <h1>You can apply to be instructor of CCNY in this page</h1>
+  <div class="">
+    <form class="" action="/applyInstructor" method="post">
+      <div class="">
+        <label for="email">E-mail: </label>
+        <input type="email" name="applicantEmail" value="">
+      </div>
+
+      <div class="">
+        <label for="name">Name: </label>
+        <input type="text" name="applicantName" value="">
+      </div>
+
+      <div class="">
+        <label for="department">Department: </label>
+        <input type="text" name="department" value="">
+      </div>
+
+      <div class="">
+        <label for="selfStatement">Self Statement: </label>
+        <textarea name="selfStatement" cols="30" rows="4"></textarea>
+      </div>
+
+      <button type="submit" name="button">Submit</button>
+    </form>
+  </div>
+
+
 </body>
+
 </html>

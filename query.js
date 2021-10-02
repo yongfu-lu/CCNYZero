@@ -9,7 +9,9 @@ const applicantSchema = schema.getApplicantSchema();
 exports.getTopStudents = getTopStudents;
 exports.getTopClasses = getTopClasses;
 exports.getWorstClasses = getWorstClasses;
-exports.getApplications = getApplications;
+exports.getStudentApplications = getStudentApplications;
+exports.getInstructorApplications = getInstructorApplications;
+
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -64,9 +66,23 @@ async function getWorstClasses(Class) {
       return worstClasses;
   }
   
-  async function getApplications(Applicant) {
+  async function getStudentApplications(Applicant) {
     var applications;
-    Applicant.find({decided:false}, function(err, foundApplications){
+    Applicant.find({decided:false, role:"student"}, function(err, foundApplications){
+      if(err){
+        console.log(err);
+      }else{
+        applications = foundApplications;
+      }
+    })
+    await sleep();
+    return applications;
+  } 
+
+
+  async function getInstructorApplications(Applicant) {
+    var applications;
+    Applicant.find({decided:false, role:"instructor"}, function(err, foundApplications){
       if(err){
         console.log(err);
       }else{

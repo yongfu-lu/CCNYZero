@@ -88,7 +88,7 @@ app.get("/studentHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("studentHome", {myname:req.user.fullname});
+        res.render("studentHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
     }
 })
 
@@ -96,7 +96,6 @@ app.get("/registrarHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'registrar'){
         res.redirect("/logout");
     }else{
-        //res.render("registrarHome", {myname:req.user.fullname});
         res.render("registrarHome",{ myname:req.user.fullname, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
 
     }
@@ -107,7 +106,7 @@ app.get("/instructorHome",function(req,res){
     if(!req.isAuthenticated() || req.user.role !='instructor'){
         res.redirect("/logout");
     }else{
-        res.render("instructorHome", {myname:req.user.fullname});
+        res.render("instructorHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
     }
 })
 
@@ -149,7 +148,6 @@ app.get("/applyInstructor", function(req, res) {
   
   
  app.post("/applyStudent", function(req, res) {
-
     const newApplicant = new Applicant({
       email: req.body.applicantEmail,
       fullname: req.body.applicantName,
@@ -168,22 +166,45 @@ app.get("/applyInstructor", function(req, res) {
     });
   });
 
+    
+ app.post("/applyInstructor", function(req, res) {
+    const newApplicant = new Applicant({
+      email: req.body.applicantEmail,
+      fullname: req.body.applicantName,
+      department: req.body.department,
+      role:"instructor",
+      selfStatement:req.body.selfStatement,
+      decided: false
+    });
+    newApplicant.save(function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Add a new instructor applicant successfully.");
+        res.redirect("/");
+      }
+    });
+  });
+
+
 
 /**************************** MessageBox related methods */
 app.get("/adminMessage", async function(req,res){
-    console.log(req.user.role + " going to message box");
-    var applications = await query.getApplications(Applicant);
-    res.render("adminMessage", {applications:applications});
+    
+    var studentApplications = await query.getStudentApplications(Applicant);
+    var instructorApplications = await query.getInstructorApplications(Applicant);
+
+    res.render("adminMessage", {studentApplications:studentApplications, instructorApplications:instructorApplications});
 })
 
-//when admin make dicision about applications
+    //when admin make dicision about applications
 app.post("/adminMessage", function(req,res){
     var dicision = req.body.dicision;
     if(dicision == "reject"){
         emailer.sendRejectEmail(req.body.email,req.body.fullname);
         res.redirect("/adminMessage");
     }else{
-        emailer.sendAcceptEmail(req.body.email,req.body.fullname, User);
+        emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.GPA, User);
         Applicant.findOneAndUpdate({email:req.body.email, role:req.body.role},{decided:true}, function(err){
             if(err){
                 console.log(err)

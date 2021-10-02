@@ -29,7 +29,9 @@ exports.getApplicantSchema = function(){
         role:String,        //admin, student, instructor, visitor
         major: String,
         GPA:Number,
-        decided: Boolean   //only show undecided application to admin's message box
+        decided: Boolean,   //only show undecided application to admin's message box
+        department:String,
+        selfStatement:String,
     });
 
 }
@@ -46,7 +48,8 @@ exports.getUserSchema = function(){
         taken_class: [],
         required_course: [String],      //required courses for graduation
         assigned_class:[String],        //when user role is professor, assigned class is what class he teaching
-        wrote_review:[String]
+        wrote_review:[String],
+        firstLogin: Boolean
     });
     
 }
