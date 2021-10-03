@@ -11,7 +11,7 @@ exports.getTopClasses = getTopClasses;
 exports.getWorstClasses = getWorstClasses;
 exports.getStudentApplications = getStudentApplications;
 exports.getInstructorApplications = getInstructorApplications;
-
+exports.changePassword = changePassword;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -92,3 +92,20 @@ async function getWorstClasses(Class) {
     await sleep();
     return applications;
   } 
+
+
+  //change user password
+function changePassword(User, username, newpassword){
+  User.findByUsername(username).then(function(sanitizedUser){
+    if (sanitizedUser){
+        sanitizedUser.setPassword(newpassword, function(){
+            sanitizedUser.save();
+            console.log("password reset success");
+        });
+    } else {
+        console.log("Pass word reset fail");
+    }
+},function(err){
+   console.error(err);
+})
+}

@@ -55,6 +55,9 @@ const userRoles = {
 /**************** add and update data for testing here **********/
 
 
+//query.changePassword(User,"ssss810@ccny","ccc");
+
+
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -84,32 +87,49 @@ app.get("/logout", function(req, res){
 })
 
 //if non-student user try to access student homepage by typing url in the broswer, user will be directed to visitor homepage 
-app.get("/studentHome",function(req,res){
+app.get("/studentHome",async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
+        topStudents = await query.getTopStudents(User);
+         topClasses = await query.getTopClasses(Class);
+         worstClasses = await query.getWorstClasses(Class);
         res.render("studentHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
     }
 })
 
-app.get("/registrarHome",function(req,res){
+app.get("/registrarHome",async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'registrar'){
         res.redirect("/logout");
     }else{
+        topStudents = await query.getTopStudents(User);
+         topClasses = await query.getTopClasses(Class);
+         worstClasses = await query.getWorstClasses(Class);
         res.render("registrarHome",{ myname:req.user.fullname, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
 
     }
 })
 
 
-app.get("/instructorHome",function(req,res){
+app.get("/instructorHome",async function(req,res){
     if(!req.isAuthenticated() || req.user.role !='instructor'){
         res.redirect("/logout");
     }else{
+        topStudents = await query.getTopStudents(User);
+         topClasses = await query.getTopClasses(Class);
+         worstClasses = await query.getWorstClasses(Class);
         res.render("instructorHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
     }
 })
 
+
+app.get("/changePassword", function(req,res){
+    if(!req.isAuthenticated()){
+        res.redirect("/logout");
+    }else{
+        res.render("changePassword");
+    }
+})
 
 app.post("/login", function(req,res){
     const user = new User({
@@ -122,12 +142,15 @@ app.post("/login", function(req,res){
             console.log(err);
         }else{
             passport.authenticate("local")(req, res, function(){
-                
                 User.findOne({username:user.username}, function(err, foundUser){
                     if(err){
                         console.log(err)
                     }else{
-                        res.redirect("/" + foundUser.role +"home");
+                        if(foundUser.firstLogin){
+                            res.redirect("/changePassword");
+                        }else{
+                            res.redirect("/" + foundUser.role +"home");
+                        }
                     }
                 })
             })
@@ -136,6 +159,19 @@ app.post("/login", function(req,res){
 })
 
 
+app.post("/changePassword", function(req, res){
+    const username = req.user.username
+    const newPassword = req.body.newpassword;
+    const role = req.user.role;
+    query.changePassword(User, username, newPassword);
+    User.findOneAndUpdate({username:username},{firstLogin:false},function(err){
+        if(err){
+            console.log(err);
+        }else{
+            res.redirect("/" + role +"home");
+        }
+    })
+})
 
 // ********************** apply-related methods *******************
 app.get("/applyStudent", function(req, res) {
