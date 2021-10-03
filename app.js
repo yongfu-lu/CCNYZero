@@ -45,18 +45,8 @@ passport.deserializeUser(User.deserializeUser());
 var topStudents;
 var topClasses;
 var worstClasses;
-//this object is created for avoiding typo purpose. Used when create new users
-const userRoles = {
-    registrar: "registrar",
-    instructor: "instructor",
-    student:"student",
-    visitor:"visitor"
-}
+const programQuota = 30;
 /**************** add and update data for testing here **********/
-
-
-//query.changePassword(User,"ssss810@ccny","ccc");
-
 
 /*********** All route from here ********/
 
@@ -229,8 +219,11 @@ app.get("/adminMessage", async function(req,res){
     
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
-
-    res.render("adminMessage", {studentApplications:studentApplications, instructorApplications:instructorApplications});
+    var totalStudents = await query.getTotalStudents(User);
+    res.render("adminMessage", {studentApplications:studentApplications, 
+        instructorApplications:instructorApplications,
+        programQuota:programQuota,
+        totalStudents:totalStudents});
 })
 
     //when admin make dicision about applications
@@ -238,17 +231,16 @@ app.post("/adminMessage", function(req,res){
     var dicision = req.body.dicision;
     if(dicision == "reject"){
         emailer.sendRejectEmail(req.body.email,req.body.fullname);
-        res.redirect("/adminMessage");
     }else{
         emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.GPA, User);
-        Applicant.findOneAndUpdate({email:req.body.email, role:req.body.role},{decided:true}, function(err){
-            if(err){
-                console.log(err)
-            }else{
-                res.redirect("/adminMessage");
-            }
-        })
     }
+    Applicant.findOneAndUpdate({email:req.body.email, role:req.body.role},{decided:true}, function(err){
+        if(err){
+            console.log(err)
+        }else{
+            res.redirect("/adminMessage");
+        }
+    })
 })
 
 

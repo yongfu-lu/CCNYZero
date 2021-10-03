@@ -1,5 +1,5 @@
 admin@ccny      qqq        registrar
-tom@ccny        123        student
+tom@ccny        333        student
 jerry@ccny      123        student
 bob@ccny        123        student
 Iron@ccny       123        instructor

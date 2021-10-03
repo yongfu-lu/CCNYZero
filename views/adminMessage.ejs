@@ -9,6 +9,8 @@
 <body>
     <h1>Hello TeamQ, this is your message box</h1>
     <br><br>
+    <h3>Program quota is  <%= programQuota%>, current total number of students is <%= totalStudents%> </h3>
+    
     <h3>Below are new student applications</h3>
     <% for(var i = 0; i<studentApplications.length; i++){ %>
         <div>
@@ -18,13 +20,36 @@
                 <input type="hidden" name="GPA" value= <%= studentApplications[i].GPA %>  >
                 <input type="hidden" name="role" value= <%= studentApplications[i].role %>  >
                 <p> Applicant Name: <%= studentApplications[i].fullname %> --- GPA: <%= studentApplications[i].GPA %> </p>
-            
-                <button type="submit" name="dicision" value="accept"> Accept</button> 
-                <button type="submit" name ="dicision" value="reject">Reject</button>
+                
+                <textarea id="justification<%=i%>" name="justification" rows="4" cols="30" 
+                    placeholder="Please provide justification if your dicision is against student's qualification"
+                    oninput="checkJustification(<%=i%>)"></textarea>
+
+                <button type="submit" name="dicision" value="accept" id="acceptBtn<%=i%>" > Accept</button> 
+                <button type="submit" name ="dicision" value="reject" id="rejectBtn<%=i%>">Reject</button>
+                
+                <script type="text/javascript">
+                    var programQuota = <%= programQuota%>;
+                    var totalStudents = <%= totalStudents%>;
+                    var GPA = <%= studentApplications[i].GPA %>;
+                    if(programQuota > totalStudents && GPA > 3.0){
+                        document.getElementById("rejectBtn<%=i%>").disabled = true;
+                    }else{
+                        document.getElementById("acceptBtn<%=i%>").disabled = true;
+                    }
+                </script>
             </form>
-            
         </div>
     <%} %>
+    <script type="text/javascript">
+        function checkJustification(i){
+            var text = document.getElementById("justification"+i).value
+            if(text != ''){
+                document.getElementById("rejectBtn"+i).disabled = false;
+                document.getElementById("acceptBtn"+i).disabled = false;
+            }
+        }
+    </script>
     
     <br>
     <h3>Below are new instructor applications</h3>
@@ -36,8 +61,8 @@
                 <input type="hidden" name="role" value= <%= instructorApplications[i].role %>  >
                 <p> Applicant Name: <%= instructorApplications[i].fullname %> --- Self-Statement: <%= instructorApplications[i].selfStatement %> </p>
             
-                <button type="submit" name="dicision" value="accept"> Accept</button> 
-                <button type="submit" name ="dicision" value="reject">Reject</button>
+                <button type="submit" name="dicision" value="accept" > Accept</button> 
+                <button type="submit" name ="dicision" value="reject" >Reject</button>
             </form>
             
         </div>
@@ -45,5 +70,6 @@
     
      <br>
     <a href="/registrarHome">Go back to registrar home</a>
+    
 </body>
 </html>

@@ -12,6 +12,8 @@ exports.getWorstClasses = getWorstClasses;
 exports.getStudentApplications = getStudentApplications;
 exports.getInstructorApplications = getInstructorApplications;
 exports.changePassword = changePassword;
+exports.getTotalStudents = getTotalStudents;
+
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -108,4 +110,19 @@ function changePassword(User, username, newpassword){
 },function(err){
    console.error(err);
 })
+}
+
+  //get total students in program
+async function getTotalStudents(User) {
+  var total;
+  User.find({ role: "student" })
+    .exec(async function (err, foundStudents) {
+      if (err) {
+        console.log(err);
+      } else {
+        total = foundStudents.length
+      }
+    });
+  await sleep();
+  return total;
 }
