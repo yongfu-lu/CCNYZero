@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 exports.getClassSchema = function(){
-    console.log("getting classSchema");
+    //console.log("getting classSchema");
     return new mongoose.Schema({
         department:String,            //example: computer science 
         course_fullname:String,       //example: Algorithm
@@ -22,7 +22,7 @@ exports.getClassSchema = function(){
 
 
 exports.getApplicantSchema = function(){
-    console.log("This is applicant schema from schema.js")
+    //console.log("This is applicant schema from schema.js")
     return new mongoose.Schema ({
         email:String,
         fullname:String,
@@ -37,7 +37,7 @@ exports.getApplicantSchema = function(){
 }
 
 exports.getUserSchema = function(){
-    console.log("This is user schema from schema.js")
+    //console.log("This is user schema from schema.js")
     return new mongoose.Schema ({
         email:String,
         password: String,
@@ -56,7 +56,7 @@ exports.getUserSchema = function(){
 
 
 exports.getClassReviewSchema = function(){
-    console.log("getting classReviewSchema");
+    //console.log("getting classReviewSchema");
     return new mongoose.Schema({
         writer:String,          //student name ?? id??
         write_to_class: String,  // class id??

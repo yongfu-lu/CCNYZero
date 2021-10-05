@@ -28,6 +28,7 @@
                 <button type="submit" name="dicision" value="accept" id="acceptBtn<%=i%>" > Accept</button> 
                 <button type="submit" name ="dicision" value="reject" id="rejectBtn<%=i%>">Reject</button>
                 
+                <!-- check if visitor is qualified to be accept to be student and disable the button against rule-->
                 <script type="text/javascript">
                     var programQuota = <%= programQuota%>;
                     var totalStudents = <%= totalStudents%>;
@@ -41,15 +42,6 @@
             </form>
         </div>
     <%} %>
-    <script type="text/javascript">
-        function checkJustification(i){
-            var text = document.getElementById("justification"+i).value
-            if(text != ''){
-                document.getElementById("rejectBtn"+i).disabled = false;
-                document.getElementById("acceptBtn"+i).disabled = false;
-            }
-        }
-    </script>
     
     <br>
     <h3>Below are new instructor applications</h3>
@@ -71,5 +63,18 @@
      <br>
     <a href="/registrarHome">Go back to registrar home</a>
     
+    
+    <script type="text/javascript">
+        //admin need to provide reason if he want to make dicision against rule 
+        function checkJustification(i){
+            var text = document.getElementById("justification"+i).value
+            if(text != ''){
+                document.getElementById("rejectBtn"+i).disabled = false;
+                document.getElementById("acceptBtn"+i).disabled = false;
+            }
+        }
+
+
+    </script>
 </body>
 </html>

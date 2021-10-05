@@ -7,7 +7,18 @@
     <title>CCNY Zero Home</title>
 </head>
 <body>
-    <h1>Welcome to CCNY, <%=myname%>,  this is admin home page</h1>
+    <h1>Welcome to CCNY, <%=myname%>,  this is admin home page, today is :<%= today.toLocaleDateString() %></h1>
+
+    <!-- This form can change today's date, this is for testing purpose -->
+    <form action="/setToday", method="post">
+        <label for="setTodao">Set Today To:</label>
+        <input type="date" name="settoday"
+        min="2021-01-01" max="2021-12-31">
+        <button type="submit"> OK </button>
+    </form>
+    
+
+    <br><br>
     <a href="/logout"> log out </a>
     <br><br>
     <a href="/adminMessage">Message Box</a>

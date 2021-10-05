@@ -9,6 +9,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const schema = require(__dirname + "/schema.js");
 const emailer = require(__dirname + "/emailer.js");
 const query = require(__dirname + "/query.js");
+const time = require(__dirname+"/time.js")
 
 const app = express();
 
@@ -46,7 +47,10 @@ var topStudents;
 var topClasses;
 var worstClasses;
 const programQuota = 30;
+var today = time.today;
+
 /**************** add and update data for testing here **********/
+
 
 /*********** All route from here ********/
 
@@ -58,7 +62,7 @@ app.get("/",async function(req, res){
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("visitorHome",{ topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
+        res.render("visitorHome",{ topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
     }
 })
 
@@ -84,7 +88,7 @@ app.get("/studentHome",async function(req,res){
         topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("studentHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
+        res.render("studentHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
     }
 })
 
@@ -95,7 +99,7 @@ app.get("/registrarHome",async function(req,res){
         topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("registrarHome",{ myname:req.user.fullname, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
+        res.render("registrarHome",{ myname:req.user.fullname, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
 
     }
 })
@@ -108,7 +112,7 @@ app.get("/instructorHome",async function(req,res){
         topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("instructorHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses});
+        res.render("instructorHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
     }
 })
 
@@ -243,7 +247,13 @@ app.post("/adminMessage", function(req,res){
     })
 })
 
-
+/**************************** Time related methods **********/
+app.post("/setToday", function(req,res){
+    //"2021-12-21T00:00:00"
+    const newToday = req.body.settoday + "T00:00:00";
+    today = time.setToday(newToday);
+    res.redirect("/registrarHome");
+})
 
 /** server port **/
 app.listen(3000, function(){
