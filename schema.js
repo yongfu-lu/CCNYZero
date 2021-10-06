@@ -12,11 +12,10 @@ exports.getClassSchema = function(){
         instructor:String,            // name of professor ??
         students: [String],           // array of student's name or id??
         max_capacity: Number,   
-        schedule: [String],      
+        schedule: [],      
         rating: Number,
         prerequisites: [String],      // [array of course_name] ??
         review:[String],              //class review _id ??
-        
     });
 }
 
@@ -49,7 +48,8 @@ exports.getUserSchema = function(){
         required_course: [String],      //required courses for graduation
         assigned_class:[String],        //when user role is professor, assigned class is what class he teaching
         wrote_review:[String],
-        firstLogin: Boolean
+        firstLogin: Boolean,
+        suspended:Boolean
     });
     
 }

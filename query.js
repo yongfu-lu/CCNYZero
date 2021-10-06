@@ -13,7 +13,7 @@ exports.getStudentApplications = getStudentApplications;
 exports.getInstructorApplications = getInstructorApplications;
 exports.changePassword = changePassword;
 exports.getTotalStudents = getTotalStudents;
-
+exports.getAvailableInstructors = getAvailableInstructors;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -126,3 +126,18 @@ async function getTotalStudents(User) {
   await sleep();
   return total;
 }
+
+async function getAvailableInstructors(User) {
+  var instructors;
+  User.find({ role: "instructor" , suspended:false})
+    .exec(async function (err, foundInstructors) {
+      if (err) {
+        console.log(err);
+      } else {
+        instructors = foundInstructors;
+      }
+    });
+  await sleep();
+  return instructors;
+}
+

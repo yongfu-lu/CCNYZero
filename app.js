@@ -46,11 +46,10 @@ passport.deserializeUser(User.deserializeUser());
 var topStudents;
 var topClasses;
 var worstClasses;
+var instructors;
 const programQuota = 30;
 var today = time.today;
-
 /**************** add and update data for testing here **********/
-
 
 /*********** All route from here ********/
 
@@ -253,6 +252,43 @@ app.post("/setToday", function(req,res){
     const newToday = req.body.settoday + "T00:00:00";
     today = time.setToday(newToday);
     res.redirect("/registrarHome");
+})
+
+
+/******************************* Class related route  ********/
+app.get("/classSetUp", async function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar'){
+        res.redirect("/logout");
+    }else{
+        instructors = await query.getAvailableInstructors(User);
+        res.render("classSetUp", {period:time.getPeriod(today), instructors:instructors, justAdded:false});
+    }
+})
+
+
+app.post("/classSetUp", function(req,res){      
+    const newClass = new Class({
+        department:req.body.department,           
+        course_fullname:req.body.classFullName,    
+        course_shortname:req.body.classShortName,    
+        section:req.body.classSection,          
+        credit: req.body.classCredit,         
+        instructor:req.body.instructor, 
+        max_capacity: req.body.classSize,   
+        schedule: [
+        {
+            day: req.body.day1,
+            startTime: req.body.startTime1,
+            endTime: req.body.endTime1
+        },
+        {
+            day: req.body.day2,
+            startTime: req.body.startTime2,
+            endTime: req.body.endTime2
+        }]
+    });
+    newClass.save();
+    res.render("classSetUp", {period:time.getPeriod(today), instructors:instructors, justAdded:true});
 })
 
 /** server port **/
