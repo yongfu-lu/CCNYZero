@@ -43,11 +43,11 @@ exports.getUserSchema = function(){
         fullname:String,
         role:String,        //admin, student, instructor, visitor
         GPA:Number,         
-        enrolled_class: [String],
+        enrolled_class: [],
         taken_class: [],
-        required_course: [String],      //required courses for graduation
-        assigned_class:[String],        //when user role is professor, assigned class is what class he teaching
-        wrote_review:[String],
+        required_course: [],      //required courses for graduation
+        assigned_class:[],        //when user role is professor, assigned class is what class he teaching
+        wrote_review:[],
         firstLogin: Boolean,
         suspended:Boolean
     });

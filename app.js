@@ -266,6 +266,14 @@ app.get("/classSetUp", async function(req,res){
 })
 
 
+app.get("/classSignUp", function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'student'){
+        res.redirect("/logout");
+    }else{
+        res.render("classSignUp",{period:time.getPeriod(today)});
+    }
+})
+
 app.post("/classSetUp", function(req,res){      
     const newClass = new Class({
         department:req.body.department,           
@@ -287,9 +295,20 @@ app.post("/classSetUp", function(req,res){
             endTime: req.body.endTime2
         }]
     });
-    newClass.save();
+    //After set up new class, update instructor collection too, add new class to assigned_class of the instructor
+    newClass.save(function(err,doc){
+        User.updateOne({fullname:req.body.instructor}, {$push:{assigned_class:doc.id}}, function(err, user){
+            if(err) console.log(err);
+            else{
+                console.log("Updated class to instructor");
+            }
+        });
+    });
     res.render("classSetUp", {period:time.getPeriod(today), instructors:instructors, justAdded:true});
+
 })
+
+
 
 /** server port **/
 app.listen(3000, function(){
