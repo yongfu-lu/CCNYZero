@@ -48,10 +48,10 @@ var topClasses;
 var worstClasses;
 var instructors;
 const programQuota = 30;
-//var today = time.today;
+var today = time.today;
 
 /**************** do testing code here **********/
-var today = new Date("2021-08-17T00:00:00")
+// var today = new Date("2021-08-17T00:00:00")
 
 /*********** All route from here ********/
 
@@ -316,6 +316,8 @@ app.post("/classSignUp", async function(req,res){
     const newClass = await query.getClassDetail(Class,req.body.classID);
     const classShortName = newClass.course_shortname;
     const takenClasses = req.user.taken_class;
+    const studentsAlreadyInClass = newClass.students.length;
+    const classSize = newClass.max_capacity;
 
     const enrolledClasses = await query.getEnrolledClasses(User,"tom@ccny");
     const schedules = await query.getEnrolledSchedules(Class, enrolledClasses);
@@ -338,11 +340,15 @@ app.post("/classSignUp", async function(req,res){
     //if student schedule time conflit with new class, add class will fail
     if(time.conflict(schedules, newClassSchedule)){
         res.render("classSignUpResult", {result:"Fail", detail:"Schedule Conflict"});
+    }else if (studentsAlreadyInClass >= classSize){
+        query.addStudentToWaitList(Class,req.body.classID, req.user.username);
+        res.render("classSignUpResult", {result:"This class is full", detail:"You will be put in wait list."})
     }else{
         User.updateOne({username:req.user.username}, {$push:{enrolled_class:req.body.classID}}, function(err, user){
             if(err) console.log(err);
             else{
                 console.log("Add enrolled class to student");
+                query.addStudentToClass(Class,req.body.classID, req.user.username);
                 res.render("classSignUpResult", {result:"Success", detail:"You added new class to your schedule."});
             }
         });

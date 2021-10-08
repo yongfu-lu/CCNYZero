@@ -17,8 +17,8 @@ exports.getAllClasses = getAllClasses;
 exports.getClassDetail = getClassDetail;
 exports.getEnrolledClasses = getEnrolledClasses;
 exports.getEnrolledSchedules = getEnrolledSchedules;
-
-
+exports.addStudentToClass = addStudentToClass;
+exports.addStudentToWaitList = addStudentToWaitList;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -215,4 +215,23 @@ async function getEnrolledSchedules(Class, ids){
   }
   await sleep();
   return schedules;
+}
+
+async function addStudentToClass(Class, classID, username){
+    Class.updateOne({_id:classID}, {$push:{students:username}}, function(err){
+      if(err){
+        console.log(err);
+      }
+    })
+}
+
+async function addStudentToWaitList(Class,classID, username){
+  console.log("in query");
+  console.log(username);
+  console.log(classID);
+  Class.updateOne({_id:classID}, {$push: {wait_list:username}},function(err){
+    if(err){
+      console.log(err);
+    }
+  })
 }

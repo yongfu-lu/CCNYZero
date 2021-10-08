@@ -16,6 +16,7 @@ exports.getClassSchema = function(){
         rating: Number,
         prerequisites: [String],      // [array of course_name] ??
         review:[String],              //class review _id ??
+        wait_list:[]
     });
 }
 
