@@ -5,15 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class sign up</title>
+    <% classes %>
 </head>
 <body>
     <h1>This is class sign up page for students</h1>
 
     <a href="/studentHome">Go Back To Student Home Page</a>
-    <% if(period != "classSetUp"){ %>
+    <% if(period != "courseRegistration"){ %>
         <h1>It is not class registration period right now</h1>
     <%} else{%>
-        <h1>You can sign up class now</h1>
+        <h3>Classes List: </h3>
+        
+            <% for(var i = 0; i<classes.length; i++){ %>
+                <form action="/classSignUp" method="post">
+                    <input type="hidden" name="classID" value= <%= classes[i].id %> >
+                    <p><%= classes[i].id %></p>
+                    <p><%= classes[i].course_shortname%><%= classes[i].section%>   -- <%= classes[i].course_fullname %> -- <%= classes[i].instructor%></p>
+                    <p><%= classes[i].schedule[0].day%> <%= classes[i].schedule[0].startTime%>-<%= classes[i].schedule[0].endTime%> </p>
+                    <p><%= classes[i].schedule[1].day%> <%= classes[i].schedule[1].startTime%>-<%= classes[i].schedule[1].endTime%> </p>
+                    <button type="submit"> Sign Up </button>
+                    <hr>
+                </form>
+            <%} %>
+        
     <%} %>
 </body>
-</html>
+</html> 

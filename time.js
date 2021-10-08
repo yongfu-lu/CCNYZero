@@ -29,6 +29,8 @@ exports.gradingPeroidEnd = gradingPeroidEnd;
 exports.today = new Date();
 exports.setToday = setToday;
 exports.getPeriod = getPeriod;
+exports.convertSchedule = convertSchedule;
+exports.conflict = conflict;
 
 //set today to custom date for testing purpose
 function setToday(customDate){
@@ -52,4 +54,31 @@ function getPeriod(day){
    }
 
    return period;
+}
+
+function convertSchedule(newClass){
+  var newClassSchedule = [];
+  newClassSchedule.push(  [newClass.schedule[0].day, newClass.schedule[0].startTime, newClass.schedule[0].endTime]  );
+  newClassSchedule.push(  [newClass.schedule[1].day, newClass.schedule[1].startTime, newClass.schedule[1].endTime]  );
+  return newClassSchedule;
+}
+
+
+function conflict(schedules, newClassSchedule){
+    for (var i = 0; i < schedules.length; i++){
+        temp = schedules[i];
+        for( var j = 0; j < newClassSchedule.length; j++){
+          //if scheduled day is different day, skip
+           if(temp[0] != newClassSchedule[j][0]){
+             continue;
+           }else{
+             //if new class start time is between any old class start and end time.
+             //or new class end time is between any old class start and end time, conflit
+             if(newClassSchedule[j][1] >= temp[1] && newClassSchedule[j][1] < temp[2] || newClassSchedule[j][2] >= temp[1] && newClassSchedule[j][2] < temp[2]){
+               return true;
+             }
+           }
+        }
+    }
+    return false;
 }

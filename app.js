@@ -48,8 +48,10 @@ var topClasses;
 var worstClasses;
 var instructors;
 const programQuota = 30;
-var today = time.today;
-/**************** add and update data for testing here **********/
+//var today = time.today;
+
+/**************** do testing code here **********/
+var today = new Date("2021-08-17T00:00:00")
 
 /*********** All route from here ********/
 
@@ -255,7 +257,7 @@ app.post("/setToday", function(req,res){
 })
 
 
-/******************************* Class related route  ********/
+/******************************* Class related route  ***************/
 app.get("/classSetUp", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'registrar'){
         res.redirect("/logout");
@@ -266,11 +268,12 @@ app.get("/classSetUp", async function(req,res){
 })
 
 
-app.get("/classSignUp", function(req,res){
+app.get("/classSignUp", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("classSignUp",{period:time.getPeriod(today)});
+        const classes = await query.getAllClasses(Class);
+        res.render("classSignUp",{period:time.getPeriod(today),classes:classes});
     }
 })
 
@@ -308,6 +311,43 @@ app.post("/classSetUp", function(req,res){
 
 })
 
+
+app.post("/classSignUp", async function(req,res){
+    const newClass = await query.getClassDetail(Class,req.body.classID);
+    const classShortName = newClass.course_shortname;
+    const takenClasses = req.user.taken_class;
+
+    const enrolledClasses = await query.getEnrolledClasses(User,"tom@ccny");
+    const schedules = await query.getEnrolledSchedules(Class, enrolledClasses);
+    var newClassSchedule = time.convertSchedule(newClass);
+
+    //maximun enroll class is 4 classes
+    if(req.user.enrolled_class.length >= 4){
+        res.render("classSignUpResult", {result:"Fail", detail:"You cannot sign up more than 4 classes"});
+        return;
+    }else{
+        //if student already pass this class, cannot take it again
+        for(var i = 0; i<takenClasses.length; i++){
+            if(takenClasses[i].course_shortname == classShortName && takenClasses[i].grade != 'F'){
+                res.render("classSignUpResult", {result:"Fail", detail:"You already passed this class"});
+                return;
+            }
+        }
+    }
+
+    //if student schedule time conflit with new class, add class will fail
+    if(time.conflict(schedules, newClassSchedule)){
+        res.render("classSignUpResult", {result:"Fail", detail:"Schedule Conflict"});
+    }else{
+        User.updateOne({username:req.user.username}, {$push:{enrolled_class:req.body.classID}}, function(err, user){
+            if(err) console.log(err);
+            else{
+                console.log("Add enrolled class to student");
+                res.render("classSignUpResult", {result:"Success", detail:"You added new class to your schedule."});
+            }
+        });
+    }
+})
 
 
 /** server port **/
