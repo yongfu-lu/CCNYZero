@@ -19,7 +19,7 @@
             <% for(var i = 0; i<classes.length; i++){ %>
                 <form action="/classSignUp" method="post">
                     <input type="hidden" name="classID" value= <%= classes[i].id %> >
-                    <p><%= classes[i].id %></p>
+                    
                     <p><%= classes[i].course_shortname%><%= classes[i].section%>   -- <%= classes[i].course_fullname %> -- <%= classes[i].instructor%></p>
                     <p><%= classes[i].schedule[0].day%> <%= classes[i].schedule[0].startTime%>-<%= classes[i].schedule[0].endTime%> </p>
                     <p><%= classes[i].schedule[1].day%> <%= classes[i].schedule[1].startTime%>-<%= classes[i].schedule[1].endTime%> </p>

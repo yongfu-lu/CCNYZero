@@ -14,7 +14,7 @@
     <%if(justAdded == true){%>
         <h2>Added New Class Success, Please Add Another One</h2>
     <%}%>
-    <% if(period != "class"){ %>
+    <% if(period != "classSetUp"){ %>
         <h1>It is not class set up period right now</h1>
     <%} else{%>
         <form action="/classSetUp" method="post">

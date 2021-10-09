@@ -52,6 +52,7 @@ var today = time.today;
 
 /**************** do testing code here **********/
 // var today = new Date("2021-08-17T00:00:00")
+//todo: after student enroll a class, add student to the calss in database, also add "grade:'' attribute"
 
 /*********** All route from here ********/
 
@@ -348,7 +349,7 @@ app.post("/classSignUp", async function(req,res){
             if(err) console.log(err);
             else{
                 console.log("Add enrolled class to student");
-                query.addStudentToClass(Class,req.body.classID, req.user.username);
+                query.addStudentToClass(Class,req.body.classID, req.user.username, req.user.fullname);
                 res.render("classSignUpResult", {result:"Success", detail:"You added new class to your schedule."});
             }
         });

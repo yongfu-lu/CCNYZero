@@ -167,18 +167,16 @@ async function getAllClasses(Class) {
 }
 
 async function getClassDetail(Class, ID) {
-  //var classShortName;
   var newClass;
   Class.findById(ID).exec(async function (err, foundClass) {
     if (err) {
       console.log(err);
     } else {
-      //classShortName = foundClass.course_shortname;
       newClass = foundClass;
     }
   });
    await sleep();
-  //  return classShortName;
+  
   return newClass;
 }
 
@@ -217,8 +215,8 @@ async function getEnrolledSchedules(Class, ids){
   return schedules;
 }
 
-async function addStudentToClass(Class, classID, username){
-    Class.updateOne({_id:classID}, {$push:{students:username}}, function(err){
+async function addStudentToClass(Class, classID, username, fullname){
+    Class.updateOne({_id:classID}, {$push:{students:{email: username, fullname:fullname, grade:""}}}, function(err){
       if(err){
         console.log(err);
       }

@@ -10,7 +10,7 @@ exports.getClassSchema = function(){
         section: String,              //example: A, B, K
         credit: Number,         
         instructor:String,            // name of professor ??
-        students: [String],           // array of student's name or id??
+        students: [],           // array of student's name or id??
         max_capacity: Number,   
         schedule: [],      
         rating: Number,
