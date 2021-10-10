@@ -19,6 +19,8 @@ exports.getEnrolledClasses = getEnrolledClasses;
 exports.getEnrolledSchedules = getEnrolledSchedules;
 exports.addStudentToClass = addStudentToClass;
 exports.addStudentToWaitList = addStudentToWaitList;
+exports.getEnrolledClassObjects = getEnrolledClassObjects;
+
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -194,7 +196,9 @@ async function getEnrolledClasses(User, username) {
   return classes;
 }
 
+
 async function getEnrolledSchedules(Class, ids){
+  console.log("inside get schedules method");
   var schedules=[];
   for(var i = 0; i < ids.length; i++){
     Class.findById(ids[i]).exec(async function( err, foundClass){
@@ -233,3 +237,16 @@ async function addStudentToWaitList(Class,classID, username){
     }
   })
 }
+
+
+async function getEnrolledClassObjects(Class, ids){
+  var classes=[];
+  for(var i = 0; i < ids.length; i++){
+    Class.findById(ids[i]).exec(async function( err, foundClass){
+        classes.push(foundClass);
+    })
+  }
+  await sleep();
+  return classes;
+}
+/*******************   new methods ************** */

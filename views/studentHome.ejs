@@ -11,22 +11,26 @@
     <a href="/logout"> log out </a>
     <br><br>
     <a href="/classSignUp"> Sign Up Class</a>
+    <br><br>
+    <a href="/studentMyClasses">My Classes</a>
+    <br><br>
+    <a href="/myAcademics">My Academics</a>
 
-    <h3>I am showing Top 3 students in CCNY: </h3>
+    <h3>Top 3 students in CCNY: </h3>
     <% for(var i = 0; i<topStudents.length; i++){ %>
         <div>
             <p> <%= topStudents[i].fullname %>  --- GPA: <%= topStudents[i].GPA%></p>
         </div>
     <%} %> 
 
-    <h3>I am showing Top 3 classes in CCNY: </h3>
+    <h3>Top 3 classes in CCNY: </h3>
     <% for(var i = 0; i<topClasses.length; i++){ %>
         <div>
             <p> <%= topClasses[i].course_fullname %> --- Instructor:<%= topClasses[i].instructor%> ---rating: <%= topClasses[i].rating%></p>
         </div>
     <%} %> 
 
-    <h3>I am showing worst 3 classes in CCNY: </h3>
+    <h3>Worst 3 classes in CCNY: </h3>
     <% for(var i = 0; i<topClasses.length; i++){ %>
         <div>
             <p> <%= worstClasses[i].course_fullname %>  ---Instructor:<%= worstClasses[i].instructor%> ---rating: <%= worstClasses[i].rating%></p>

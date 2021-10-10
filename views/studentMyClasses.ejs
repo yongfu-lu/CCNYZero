@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Classes</title>
+</head>
+<body>
+    <h1>Your current enrolled classes</h1>
+    <a href="/studentHome"> Go Back To Home</a>
+
+    <% enrolledClasses%>
+
+    <table>
+        <tr>
+            <th>Class</th>
+            <th>Instructor</th>
+            <th>Schedule</th>
+            <th>Actions</th>
+        </tr>
+        <% for(var i = 0; i<enrolledClasses.length; i++){ %>
+            
+            <form action="/studentMyClasses" method="post">
+                <tr>
+                    <input type="hidden" name="classID" value= <%= enrolledClasses[i].id %> >
+                    <input type="hidden" name="classShortName" value= <%= enrolledClasses[i].course_shortname %> >
+                    <input type="hidden" name="classSection" value= <%= enrolledClasses[i].section %> >
+                    <th><%= enrolledClasses[i].course_shortname%><%= enrolledClasses[i].section%></th>
+                    <th><%= enrolledClasses[i].instructor%></th>
+                    <th><%= enrolledClasses[i].schedule[0].day%> <%= enrolledClasses[i].schedule[0].startTime%> <%= enrolledClasses[i].schedule[0].endTime%> 
+                    <%= enrolledClasses[i].schedule[1].day%> <%= enrolledClasses[i].schedule[1].startTime%>-<%= enrolledClasses[i].schedule[1].endTime%></th>
+                    <th><button type="submit" name="action" value="drop"> Drop </button><button type="submit" name="action" value="rate"> Rate </button><th>
+                </tr>
+                
+            </form>
+        <%} %>
+    </table>
+
+
+</body>
+</html>

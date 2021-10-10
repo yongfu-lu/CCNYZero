@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Academics</title>
+</head>
+<body>
+    <h1>This is your academics record page</h1>
+    <a href="/studentHome"> Go Back To Home</a>
+
+    <h3>GPA: <%=GPA%> </h3>
+    <h3>Grades detail: </h3>
+    <table>
+        <tr>
+            <th>Course</th>
+            <th>Credit</th>
+            <th>Grade</th>
+        </tr>
+        <%for(var i = 0; i< taken_classes.length; i++) { %>
+            <tr>
+                <th><%=taken_classes[i].course_shortname%></th>
+                <th><%=taken_classes[i].credit%></th>
+                <th><%=taken_classes[i].grade%></th>
+            </tr>
+        <%} %>
+    </table>
+    
+</body>
+</html>

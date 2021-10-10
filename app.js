@@ -51,8 +51,8 @@ const programQuota = 30;
 var today = time.today;
 
 /**************** do testing code here **********/
-// var today = new Date("2021-08-17T00:00:00")
-//todo: after student enroll a class, add student to the calss in database, also add "grade:'' attribute"
+ //var today = new Date("2021-08-17T00:00:00")
+
 
 /*********** All route from here ********/
 
@@ -320,7 +320,8 @@ app.post("/classSignUp", async function(req,res){
     const studentsAlreadyInClass = newClass.students.length;
     const classSize = newClass.max_capacity;
 
-    const enrolledClasses = await query.getEnrolledClasses(User,"tom@ccny");
+    const enrolledClasses = await query.getEnrolledClasses(User,req.user.username);
+    
     const schedules = await query.getEnrolledSchedules(Class, enrolledClasses);
     var newClassSchedule = time.convertSchedule(newClass);
 
@@ -353,6 +354,61 @@ app.post("/classSignUp", async function(req,res){
                 res.render("classSignUpResult", {result:"Success", detail:"You added new class to your schedule."});
             }
         });
+    }
+})
+
+
+app.post("/dropClass",function(req,res){
+    const confirm = req.body.confirm;
+    if(confirm == 'no'){
+        res.redirect("/studentMyClasses")
+    }else{
+        User.findOneAndUpdate({username:req.user.username}, {$pull:{enrolled_class:req.body.classID}},function(err){
+            if(err)console.log(err)
+            else{
+                console.log("drop a class from student");
+                Class.findOneAndUpdate({_id:req.body.classID}, {$pull:{students:{email:req.user.username}}},function(err){
+                    if(err)console.log(err)
+                    else{
+                        console.log("Delete student from class");
+                        res.redirect("/studentMyClasses");
+                    }
+                })
+            }
+        })
+        
+    }
+})
+
+
+/******************************** student's pages ***********************/
+app.get("/myAcademics", function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'student'){
+        res.redirect("/logout");
+    }else{
+        res.render("myAcademics",{taken_classes:req.user.taken_class, GPA:req.user.GPA});
+    }
+})
+
+
+app.get("/studentMyClasses",async function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'student'){
+        res.redirect("/logout");
+    }else{
+        const classIds = req.user.enrolled_class;
+        const enrolledClass = await query.getEnrolledClassObjects(Class, classIds);
+        res.render("studentMyClasses", {enrolledClasses:enrolledClass});
+    }
+})
+
+app.post("/studentMyClasses", async function(req,res){
+    const action = req.body.action;
+    const classID = req.body.classID;
+    const className = req.body.classShortName + req.body.classSection;
+    if(action == "drop"){
+        res.render("dropClass", {classID: classID, className:className,});
+    }else{
+        res.render("rateClass",{classID: classID, className:className,});
     }
 })
 
