@@ -9,10 +9,14 @@
 <body>
     <% className %>
     <% classID %>
+    <% classCredit %>
     <h1>Are you sure you want to drop the following class ?</h1>
     <form action="/dropClass", method="post">
-        <h3>   <%= className %>  </h3>
+        <h3>   <%= className %> <%=classSection%>  </h3>
         <input type="hidden" name="classID" value= <%= classID %> >
+        <input type="hidden" name="className" value= <%= className %> >
+        <input type="hidden" name="classCredit" value= <%= classCredit %> >
+
         <button type="submit" name="confirm" value="yes"> Yes </button>
         <button type="submit" name="confirm" value="no"> No </button>
     </form>

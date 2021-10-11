@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Your current enrolled classes</h1>
+    <%= period%>
     <a href="/studentHome"> Go Back To Home</a>
 
     <% enrolledClasses%>
@@ -26,11 +27,20 @@
                     <input type="hidden" name="classID" value= <%= enrolledClasses[i].id %> >
                     <input type="hidden" name="classShortName" value= <%= enrolledClasses[i].course_shortname %> >
                     <input type="hidden" name="classSection" value= <%= enrolledClasses[i].section %> >
+                    <input type="hidden" name="classCredit" value= <%= enrolledClasses[i].credit %> >
                     <th><%= enrolledClasses[i].course_shortname%><%= enrolledClasses[i].section%></th>
                     <th><%= enrolledClasses[i].instructor%></th>
                     <th><%= enrolledClasses[i].schedule[0].day%> <%= enrolledClasses[i].schedule[0].startTime%> <%= enrolledClasses[i].schedule[0].endTime%> 
                     <%= enrolledClasses[i].schedule[1].day%> <%= enrolledClasses[i].schedule[1].startTime%>-<%= enrolledClasses[i].schedule[1].endTime%></th>
-                    <th><button type="submit" name="action" value="drop"> Drop </button><button type="submit" name="action" value="rate"> Rate </button><th>
+                    <th>
+                        <% if(period != "grading"){ %>
+                            <button type="submit" name="action" value="drop"> Drop </button>
+                        <%} %>
+                        <% if(period == "classRunning" || period == "grading"){ %>
+                            <button type="submit" name="action" value="rate"> Rate </button>
+                        <% } %>
+                        
+                    <th>
                 </tr>
                 
             </form>

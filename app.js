@@ -48,10 +48,10 @@ var topClasses;
 var worstClasses;
 var instructors;
 const programQuota = 30;
-var today = time.today;
+//var today = time.today;
 
 /**************** do testing code here **********/
- //var today = new Date("2021-08-17T00:00:00")
+var today = new Date("2021-08-25T00:00:00")
 
 
 /*********** All route from here ********/
@@ -319,9 +319,7 @@ app.post("/classSignUp", async function(req,res){
     const takenClasses = req.user.taken_class;
     const studentsAlreadyInClass = newClass.students.length;
     const classSize = newClass.max_capacity;
-
     const enrolledClasses = await query.getEnrolledClasses(User,req.user.username);
-    
     const schedules = await query.getEnrolledSchedules(Class, enrolledClasses);
     var newClassSchedule = time.convertSchedule(newClass);
 
@@ -332,13 +330,12 @@ app.post("/classSignUp", async function(req,res){
     }else{
         //if student already pass this class, cannot take it again
         for(var i = 0; i<takenClasses.length; i++){
-            if(takenClasses[i].course_shortname == classShortName && takenClasses[i].grade != 'F'){
+            if(takenClasses[i].course_shortname == classShortName && takenClasses[i].grade != 'F' && takenClasses[i].grade != 'W'){
                 res.render("classSignUpResult", {result:"Fail", detail:"You already passed this class"});
                 return;
             }
         }
     }
-
     //if student schedule time conflit with new class, add class will fail
     if(time.conflict(schedules, newClassSchedule)){
         res.render("classSignUpResult", {result:"Fail", detail:"Schedule Conflict"});
@@ -364,13 +361,17 @@ app.post("/dropClass",function(req,res){
         res.redirect("/studentMyClasses")
     }else{
         User.findOneAndUpdate({username:req.user.username}, {$pull:{enrolled_class:req.body.classID}},function(err){
-            if(err)console.log(err)
+            if(err)  console.log(err)
             else{
-                console.log("drop a class from student");
+                if(time.getPeriod(today) == "classRunning"){
+                    User.findOneAndUpdate({username:req.user.username},
+                        {$push:{taken_class:{course_shortname:req.body.className, credit:0,grade:"W"}}},function(err){
+                            if(err) console.log(err)
+                        })      
+                }
                 Class.findOneAndUpdate({_id:req.body.classID}, {$pull:{students:{email:req.user.username}}},function(err){
                     if(err)console.log(err)
                     else{
-                        console.log("Delete student from class");
                         res.redirect("/studentMyClasses");
                     }
                 })
@@ -397,16 +398,20 @@ app.get("/studentMyClasses",async function(req,res){
     }else{
         const classIds = req.user.enrolled_class;
         const enrolledClass = await query.getEnrolledClassObjects(Class, classIds);
-        res.render("studentMyClasses", {enrolledClasses:enrolledClass});
+        const period = time.getPeriod(today);
+        res.render("studentMyClasses", {enrolledClasses:enrolledClass, period:period});
     }
 })
 
 app.post("/studentMyClasses", async function(req,res){
     const action = req.body.action;
     const classID = req.body.classID;
-    const className = req.body.classShortName + req.body.classSection;
+    const className = req.body.classShortName;
+    const classSection = req.body.classSection;
+    const classCredit = req.body.classCredit;
+ 
     if(action == "drop"){
-        res.render("dropClass", {classID: classID, className:className,});
+        res.render("dropClass", {classID: classID, className:className, classSection: classSection, classCredit : classCredit});
     }else{
         res.render("rateClass",{classID: classID, className:className,});
     }
