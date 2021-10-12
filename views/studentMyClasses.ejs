@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Your current enrolled classes</h1>
-    <%= period%>
+    <!-- <%= period%> -->
     <a href="/studentHome"> Go Back To Home</a>
 
     <% enrolledClasses%>
@@ -28,6 +28,8 @@
                     <input type="hidden" name="classShortName" value= <%= enrolledClasses[i].course_shortname %> >
                     <input type="hidden" name="classSection" value= <%= enrolledClasses[i].section %> >
                     <input type="hidden" name="classCredit" value= <%= enrolledClasses[i].credit %> >
+                    <input type="hidden" name="instructor" value= "<%= enrolledClasses[i].instructor %>" >
+
                     <th><%= enrolledClasses[i].course_shortname%><%= enrolledClasses[i].section%></th>
                     <th><%= enrolledClasses[i].instructor%></th>
                     <th><%= enrolledClasses[i].schedule[0].day%> <%= enrolledClasses[i].schedule[0].startTime%> <%= enrolledClasses[i].schedule[0].endTime%> 

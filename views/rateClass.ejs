@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styles.css">
+    <title>Rate Class</title>
+</head>
+<body>
+    <h1>You can rate your class here</h1>
+    <a href="/studentMyClasses">Go Back To My Classes</a>
+    <% classID %>
+    <h3>Rate following class: </h3>
+    <h4> Class: <%= className %><%= classSection %>,  Instructor: <%= instructor %></h4> 
+    
+    <form action="/rateClass", method="post">
+        <input type="hidden" name="numberOfStar" id="numberOfStar">
+        <div class="stars">
+            <a>⭐️</a>
+            <a>⭐️</a>
+            <a>⭐️</a>
+            <a>⭐️</a>
+            <a>⭐️</a>
+        </div>
+        <textarea  name="review" rows="6" cols="50" placeholder="Tell us your experience of this class"></textarea>
+        <br>
+        <button type="submit"> submit </button>
+    </form>
+
+    <script>
+        const stars = document.querySelectorAll(".stars a");
+        stars.forEach(function(star,clickedIdx){
+            star.addEventListener("click",()=>{
+                stars.forEach(function(otherStar,otherIdx){
+                    if(otherIdx <= clickedIdx){
+                        otherStar.classList.add("active");
+                    }else{
+                        otherStar.classList.remove("active");
+                    }
+                })
+                document.getElementById("numberOfStar").value = clickedIdx + 1;
+            })
+        })
+
+    </script>
+</body>
+
+</html>

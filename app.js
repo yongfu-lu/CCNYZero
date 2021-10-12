@@ -12,7 +12,6 @@ const query = require(__dirname + "/query.js");
 const time = require(__dirname+"/time.js")
 
 const app = express();
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
@@ -382,6 +381,12 @@ app.post("/dropClass",function(req,res){
 })
 
 
+app.post("/rateClass",function(req,res){
+    console.log(req.body.numberOfStar);
+    console.log(req.body.review);
+    console.log(req.user.username);
+})
+
 /******************************** student's pages ***********************/
 app.get("/myAcademics", function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
@@ -409,11 +414,12 @@ app.post("/studentMyClasses", async function(req,res){
     const className = req.body.classShortName;
     const classSection = req.body.classSection;
     const classCredit = req.body.classCredit;
- 
+    const instructor = req.body.instructor;
+    
     if(action == "drop"){
         res.render("dropClass", {classID: classID, className:className, classSection: classSection, classCredit : classCredit});
     }else{
-        res.render("rateClass",{classID: classID, className:className,});
+        res.render("rateClass",{classID: classID, className:className,classSection:classSection, instructor:instructor});
     }
 })
 

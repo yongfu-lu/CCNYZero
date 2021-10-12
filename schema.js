@@ -14,8 +14,8 @@ exports.getClassSchema = function(){
         max_capacity: Number,   
         schedule: [],      
         rating: Number,
-        prerequisites: [String],      // [array of course_name] ??
-        review:[String],              //class review _id ??
+        prerequisites: [],      // [array of course_name] ??
+        review:[],              //class review _id ??
         wait_list:[]
     });
 }
@@ -61,7 +61,7 @@ exports.getClassReviewSchema = function(){
     return new mongoose.Schema({
         writer:String,          //student name ?? id??
         write_to_class: String,  // class id??
-        ranking: Number,
+        rate: Number,
         review: String
     })
 }

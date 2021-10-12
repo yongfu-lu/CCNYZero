@@ -1,9 +1,9 @@
 
 /*
 Semester peroid:
-  class set up : 2021/8/10 - 2021/8/15
-  register: 2021/8/16 - 2021/8/20
-  class running: 2021/08/21 - 2021/12/20
+  classSetUp : 2021/8/10 - 2021/8/15
+  courseRegistration: 2021/8/16 - 2021/8/20
+  classRunning: 2021/08/21 - 2021/12/20
   grading: 2021/12/21 - 2021/12-25
 */
 
