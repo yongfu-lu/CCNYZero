@@ -70,7 +70,7 @@ exports.sendAcceptEmail = function(email, name, gpa, User){
         username:newStudentEmail,
         fullname:name,
         role:"student",
-        GPA:gpa,
+        GPA:0,
         firstLogin:true,
         }, password, function(err,user){
             if(err){

@@ -24,6 +24,7 @@ exports.giveWarning = giveWarning;
 exports.checkWarningNumber = checkWarningNumber;
 exports.suspendUser =suspendUser;
 exports.ifDropAllClasses =ifDropAllClasses;
+exports.calculateRating= calculateRating;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -267,7 +268,7 @@ function checkWarningNumber(User,username){
       if(err) console.log(err)
       else{
         var warnings = foundUser.warning.length;
-        if(warnings >= 3){
+        if(warnings >= 3 && foundUser.role=="instructor"){
           console.log("Your have up to 3 warnings")
           suspendUser(User,username);
           return warnings;
@@ -289,5 +290,31 @@ function ifDropAllClasses(User,username){
     if (foundUser.enrolled_class.length == 0){
       suspendUser(User,username);
     }
+  })
+}
+
+function calculateRating(User,Class, classID){
+  var sumOfRating = 0;
+  var numOfRating = 0;
+  var reviews = [];
+  Class.findOne({_id:classID}, function(err,foundClass){
+      if(err) console.log(err);
+      const originalRate = foundClass.rating;
+      reviews = foundClass.review
+      for(var i = 0; i<reviews.length; i++){
+          sumOfRating += reviews[i].rate;
+          numOfRating += 1;
+      }
+      if(numOfRating > 0){
+        var overallRate = (sumOfRating / numOfRating).toFixed(2);
+        Class.updateOne({_id:classID},{rating:overallRate},function(err){
+          if(err) console.log(err);
+          if(originalRate > 2 && overallRate < 2){
+              User.findOne({fullname:foundClass.instructor}, function(error, foundUser){
+                giveWarning(User,foundUser.username,"Class Rating Too Low");
+              })
+          }
+        })
+      }
   })
 }

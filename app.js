@@ -400,7 +400,7 @@ app.post("/rateClass",function(req,res){
         write_to_classID:req.body.classID,
         write_to_className:req.body.className,
         instructor:req.body.instructor,
-        rate:req.body.numberOfStar,
+        rate:parseInt(req.body.numberOfStar),
         review:review
     }
     
@@ -408,6 +408,7 @@ app.post("/rateClass",function(req,res){
         if(err) console.log(err);
         Class.updateOne({_id:req.body.classID},{$push:{review:newReview}},function(err){
             if(err) console.log(err);
+            query.calculateRating(User,Class,req.body.classID);
             res.redirect("/studentMyClasses");
         })
     })
