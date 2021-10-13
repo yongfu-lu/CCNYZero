@@ -50,7 +50,9 @@ exports.getUserSchema = function(){
         assigned_class:[],        //when user role is professor, assigned class is what class he teaching
         wrote_review:[],
         firstLogin: Boolean,
-        suspended:Boolean
+        suspended:Boolean,
+        warning:[],
+        honor:Number
     });
     
 }
@@ -59,8 +61,10 @@ exports.getUserSchema = function(){
 exports.getClassReviewSchema = function(){
     //console.log("getting classReviewSchema");
     return new mongoose.Schema({
-        writer:String,          //student name ?? id??
-        write_to_class: String,  // class id??
+        writer_name:String,           //student name
+        writer_email:String,          //student email
+        write_to_classID: String,  // class id??
+        write_to_className: String, //class name??
         rate: Number,
         review: String
     })

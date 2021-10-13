@@ -20,7 +20,9 @@ exports.getEnrolledSchedules = getEnrolledSchedules;
 exports.addStudentToClass = addStudentToClass;
 exports.addStudentToWaitList = addStudentToWaitList;
 exports.getEnrolledClassObjects = getEnrolledClassObjects;
-
+exports.giveWarning = giveWarning;
+exports.checkWarningNumber = checkWarningNumber;
+exports.suspendUser =suspendUser;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -249,4 +251,34 @@ async function getEnrolledClassObjects(Class, ids){
   await sleep();
   return classes;
 }
-/*******************   new methods ************** */
+
+
+function giveWarning(User,username, warning){
+    User.updateOne({username:username},{$push:{warning:warning}}, function(err){
+      if(err) console.log(err);
+      console.log("You are given one warning");
+      checkWarningNumber(User,username);
+    })
+}
+
+function checkWarningNumber(User,username){
+    User.findOne({username:username}, function(err,foundUser){
+      if(err) console.log(err)
+      else{
+        var warnings = foundUser.warning.length;
+        if(warnings >= 3){
+          console.log("Your have up to 3 warnings")
+          suspendUser(User,username);
+          return warnings;
+        }
+      }
+    })
+}
+
+function suspendUser(User, username){
+  User.updateOne({username:username},{suspended:true}, function(err){
+    if(err) console.log(err);
+    console.log("You are suspended");
+  }) 
+}
+

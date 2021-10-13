@@ -15,9 +15,13 @@
     <h4> Class: <%= className %><%= classSection %>,  Instructor: <%= instructor %></h4> 
     
     <form action="/rateClass", method="post">
-        <input type="hidden" name="numberOfStar" id="numberOfStar">
+        <input type="hidden" name="numberOfStar" id="numberOfStar" value=1>
+        <input type="hidden" name="classID" value= "<%= classID %>" >
+        <input type="hidden" name="className" value= "<%= className %>" >
+        <input type="hidden" name="classSection" value= "<%= classSection %>" >
+        <input type="hidden" name="instructor" value= "<%= instructor %>" >
         <div class="stars">
-            <a>⭐️</a>
+            <a class="active">⭐️</a>
             <a>⭐️</a>
             <a>⭐️</a>
             <a>⭐️</a>

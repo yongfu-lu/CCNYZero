@@ -6,10 +6,12 @@ const mongoose = require("mongoose");
 const session = require('express-session');
 const passport = require('passport');
 const passportLocalMongoose = require("passport-local-mongoose");
+const { giveWarning } = require('./query');
 const schema = require(__dirname + "/schema.js");
 const emailer = require(__dirname + "/emailer.js");
 const query = require(__dirname + "/query.js");
-const time = require(__dirname+"/time.js")
+const time = require(__dirname+"/time.js");
+const utility = require(__dirname+"/utility");
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -51,8 +53,6 @@ const programQuota = 30;
 
 /**************** do testing code here **********/
 var today = new Date("2021-08-25T00:00:00")
-
-
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -382,9 +382,34 @@ app.post("/dropClass",function(req,res){
 
 
 app.post("/rateClass",function(req,res){
-    console.log(req.body.numberOfStar);
-    console.log(req.body.review);
-    console.log(req.user.username);
+    var review = req.body.review;
+    if(!utility.passTabooWordsCheck(review)){
+        query,giveWarning(User,req.user.username,"Taboo Warning");
+        query,giveWarning(User,req.user.username,"Taboo Warning");
+        res.redirect("/studentMyClasses");
+        return;
+    }else{
+        review = utility.passTabooWordsCheck(review);
+    }
+    var newReview = {
+        writer_name:req.user.fullname,
+        writer_email:req.user.username,
+        write_to_classID:req.body.classID,
+        write_to_className:req.body.className,
+        instructor:req.body.instructor,
+        rate:req.body.numberOfStar,
+        review:review
+    }
+    
+    User.updateOne({username:req.user.username},{$push:{wrote_review:newReview}},function(err){
+        if(err) console.log(err);
+        Class.updateOne({_id:req.body.classID},{$push:{review:newReview}},function(err){
+            if(err) console.log(err);
+            res.redirect("/studentMyClasses");
+        })
+    })
+    
+    
 })
 
 /******************************** student's pages ***********************/
