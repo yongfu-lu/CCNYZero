@@ -363,11 +363,14 @@ app.post("/dropClass",function(req,res){
             if(err)  console.log(err)
             else{
                 if(time.getPeriod(today) == "classRunning"){
+                    //take off class from student
                     User.findOneAndUpdate({username:req.user.username},
                         {$push:{taken_class:{course_shortname:req.body.className, credit:0,grade:"W"}}},function(err){
                             if(err) console.log(err)
-                        })      
+                            query.ifDropAllClasses(User,req.user.username);
+                        })
                 }
+                //take off student from class
                 Class.findOneAndUpdate({_id:req.body.classID}, {$pull:{students:{email:req.user.username}}},function(err){
                     if(err)console.log(err)
                     else{

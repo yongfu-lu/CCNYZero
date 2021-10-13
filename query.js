@@ -23,6 +23,7 @@ exports.getEnrolledClassObjects = getEnrolledClassObjects;
 exports.giveWarning = giveWarning;
 exports.checkWarningNumber = checkWarningNumber;
 exports.suspendUser =suspendUser;
+exports.ifDropAllClasses =ifDropAllClasses;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -282,3 +283,11 @@ function suspendUser(User, username){
   }) 
 }
 
+
+function ifDropAllClasses(User,username){
+  User.findOne({username:username},function(err,foundUser){
+    if (foundUser.enrolled_class.length == 0){
+      suspendUser(User,username);
+    }
+  })
+}
