@@ -4,6 +4,7 @@ const schema = require(__dirname + "/schema.js");
 const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
 const applicantSchema = schema.getApplicantSchema();
+const complaintSchema = schema.getComplaintSchema();
 
 exports.getTopStudents = getTopStudents;
 exports.getTopClasses = getTopClasses;
@@ -25,6 +26,8 @@ exports.checkWarningNumber = checkWarningNumber;
 exports.suspendUser =suspendUser;
 exports.ifDropAllClasses =ifDropAllClasses;
 exports.calculateRating= calculateRating;
+exports.createComplaint= createComplaint;
+exports.getComplaints = getComplaints;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -268,7 +271,7 @@ function checkWarningNumber(User,username){
       if(err) console.log(err)
       else{
         var warnings = foundUser.warning.length;
-        if(warnings >= 3 && foundUser.role=="instructor"){
+        if(warnings >= 3){
           console.log("Your have up to 3 warnings")
           suspendUser(User,username);
           return warnings;
@@ -317,4 +320,35 @@ function calculateRating(User,Class, classID){
         })
       }
   })
+}
+
+
+function createComplaint(Complaint,user,complaintAbout, complaintAboutRolo, className,detail){
+    const newComplaint = new Complaint({
+        complaintFrom: user.username,
+        complaintFromRole: user.role,
+        complaintAbout:complaintAbout,
+        complaintAboutRole:complaintAboutRolo,
+        className:className,
+        detail: detail,
+        decided:false
+    })
+
+    newComplaint.save();
+}
+
+async function getComplaints(Complaint) {
+  var complaints;
+  Complaint.find(
+    { decided: false},
+    function (err, foundComplaints) {
+      if (err) {
+        console.log(err);
+      } else {
+        complaints = foundComplaints
+      }
+    }
+  );
+  await sleep();
+  return complaints;
 }

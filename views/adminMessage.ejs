@@ -7,7 +7,9 @@
     <title>AdminMessage</title>
 </head>
 <body>
+
     <h1>Hello TeamQ, this is your message box</h1>
+    <a href="/registrarHome">Go back to registrar home</a>
     <br><br>
     <h3>Program quota is  <%= programQuota%>, current total number of students is <%= totalStudents%> </h3>
     
@@ -61,9 +63,11 @@
     <%} %>
     
      <br>
-    <a href="/registrarHome">Go back to registrar home</a>
+
+    <h3> Below are new complaints from students and instructors</h3>
+    <%= complaints %>
     
-    
+
     <script type="text/javascript">
         //admin need to provide reason if he want to make dicision against rule 
         function checkJustification(i){
@@ -73,8 +77,6 @@
                 document.getElementById("acceptBtn"+i).disabled = false;
             }
         }
-
-
     </script>
 </body>
 </html>

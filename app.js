@@ -32,13 +32,14 @@ mongoose.connect("mongodb+srv://TeamQ:brooklyn2021@cluster0.w84rk.mongodb.net/CC
 const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
 const applicantSchema = schema.getApplicantSchema();
+const complaintSchema = schema.getComplaintSchema();
 
 userSchema.plugin(passportLocalMongoose);
 
 const User = new mongoose.model("User", userSchema);
 const Class = new mongoose.model("Class", classSchema);
 const Applicant = new mongoose.model("Applicant", applicantSchema);
-
+const Complaint = new mongoose.model('Complaint', complaintSchema);
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
@@ -49,10 +50,10 @@ var topClasses;
 var worstClasses;
 var instructors;
 const programQuota = 30;
-//var today = time.today;
+var today = time.today;
 
 /**************** do testing code here **********/
-var today = new Date("2021-08-25T00:00:00")
+//var today = new Date("2021-08-25T00:00:00")
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -225,10 +226,12 @@ app.get("/adminMessage", async function(req,res){
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
     var totalStudents = await query.getTotalStudents(User);
+    var complaints = await query.getComplaints(Complaint);
     res.render("adminMessage", {studentApplications:studentApplications, 
         instructorApplications:instructorApplications,
         programQuota:programQuota,
-        totalStudents:totalStudents});
+        totalStudents:totalStudents,
+        complaints:complaints});
 })
 
     //when admin make dicision about applications
@@ -452,6 +455,23 @@ app.post("/studentMyClasses", async function(req,res){
     }
 })
 
+
+app.get("/fileComplaint", function(req,res){
+    if(!req.isAuthenticated()){
+        res.redirect("/logout");
+    }else{
+        res.render("fileComplaint", {userRole:req.user.role});
+    }
+})
+
+
+app.post("/fileComplaint", function(req,res){
+
+    query.createComplaint(Complaint,req.user,req.body.complaintAboutName, req.body.complaintAboutRole,
+        req.body.className, req.body.complaintDetail);
+    
+    res.redirect("/");
+})
 
 /** server port **/
 app.listen(3000, function(){

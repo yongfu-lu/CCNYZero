@@ -71,6 +71,10 @@ exports.sendAcceptEmail = function(email, name, gpa, User){
         fullname:name,
         role:"student",
         GPA:0,
+        warning:[],
+        suspended:false,
+        takan_class:[],
+        enrolled_class:[],
         firstLogin:true,
         }, password, function(err,user){
             if(err){

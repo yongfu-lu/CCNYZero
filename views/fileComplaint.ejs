@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File complaint</title>
+</head>
+<body>
+    <h1>You can file complaint to student or instructor in this page</h1>
+    <a href="/"> Go Back To Home</a>
+    <form action="/fileComplaint" method="post">
+        <p>Complaint about:
+            <input type="radio" id= "student" name="complaintAboutRole" value="student" checked="checked">
+            <label for="student">Student</label>
+            <% if (userRole == "student"){ %>
+                <input type="radio" id= "instructor" name="complaintAboutRole" value="instructor" >
+                <label for="Instructor">Instructor</label>
+            <%} %>
+        </p> 
+        <label for="complaintAboutName">His/Her Name: </label>
+        <input type="text" name="complaintAboutName">
+        <br>
+        <label for="className"> Class Name: </label>
+        <input type="text" name="className">
+        <br>
+        <label for="complaintDetail">Details: </label><br>
+        <textarea id="complaintDetail" name="complaintDetail" rows="8" cols="40" 
+        placeholder="Please provide detail of what you want to report. "
+        ></textarea><br>
+
+        <button type="submit"> Submit </button>
+    </form>
+
+</body>
+</html>
