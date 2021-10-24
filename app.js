@@ -220,22 +220,23 @@ app.get("/applyInstructor", function(req, res) {
 
 
 
-/**************************** MessageBox related methods */
-app.get("/adminMessage", async function(req,res){
+/**************************** admin related methods */
+
+
+app.get("/application", async function(req,res){
     
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
     var totalStudents = await query.getTotalStudents(User);
     var complaints = await query.getComplaints(Complaint);
-    res.render("adminMessage", {studentApplications:studentApplications, 
+    res.render("application", {studentApplications:studentApplications, 
         instructorApplications:instructorApplications,
         programQuota:programQuota,
-        totalStudents:totalStudents,
-        complaints:complaints});
+        totalStudents:totalStudents});
 })
 
     //when admin make dicision about applications
-app.post("/adminMessage", function(req,res){
+app.post("/application", function(req,res){
     var dicision = req.body.dicision;
     if(dicision == "reject"){
         emailer.sendRejectEmail(req.body.email,req.body.fullname);
@@ -246,7 +247,7 @@ app.post("/adminMessage", function(req,res){
         if(err){
             console.log(err)
         }else{
-            res.redirect("/adminMessage");
+            res.redirect("/application");
         }
     })
 })
