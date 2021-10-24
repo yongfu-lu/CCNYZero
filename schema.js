@@ -73,6 +73,7 @@ exports.getClassReviewSchema = function(){
 exports.getComplaintSchema = function(){
     return new mongoose.Schema({
         complaintFrom: String,
+        complaintFromName: String,
         complaintFromRole:String,
         complaintAbout: String,
         complaintAboutRole: String,

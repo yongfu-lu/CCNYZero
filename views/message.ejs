@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message</title>
+</head>
+<body>
+    <h1>Hello TeamQ, this is message page.  </h1>
+    <a href="/">Go back to registrar home</a>
+    <br><br>
+    <!-- <%= complaints %> -->
+    <% for (var i = 0; i < complaints.length; i++) { %>
+        <div>
+            <form action="/message" method="post">
+                <input type="hidden" name="complaintId" value= <%= complaints[i]._id%>  >
+                <input type="hidden" name="fullName" value= <%= complaints[i].complaintAbout %>>
+                <input type="hidden" name="className" value= <%= complaints[i].className %>>
+
+                <p> Complaint From: <%=complaints[i].complaintFromName%> (<%=complaints[i].complaintFromRole%>)  Email: <%=complaints[i].complaintFrom %><br>
+                    Complaint About: <%=complaints[i].complaintAbout%> (<%=complaints[i].complaintAboutRole%>) in class <%=complaints[i].className %></p>
+                <p>Details:<br>
+                   <%=complaints[i].detail%>
+                </p>
+
+                <button type="submit" name="decision" value="issueWarning" > Issue Warning </button> 
+                <button type="submit" name ="decision" value="acknowledge" > acknowledge </button>
+                <% if (complaints[i].complaintFromRole == 'instructor'){ %>
+                    <button type="submit" name ="decision" value="deregister"> De-register </button>
+                <%}%>
+            </form>
+            <br>
+        </div>
+    <%}%>
+</body>
+</html>

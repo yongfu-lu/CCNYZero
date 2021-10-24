@@ -24,11 +24,11 @@
                 <p> Applicant Name: <%= studentApplications[i].fullname %> --- GPA: <%= studentApplications[i].GPA %> </p>
                 
                 <textarea id="justification<%=i%>" name="justification" rows="4" cols="30" 
-                    placeholder="Please provide justification if your dicision is against student's qualification"
+                    placeholder="Please provide justification if your decision is against student's qualification"
                     oninput="checkJustification(<%=i%>)"></textarea>
 
-                <button type="submit" name="dicision" value="accept" id="acceptBtn<%=i%>" > Accept</button> 
-                <button type="submit" name ="dicision" value="reject" id="rejectBtn<%=i%>">Reject</button>
+                <button type="submit" name="decision" value="accept" id="acceptBtn<%=i%>" > Accept</button> 
+                <button type="submit" name ="decision" value="reject" id="rejectBtn<%=i%>">Reject</button>
                 
                 <!-- check if visitor is qualified to be accept to be student and disable the button against rule-->
                 <script type="text/javascript">
@@ -55,8 +55,8 @@
                 <input type="hidden" name="role" value= <%= instructorApplications[i].role %>  >
                 <p> Applicant Name: <%= instructorApplications[i].fullname %> --- Self-Statement: <%= instructorApplications[i].selfStatement %> </p>
             
-                <button type="submit" name="dicision" value="accept" > Accept</button> 
-                <button type="submit" name ="dicision" value="reject" >Reject</button>
+                <button type="submit" name="decision" value="accept" > Accept</button> 
+                <button type="submit" name ="decision" value="reject" >Reject</button>
             </form>
             
         </div>
@@ -67,7 +67,7 @@
     
 
     <script type="text/javascript">
-        //admin need to provide reason if he want to make dicision against rule 
+        //admin need to provide reason if he want to make decision against rule 
         function checkJustification(i){
             var text = document.getElementById("justification"+i).value
             if(text != ''){

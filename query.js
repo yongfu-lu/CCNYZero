@@ -28,6 +28,7 @@ exports.ifDropAllClasses =ifDropAllClasses;
 exports.calculateRating= calculateRating;
 exports.createComplaint= createComplaint;
 exports.getComplaints = getComplaints;
+exports.deregister = deregister;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -326,6 +327,7 @@ function calculateRating(User,Class, classID){
 function createComplaint(Complaint,user,complaintAbout, complaintAboutRolo, className,detail){
     const newComplaint = new Complaint({
         complaintFrom: user.username,
+        complaintFromName: user.fullname,
         complaintFromRole: user.role,
         complaintAbout:complaintAbout,
         complaintAboutRole:complaintAboutRolo,
@@ -351,4 +353,19 @@ async function getComplaints(Complaint) {
   );
   await sleep();
   return complaints;
+}
+
+
+async function deregister(User,Class, username,className){
+  Class.findOne({course_shortname:className}, function(err, foundClass){
+      const classId = foundClass._id.valueOf();
+      User.findOneAndUpdate({username:username},{$pull:{enrolled_class:classId}}, function(err){
+        if(err) console.log(err)
+        else{
+          Class.findOneAndUpdate({_id:classId},{$pull:{students:{email:username}}}, function(err){
+            if(err) console.log(err);
+          })
+        }
+      })
+  })
 }

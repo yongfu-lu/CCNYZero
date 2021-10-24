@@ -53,7 +53,8 @@ const programQuota = 30;
 var today = time.today;
 
 /**************** do testing code here **********/
-//var today = new Date("2021-08-25T00:00:00")
+//var today = new Date("2021-08-17T00:00:00")
+
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -222,13 +223,51 @@ app.get("/applyInstructor", function(req, res) {
 
 /**************************** admin related methods */
 
+app.get("/message", async function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar')
+        res.redirect("/logout");
+    else{
+        var complaints = await query.getComplaints(Complaint);
+        res.render("message", {complaints : complaints});
+    }
+
+})
+
+//when admin make dicision about a complaint
+app.post("/message", function(req,res){
+    var decision = req.body.decision;
+    var complaintId = req.body.complaintId;
+    var fullName = req.body.fullName;
+    var className = req.body.className;
+    if(decision == "issueWarning" || decision == "deregister"){
+        res.render("sendWarning", {decision:decision, complaintId: complaintId, fullName: fullName,className:className})
+    }else{
+        Complaint.updateOne({_id:complaintId},{decided:true}, function(err){
+            if(err) console.log(err);
+            res.redirect("/message");
+        })
+    }
+ })
+
+app.post("/sendWarning", async function(req,res){
+    User.findOne({fullname:req.body.fullName},function(err, foundUser){
+        if ( req.body.decision == 'issueWarning'){
+            query,giveWarning(User,foundUser.username,req.body.reason);
+        } else{
+            query.deregister(User,Class, foundUser.username,req.body.className);
+        }
+        Complaint.updateOne({_id:req.body.complaintId},{decided:true}, function(err){
+            if(err) console.log(err);
+            res.redirect("/message");
+        })
+
+    })
+})
 
 app.get("/application", async function(req,res){
-    
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
     var totalStudents = await query.getTotalStudents(User);
-    var complaints = await query.getComplaints(Complaint);
     res.render("application", {studentApplications:studentApplications, 
         instructorApplications:instructorApplications,
         programQuota:programQuota,
@@ -237,8 +276,8 @@ app.get("/application", async function(req,res){
 
     //when admin make dicision about applications
 app.post("/application", function(req,res){
-    var dicision = req.body.dicision;
-    if(dicision == "reject"){
+    var decision = req.body.decision;
+    if(decision == "reject"){
         emailer.sendRejectEmail(req.body.email,req.body.fullname);
     }else{
         emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.GPA, User);
