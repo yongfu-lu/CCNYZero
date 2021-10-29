@@ -15,14 +15,19 @@
     <table>
         <tr>
             <th>Course</th>
+            <th>Year</th>
+            <th>Semester</th>
             <th>Credit</th>
             <th>Grade</th>
         </tr>
         <%for(var i = 0; i< taken_classes.length; i++) { %>
             <tr>
                 <th><%=taken_classes[i].course_shortname%></th>
+                <th><%=taken_classes[i].year%></th>
+                <th><%=taken_classes[i].semester%></th>
                 <th><%=taken_classes[i].credit%></th>
                 <th><%=taken_classes[i].grade%></th>
+
             </tr>
         <%} %>
     </table>

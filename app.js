@@ -54,7 +54,6 @@ var today = time.today;
 
 /**************** do testing code here **********/
 //var today = new Date("2021-08-17T00:00:00")
-
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -315,7 +314,7 @@ app.get("/classSignUp", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        const classes = await query.getAllClasses(Class);
+        const classes = await query.getAllCurrentClasses(Class);
         res.render("classSignUp",{period:time.getPeriod(today),classes:classes});
     }
 })
@@ -327,7 +326,9 @@ app.post("/classSetUp", function(req,res){
         course_shortname:req.body.classShortName,    
         section:req.body.classSection,          
         credit: req.body.classCredit,         
-        instructor:req.body.instructor, 
+        instructor:req.body.instructor,
+        year: today.getFullYear(),
+        semester: "Fall",
         max_capacity: req.body.classSize,   
         schedule: [
         {
@@ -408,7 +409,11 @@ app.post("/dropClass",function(req,res){
                 if(time.getPeriod(today) == "classRunning"){
                     //take off class from student
                     User.findOneAndUpdate({username:req.user.username},
-                        {$push:{taken_class:{course_shortname:req.body.className, credit:0,grade:"W"}}},function(err){
+                        {$push:{taken_class:{course_shortname:req.body.className, 
+                            year:req.body.year,
+                            semester:req.body.semester,
+                            credit:0,
+                            grade:"W"}}},function(err){
                             if(err) console.log(err)
                             query.ifDropAllClasses(User,req.user.username);
                         })
@@ -487,9 +492,10 @@ app.post("/studentMyClasses", async function(req,res){
     const classSection = req.body.classSection;
     const classCredit = req.body.classCredit;
     const instructor = req.body.instructor;
-    
+    const year = req.body.year;
+    const semester = req.body.semester;
     if(action == "drop"){
-        res.render("dropClass", {classID: classID, className:className, classSection: classSection, classCredit : classCredit});
+        res.render("dropClass", {classID: classID, className:className, classSection: classSection, classCredit : classCredit, year:year, semester:semester});
     }else{
         res.render("rateClass",{classID: classID, className:className,classSection:classSection, instructor:instructor});
     }

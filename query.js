@@ -14,7 +14,7 @@ exports.getInstructorApplications = getInstructorApplications;
 exports.changePassword = changePassword;
 exports.getTotalStudents = getTotalStudents;
 exports.getAvailableInstructors = getAvailableInstructors;
-exports.getAllClasses = getAllClasses;
+exports.getAllCurrentClasses = getAllCurrentClasses;
 exports.getClassDetail = getClassDetail;
 exports.getEnrolledClasses = getEnrolledClasses;
 exports.getEnrolledSchedules = getEnrolledSchedules;
@@ -52,7 +52,7 @@ async function getTopStudents(User) {
 
 async function getTopClasses(Class) {
   var topClasses;
-  Class.find()
+  Class.find({rating:{$ne:null} })
     .limit(3)
     .sort({ rating: -1 })
     .exec(function (err, foundClasses) {
@@ -68,7 +68,7 @@ async function getTopClasses(Class) {
 
 async function getWorstClasses(Class) {
   var worstClasses;
-  Class.find()
+  Class.find({rating:{$ne:null} })
     .limit(3)
     .sort({ rating: 1 })
     .exec(function (err, foundClasses) {
@@ -163,9 +163,9 @@ async function getAvailableInstructors(User) {
   return instructors;
 }
 
-async function getAllClasses(Class) {
+async function getAllCurrentClasses(Class) {
   var classes;
-  Class.find().exec(async function (err, foundClasses) {
+  Class.find({year:2021, semester:"Fall"}).exec(async function (err, foundClasses) {
     if (err) {
       console.log(err);
     } else {
