@@ -11,6 +11,9 @@
     <a href="/logout"> log out </a>
     <br><br>
     <a href="/fileComplaint"> File Complaint</a>
+    <br><br>
+    <a href="/instructorMyClasses"> My Classes</a>
+
     <h3>I am showing Top 3 students in CCNY: </h3>
     <% for(var i = 0; i<topStudents.length; i++){ %>
         <div>
@@ -31,7 +34,7 @@
             <p> <%= worstClasses[i].course_fullname %>  ---Instructor:<%= worstClasses[i].instructor%> ---rating: <%= worstClasses[i].rating%></p>
         </div>
     <%} %> 
-    
+
 
 </body>
 </html>

@@ -29,6 +29,7 @@ exports.calculateRating= calculateRating;
 exports.createComplaint= createComplaint;
 exports.getComplaints = getComplaints;
 exports.deregister = deregister;
+exports.getTeachingClasses = getTeachingClasses;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -368,4 +369,22 @@ async function deregister(User,Class, username,className){
         }
       })
   })
+}
+
+
+
+async function getTeachingClasses(Class, instructorName,year, semester ) {
+  var classes;
+  Class.find(
+    {year:year, semester: semester, instructor:instructorName},
+    function (err, foundClasses) {
+      if (err) {
+        console.log(err);
+      } else {
+        classes = foundClasses
+      }
+    }
+  );
+  await sleep();
+  return classes;
 }

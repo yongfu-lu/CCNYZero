@@ -50,10 +50,11 @@ var topClasses;
 var worstClasses;
 var instructors;
 const programQuota = 30;
-var today = time.today;
+var currentSemester = "Fall";
+//var today = time.today;
 
 /**************** do testing code here **********/
-//var today = new Date("2021-08-17T00:00:00")
+var today = new Date("2021-12-22T00:00:00")
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -114,7 +115,12 @@ app.get("/instructorHome",async function(req,res){
         topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("instructorHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
+        res.render("instructorHome",{ myname:req.user.fullname,
+            topStudents: topStudents, 
+            topClasses:topClasses, 
+            worstClasses:worstClasses,
+            today:today
+        });
     }
 })
 
@@ -518,6 +524,18 @@ app.post("/fileComplaint", function(req,res){
     
     res.redirect("/");
 })
+
+
+/**********************  instructor's pages */
+app.get("/instructorMyClasses", async function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'instructor'){
+        res.redirect("/logout");
+    }else{
+        teachingClasses = await query.getTeachingClasses(Class,req.user.fullname,today.getFullYear(),currentSemester);
+        res.render("instructorMyClasses", {period: time.getPeriod(today), teachingClasses:teachingClasses})
+    }
+})
+
 
 /** server port **/
 app.listen(3000, function(){

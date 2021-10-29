@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Classes</title>
+</head>
+<body>
+    <h1>This is instructor classes page, you can see your classes and student's detail here</h1>
+    <a href="/"> Go Back To Home</a>
+
+    <h3>Your Class: </h3>
+    <% for(var i = 0; i<teachingClasses.length; i++){ %>
+        <div>
+            <h3><%=teachingClasses[i].course_fullname%> <%=teachingClasses[i].course_shortname%> <%=teachingClasses[i].section%> </h3>
+            <%= teachingClasses[i].schedule[0].day%> <%= teachingClasses[i].schedule[0].startTime%> <%= teachingClasses[i].schedule[0].endTime%> 
+                    <%= teachingClasses[i].schedule[1].day%> <%= teachingClasses[i].schedule[1].startTime%>-<%= teachingClasses[i].schedule[1].endTime%>
+            
+            <table>
+                <tr>
+                    <th>Student_Name</th>
+                    <th>Student_Email</th>
+                    <th>Grade_Received</th>
+                    <th>Actions</th>
+                </tr> 
+                <% for(var j = 0; j<teachingClasses[i].students.length; j++){ %>
+                    <form action="/instructorMyClasses", method="post">
+                        <tr>
+                            <th><%= teachingClasses[i].students[j].fullname %></th>
+                            <th><%= teachingClasses[i].students[j].email %></th>
+                            <th><%= teachingClasses[i].students[j].grade %></th>
+                            <th>
+                                <button type="submit" name="action" value="record"> Check Record </button>
+                                <% if(period == "grading"){ %>
+                                    <button type="submit" name="action" value="grading"> Grading </button>
+                                <% } %>
+                                
+                            <th>
+                        </tr>
+                    </form>
+                <%} %>
+            </table>
+
+        </div>
+        <hr>
+    <%} %>
+</body>
+</html>
