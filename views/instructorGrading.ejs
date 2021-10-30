@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Grading</title>
+</head>
+<body>
+    <h1>In this page, instructors can grade his/her student</h1>
+
+
+    <form action="/instructorGrading" method="post">
+        <input type="hidden" name="studentEmail" value="<%=studentEmail%>">
+        <input type="hidden" name="classID" value="<%=classID%>">
+        <input type="hidden" name="classCredit" value="<%=classCredit%>">
+        <input type="hidden" name="className" value="<%=className%>">
+        
+        <p>Student: <%=studentName%></p>
+        <p>Class: <%=className%></p>
+        <label for="grade">Assign Grade: </label>
+        <select name="grade"> 
+            <option value="A+"> A+</option>
+            <option value="A"> A</option>
+            <option value="A-"> A-</option>
+            <option value="B+"> B+</option>
+            <option value="B"> B</option>
+            <option value="B-"> B-</option>
+            <option value="C+"> C+</option>
+            <option value="C"> C</option>
+            <option value="C-"> C-</option>
+            <option value="D+"> D+</option>
+            <option value="D"> D</option>
+            <option value="D-"> D-</option>
+            <option value="F"> F</option>
+        </select> 
+        <button type="submit"> Submit </button>
+    </form>
+</body>
+</html>

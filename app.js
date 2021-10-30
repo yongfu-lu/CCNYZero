@@ -55,6 +55,7 @@ var currentSemester = "Fall";
 
 /**************** do testing code here **********/
 var today = new Date("2021-12-22T00:00:00")
+
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -475,7 +476,7 @@ app.get("/myAcademics", function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("myAcademics",{taken_classes:req.user.taken_class, GPA:req.user.GPA});
+        res.render("myAcademics",{userRole:"student",studentName:req.user.fullname,taken_classes:req.user.taken_class, GPA:req.user.GPA});
     }
 })
 
@@ -526,7 +527,7 @@ app.post("/fileComplaint", function(req,res){
 })
 
 
-/**********************  instructor's pages */
+/**********************  instructor's pages *********/
 app.get("/instructorMyClasses", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'instructor'){
         res.redirect("/logout");
@@ -536,6 +537,31 @@ app.get("/instructorMyClasses", async function(req,res){
     }
 })
 
+app.post("/instructorMyClasses", async function(req, res){
+    const studentEmail = req.body.studentEmail;
+    User.findOne({username:studentEmail}, function(err, foundStudent){
+        if(err) console.log(err);
+        else if(req.body.action == "record"){
+            res.render("myAcademics",{userRole:"instructor",studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
+        }
+        else{
+            res.render("instructorGrading",{studentName:foundStudent.fullname,
+                studentEmail:studentEmail,
+                className:req.body.className,
+                classID:req.body.classID,
+                classCredit:req.body.classCredit
+            });
+        }
+    })
+})
+
+app.post("/instructorGrading", async function(req, res){
+    await query.assignGrade(User, Class, req.body.studentEmail, 
+        req.body.className, req.body.classID, req.body.classCredit, 
+        req.body.grade,today.getFullYear(), currentSemester)
+    
+        res.redirect("/instructorMyClasses")
+})
 
 /** server port **/
 app.listen(3000, function(){

@@ -7,10 +7,15 @@
     <title>My Academics</title>
 </head>
 <body>
-    <h1>This is your academics record page</h1>
-    <a href="/studentHome"> Go Back To Home</a>
+    <% userRole %>
+    <h1>This is academics record page</h1>
+    <a href="/"> Go Back To Home</a>
+    <br>
+    <%if (userRole == "instructor"){%>
+        <a href="instructorMyClasses"> Go Back To My Class List</a>
+    <%}%>
 
-    <h3>GPA: <%=GPA%> </h3>
+    <h3>Student:<%=studentName%> GPA: <%=GPA%> </h3>
     <h3>Grades detail: </h3>
     <table>
         <tr>

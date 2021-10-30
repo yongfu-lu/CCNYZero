@@ -30,6 +30,7 @@ exports.createComplaint= createComplaint;
 exports.getComplaints = getComplaints;
 exports.deregister = deregister;
 exports.getTeachingClasses = getTeachingClasses;
+exports.assignGrade = assignGrade;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -388,3 +389,23 @@ async function getTeachingClasses(Class, instructorName,year, semester ) {
   await sleep();
   return classes;
 }
+
+//query.assignGrade(User, Class, studentEmail, className, classCredit, grade,year, semester)
+async function assignGrade(User, Class, studentEmail, className,classID, classCredit, grade,year, semester){
+  console.log("inside assignGrade")
+  User.findOneAndUpdate({username: studentEmail},
+    {$push:{taken_class:{course_shortname:className, 
+    year:year,
+    semester:semester,
+    credit:classCredit,
+    grade:grade}}},async function(err){
+    if(err) console.log(err)
+    else{
+      Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
+        if(err) console.log(err);
+    })
+    }
+  })
+  await sleep();
+}
+ 

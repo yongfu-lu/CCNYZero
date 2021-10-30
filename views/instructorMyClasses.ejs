@@ -26,6 +26,14 @@
                 </tr> 
                 <% for(var j = 0; j<teachingClasses[i].students.length; j++){ %>
                     <form action="/instructorMyClasses", method="post">
+                        <input type="hidden" name="studentName" value= "<%= teachingClasses[i].students[j].fullname %>" >
+                        <input type="hidden" name="studentEmail" value= "<%= teachingClasses[i].students[j].email %>" >
+                        <input type="hidden" name="classID" value= "<%= teachingClasses[i]._id %>" >
+                        <input type="hidden" name="className" value= "<%= teachingClasses[i].course_shortname %>" >
+                        <input type="hidden" name="classCredit" value= "<%= teachingClasses[i].credit %>" >
+                        <input type="hidden" name="classYear" value= "<%= teachingClasses[i].year %>" >
+                        <input type="hidden" name="classSemester" value= "<%= teachingClasses[i].semester %>" >
+
                         <tr>
                             <th><%= teachingClasses[i].students[j].fullname %></th>
                             <th><%= teachingClasses[i].students[j].email %></th>
