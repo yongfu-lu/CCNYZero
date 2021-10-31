@@ -34,6 +34,8 @@ exports.getTeachingClasses = getTeachingClasses;
 exports.assignGrade = assignGrade;
 exports.didNotGradeAllStudents = didNotGradeAllStudents;
 exports.analyzeClassGPA = analyzeClassGPA
+exports.findStudentFailedTwice =findStudentFailedTwice
+exports.analyzeStudentsGPA =analyzeStudentsGPA;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -401,7 +403,7 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
         {$push:{taken_class:{course_shortname:className, 
         year:year,
         semester:semester,
-        credit:classCredit,
+        credit:parseInt(classCredit),
         grade:grade}}},async function(err){
         if(err) console.log(err)
         else{
@@ -423,10 +425,21 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
       }
     })     
     }
+    updateGPA(User, studentEmail);
   })
   await sleep();
 }
 
+function updateGPA(User, studentEmail){
+  User.findOne({username:studentEmail}, function(err, foundUser){
+    console.log(foundUser);
+    var new_GPA = utility.calculateGPAFromTakenClasses(foundUser.taken_class);
+    console.log(new_GPA);
+    User.findOneAndUpdate({username:studentEmail},{GPA:new_GPA}, function(err){
+      if(err) console.log(err);
+    })
+  })
+}
 
 async function didNotGradeAllStudents(Class, User, year, semester){
   var instructors = new Set();
@@ -486,4 +499,59 @@ function reportObnormalGrade(Complaint,className, section,instructor, GPA){
     })
 
     newComplaint.save();
+}
+
+
+function findStudentFailedTwice(Class, User,Complaint, year, semester){
+  User.find({role:"student"},function(err, foundStudents){
+      if(err) console.log(err);
+      else{
+        for(var i = 0; i<foundStudents.length; i++){
+          if(utility.ifFailedTwice(foundStudents[i])){
+              terminateStudent(User,foundStudents[i]);
+          }
+        } 
+      }
+  })
+}
+
+function terminateStudent(User,student){
+  console.log(student.fullname + " will be terminated ")
+  User.findOneAndUpdate({username:student.username}, {terminated:true},function(err){
+    if(err) console.log(err);
+  });
+}
+
+function analyzeStudentsGPA(Class,User,Complaint,year, semester){
+    User.find({role:"student"}, function(err, foundStudents){
+        for(var i = 0; i< foundStudents.length; i++){
+          if(foundStudents[i].taken_class.length > 0){
+              currentSemesterClasses = []  
+              allTakanClasses = []
+              for(var j = 0; j<foundStudents[i].taken_class.length; j++){
+                allTakanClasses.push(foundStudents[i].taken_class[j]);
+                if(foundStudents[i].taken_class[j].year == year && foundStudents[i].taken_class[j].semester == semester){
+                  currentSemesterClasses.push(foundStudents[i].taken_class[j])
+                }
+              }  
+              currentSemesterGPA = utility.calculateGPAFromTakenClasses(currentSemesterClasses)
+              overallGPA = utility.calculateGPAFromTakenClasses(allTakanClasses)
+              if(overallGPA < 2){
+                terminateStudent(User,foundStudents[i]);
+              }else if (overallGPA >= 2 && overallGPA <= 2.25){
+                giveWarning(User, foundStudents[i].username,"Your GPA is low, Please make an appointment of interview with registrar.")
+              }else if (currentSemesterGPA > 3.75 || overallGPA > 3.5){
+                giveHonor(User, foundStudents[i].username, "Your academic record is excellen. -- "+ year.toString() +", " + semester );
+              }else{}
+              User.findOneAndUpdate({username:foundStudents[i].username}, {GPA:overallGPA}, function(err){});
+          }
+        } 
+    })  
+}   
+
+function giveHonor(User, username, reason){
+    User.updateOne({username:username}, {$push:{ honor : reason }, $pop:{warning:-1}}, function(err){
+      if(err) console.log(err);
+      else console.log("You are rewarded," + username);
+    })
 }

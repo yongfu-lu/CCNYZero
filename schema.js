@@ -54,7 +54,8 @@ exports.getUserSchema = function(){
         firstLogin: Boolean,
         suspended:Boolean,
         warning:[],
-        honor:Number
+        honor:[],
+        terminated:Boolean
     });
     
 }

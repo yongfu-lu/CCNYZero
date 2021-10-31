@@ -51,11 +51,10 @@ var worstClasses;
 var instructors;
 const programQuota = 30;
 var currentSemester = "Fall";
-//var today = time.today;
+var today = time.today;
 
 /**************** do testing code here **********/
-var today = new Date("2021-12-30T00:00:00")
-
+//var today = new Date("2021-10-30T00:00:00")
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
