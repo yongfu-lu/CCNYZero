@@ -74,6 +74,7 @@ exports.getClassReviewSchema = function(){
 
 exports.getComplaintSchema = function(){
     return new mongoose.Schema({
+        title:String,
         complaintFrom: String,
         complaintFromName: String,
         complaintFromRole:String,
@@ -81,6 +82,7 @@ exports.getComplaintSchema = function(){
         complaintAboutRole: String,
         className: String,
         detail:String,
-        decided: Boolean
+        decided: Boolean,
+        isFromSystem:Boolean
     });
 }

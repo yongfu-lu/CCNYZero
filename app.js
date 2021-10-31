@@ -54,7 +54,7 @@ var currentSemester = "Fall";
 //var today = time.today;
 
 /**************** do testing code here **********/
-var today = new Date("2021-12-22T00:00:00")
+var today = new Date("2021-12-30T00:00:00")
 
 /*********** All route from here ********/
 
@@ -555,6 +555,7 @@ app.post("/instructorMyClasses", async function(req, res){
     })
 })
 
+
 app.post("/instructorGrading", async function(req, res){
     await query.assignGrade(User, Class, req.body.studentEmail, 
         req.body.className, req.body.classID, req.body.classCredit, 
@@ -562,6 +563,18 @@ app.post("/instructorGrading", async function(req, res){
     
         res.redirect("/instructorMyClasses")
 })
+
+
+/*****   These methods will be call after grading period end             *****/
+/*****   It will send warning or honor to students or instructors        *****/
+var gradeAnalyzed = false;
+if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
+    //year, semester, Class, User,
+    utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+    gradeAnalyzed = true;
+}
+
+
 
 /** server port **/
 app.listen(3000, function(){

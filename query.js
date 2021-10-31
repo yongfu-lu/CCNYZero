@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const schema = require(__dirname + "/schema.js");
+const utility = require(__dirname+"/utility");
 
 const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
@@ -31,6 +32,8 @@ exports.getComplaints = getComplaints;
 exports.deregister = deregister;
 exports.getTeachingClasses = getTeachingClasses;
 exports.assignGrade = assignGrade;
+exports.didNotGradeAllStudents = didNotGradeAllStudents;
+exports.analyzeClassGPA = analyzeClassGPA
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -335,7 +338,8 @@ function createComplaint(Complaint,user,complaintAbout, complaintAboutRolo, clas
         complaintAboutRole:complaintAboutRolo,
         className:className,
         detail: detail,
-        decided:false
+        decided:false,
+        isFromSystem:false
     })
 
     newComplaint.save();
@@ -421,4 +425,65 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
     }
   })
   await sleep();
+}
+
+
+async function didNotGradeAllStudents(Class, User, year, semester){
+  var instructors = new Set();
+  console.log("this is inside didNotGradeAllStudents method")
+  Class.find({year:year, semester:semester}, async function(err,foundClasses){
+      for(var i = 0; i<foundClasses.length; i++){
+          for(var j = 0; j < foundClasses[i].students.length; j++){
+            if (foundClasses[i].students[j].grade == ""){
+              instructors.add(foundClasses[i].instructor) 
+            }
+          }
+      }
+      for (let instructor of instructors){
+        User.findOne({fullname:instructor, role:"instructor"}, function(err, foundInstructor){
+          giveWarning(User,foundInstructor.username,"Did not grade all students.")
+        })
+      }
+  }) 
+}
+
+
+async function analyzeClassGPA (Class, User,Complaint, year, semester){
+  Class.find({year:year, semester:semester}, function(err, foundClasses){
+    for(var i = 0; i<foundClasses.length; i++){
+      var classGPA = 0;
+      var classGrade = [];
+      for(var j = 0; j < foundClasses[i].students.length; j++){
+          if(foundClasses[i].students[j].grade != 'W' && foundClasses[i].students[j].grade !=''){
+            classGrade.push(foundClasses[i].students[j].grade);
+          }
+      }
+      
+      if(classGrade.length > 0){
+        classGPA = utility.calculateClassGPA(classGrade)
+        if(classGPA > 3.5 || classGPA < 2.5){
+          reportObnormalGrade(Complaint, 
+            foundClasses[i].course_shortname,
+            foundClasses[i].section,
+            foundClasses[i].instructor,
+            classGPA)
+        }
+      }
+  }   
+  })
+}
+
+
+function reportObnormalGrade(Complaint,className, section,instructor, GPA){
+    const newComplaint = new Complaint({
+        title:"Detected Obnormal Grade! ",
+        complaintFrom:"System",
+        complaintAbout:instructor,
+        className:className,
+        detail: "Class " + className + section + " has obnormal grade from " + instructor+ ".\n Class GPA: " + GPA,
+        decided:false,
+        isFromSystem :true
+    })
+
+    newComplaint.save();
 }

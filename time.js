@@ -17,6 +17,7 @@ const classRunningEnd = new Date("2021-12-20T00:00:00")
 const gradingPeroidBegin = new Date("2021-12-21T00:00:00")
 const gradingPeroidEnd = new Date("2021-12-25T00:00:00")
 
+
 exports.classSetUpBegin = classSetUpBegin;
 exports.classSetUpEnd = classSetUpEnd;
 exports.courseRegistrationBegin = courseRegistrationBegin;
@@ -49,8 +50,10 @@ function getPeriod(day){
      period = "classRunning";
    }else if (day >= gradingPeroidBegin && day <= gradingPeroidEnd){
      period = "grading";
+   }else if (day > gradingPeroidEnd){
+     period = "afterGrading";
    }else {
-     period = "break";
+   
    }
 
    return period;

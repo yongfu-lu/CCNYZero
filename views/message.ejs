@@ -17,9 +17,13 @@
                 <input type="hidden" name="complaintId" value= <%= complaints[i]._id%>  >
                 <input type="hidden" name="fullName" value= <%= complaints[i].complaintAbout %>>
                 <input type="hidden" name="className" value= <%= complaints[i].className %>>
+                <% if(!complaints[i].isFromSystem){ %>
+                    <p> Complaint From: <%=complaints[i].complaintFromName%> (<%=complaints[i].complaintFromRole%>)  Email: <%=complaints[i].complaintFrom %><br>
+                        Complaint About: <%=complaints[i].complaintAbout%> (<%=complaints[i].complaintAboutRole%>) in class <%=complaints[i].className %></p>
+                <% }else{ %>
+                    <h4><%=complaints[i].title%> Class: <%=complaints[i].className%>,  Instructor: <%=complaints[i].complaintAbout%></h4>
+                <% } %>
 
-                <p> Complaint From: <%=complaints[i].complaintFromName%> (<%=complaints[i].complaintFromRole%>)  Email: <%=complaints[i].complaintFrom %><br>
-                    Complaint About: <%=complaints[i].complaintAbout%> (<%=complaints[i].complaintAboutRole%>) in class <%=complaints[i].className %></p>
                 <p>Details:<br>
                    <%=complaints[i].detail%>
                 </p>
