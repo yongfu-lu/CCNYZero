@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graduation Academics Record</title>
+</head>
+<body>
+    <a href="/graduationApplication"> Go Back </a>
+    <h3>The requirement courses for graduation are: </h3>
+    <table>
+        <tr>
+            <th> <%=required_courses[0]%></th>
+            <th> <%=required_courses[1]%></th>
+            <th> <%=required_courses[2]%></th>
+            <th> <%=required_courses[3]%></th>
+        </tr>
+        <tr>
+            <th> <%=required_courses[4]%></th>
+            <th> <%=required_courses[5]%></th>
+            <th> <%=required_courses[6]%></th>
+            <th> <%=required_courses[7]%></th>
+        </tr>
+    </table>
+    <hr>
+
+    <h3><%= studentName %>'s course record are : </h3>
+    <table>
+        <tr>
+            <th>Course</th>
+            <th>Year</th>
+            <th>Semester</th>
+            <th>Credit</th>
+            <th>Grade</th>
+        </tr>
+
+        <%for(var i = 0; i< taken_classes.length; i++) { %>
+            <tr>
+                <th><%=taken_classes[i].course_shortname%></th>
+                <th><%=taken_classes[i].year%></th>
+                <th><%=taken_classes[i].semester%></th>
+                <th><%=taken_classes[i].credit%></th>
+                <th><%=taken_classes[i].grade%></th>
+            </tr>
+        <%} %>
+     </table>
+
+</body>
+</html>

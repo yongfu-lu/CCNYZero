@@ -33,13 +33,14 @@ const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
 const applicantSchema = schema.getApplicantSchema();
 const complaintSchema = schema.getComplaintSchema();
-
+const graduationApplicationSchema = schema.getGraduationApplycationSchema()
 userSchema.plugin(passportLocalMongoose);
 
 const User = new mongoose.model("User", userSchema);
 const Class = new mongoose.model("Class", classSchema);
 const Applicant = new mongoose.model("Applicant", applicantSchema);
 const Complaint = new mongoose.model('Complaint', complaintSchema);
+const GraduationApplication = new mongoose.model("GraduationApplication",graduationApplicationSchema);
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
@@ -50,11 +51,15 @@ var topClasses;
 var worstClasses;
 var instructors;
 const programQuota = 30;
+const required_courses = utility.required_courses;
 var currentSemester = "Fall";
 var today = time.today;
 
 /**************** do testing code here **********/
 //var today = new Date("2021-10-30T00:00:00")
+User.update({role:"student"},{masterDegreeObtained:false }, function(err){
+
+})
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -296,6 +301,33 @@ app.post("/application", function(req,res){
     })
 })
 
+
+app.get("/graduationApplication", async function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar')
+        res.redirect("/logout");
+    else{
+        const graduationApplications = await query.getGraduationApplications(GraduationApplication);
+        res.render("graduationApplication", {applications: graduationApplications});
+    }
+})
+
+app.post("/graduationApplication", async function(req, res){
+    const action = req.body.graduationApplicationButton;
+    console.log(action);
+    if(action == "record"){
+        User.findOne({username:req.body.studentEmail},function(err, foundStudent){
+            res.render("graduationAcademicsRecord",{required_courses:required_courses,studentName:foundStudent.fullname ,taken_classes: foundStudent.taken_class});
+        })
+    }else if (action == "approve"){
+        await query.approveGraduation(GraduationApplication, User,req.body.applicationID, req.body.studentEmail);
+        res.redirect("/graduationApplication")
+    }else if(action == "deny"){
+        await query.denyGraduation(GraduationApplication, User,req.body.applicationID, req.body.studentEmail);
+        res.redirect("/graduationApplication")        
+    }else{}
+})
+
+
 /**************************** Time related methods **********/
 app.post("/setToday", function(req,res){
     //"2021-12-21T00:00:00"
@@ -470,12 +502,16 @@ app.post("/rateClass",function(req,res){
     
 })
 
-/******************************** student's pages ***********************/
-app.get("/myAcademics", function(req,res){
+/******************************** student pages ***********************/
+app.get("/myAcademics", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("myAcademics",{userRole:"student",studentName:req.user.fullname,taken_classes:req.user.taken_class, GPA:req.user.GPA});
+        const enrolled_classes = req.user.enrolled_class;
+        var taking_classes = await query.getEnrolledClassObjects(Class, enrolled_classes)
+        res.render("myAcademics",{userRole:"student",studentName:req.user.fullname,
+        taken_classes:req.user.taken_class, taking_classes:taking_classes,
+        GPA:req.user.GPA});
     }
 })
 
@@ -518,13 +554,32 @@ app.get("/fileComplaint", function(req,res){
 
 
 app.post("/fileComplaint", function(req,res){
-
     query.createComplaint(Complaint,req.user,req.body.complaintAboutName, req.body.complaintAboutRole,
         req.body.className, req.body.complaintDetail);
     
     res.redirect("/");
 })
 
+
+app.get("/applyGraduation", function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'student'){
+        res.redirect("/logout");
+    }else{
+        res.render("applyGraduation", {required_courses: required_courses})
+    }
+})
+
+app.post("/applyGraduation", function(req,res){
+    const graduationApplication = new GraduationApplication({
+        studentEmail: req.user.username,
+        studentName: req.user.fullname,
+        graduationYear:today.getFullYear(),
+        graduationSemester:currentSemester,
+        decided:false
+    })
+    graduationApplication.save();
+    res.redirect("/myAcademics");
+})
 
 /**********************  instructor's pages *********/
 app.get("/instructorMyClasses", async function(req,res){

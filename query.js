@@ -36,6 +36,10 @@ exports.didNotGradeAllStudents = didNotGradeAllStudents;
 exports.analyzeClassGPA = analyzeClassGPA
 exports.findStudentFailedTwice =findStudentFailedTwice
 exports.analyzeStudentsGPA =analyzeStudentsGPA;
+exports.getGraduationApplications  = getGraduationApplications;
+exports.getStudentObjectsByEmails = getStudentObjectsByEmails;
+exports.approveGraduation=approveGraduation;
+exports.denyGraduation =denyGraduation;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -554,4 +558,51 @@ function giveHonor(User, username, reason){
       if(err) console.log(err);
       else console.log("You are rewarded," + username);
     })
+}
+
+
+async function getGraduationApplications(GraduationApplication){
+    var applications;
+    GraduationApplication.find({decided:false}, async function(err, foundApplications){
+      if(err) console.log(err);
+      else{
+        applications = foundApplications;
+      }
+    })
+    await sleep();
+    return applications;
+}
+
+
+async function getStudentObjectsByEmails(User, emails){
+  var students = [];
+  for(var i = 0; i<emails.length; i++){
+    User.find({username:emails[i]}, function(err, foundStudent){
+      students.push(foundStudent);
+    })
+  }
+  await sleep();
+  return students;
+}
+
+async function approveGraduation(GraduationApplication, User, applicationID, studentEmail){
+  GraduationApplication.findOneAndUpdate({_id:applicationID},{decided:true},function(err){
+    if(err) console.log(err);
+    else{
+      User.findOneAndUpdate({username:studentEmail}, {masterDegreeObtained: true},function(err){
+        if(err) console.log(err);
+      })
+    }
+  })
+}
+
+
+async function denyGraduation(GraduationApplication, User, applicationID, studentEmail){
+ 
+  GraduationApplication.findOneAndUpdate({_id:applicationID},{decided:true},function(err){
+    if(err) console.log(err);
+    else{
+      giveWarning(User,studentEmail,"Reckless graduation application. ")
+    }
+  })
 }

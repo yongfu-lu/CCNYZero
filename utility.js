@@ -16,6 +16,10 @@ const gradePoint = {
     "F":0
 }
 
+exports.required_courses = ["CSC10300","CSC11300",
+"CSC21700","CSC22000",
+"CSC22100", "CSC30100",
+"CSC33200","CSC33500"]
 
 exports.passTabooWordsCheck = passTabooWordsCheck;
 exports.gradeAnalyze = gradeAnalyze;
@@ -44,10 +48,10 @@ function passTabooWordsCheck(text){
 async function gradeAnalyze(Class, User, Complaint, year, semester){
     console.log("Analyzing grade")
     //1. after grading, if instructor did not grade all students, he will get warn
-    //query.didNotGradeAllStudents(Class, User, year, semester);
+    query.didNotGradeAllStudents(Class, User, year, semester);
     
     //2. if class GPA is > 3.5 or <2.5, send message to admin, admin can decide warn or not
-    //query.analyzeClassGPA(Class, User, Complaint,year, semester);
+    query.analyzeClassGPA(Class, User, Complaint,year, semester);
 
     /*3. student GPA less than 2 will be terminate, 
       between 2 and 2.25 will receive a warning demanding interview
@@ -56,7 +60,7 @@ async function gradeAnalyze(Class, User, Complaint, year, semester){
     
     
     //4. student fail same course twice will be terminated
-    //query.findStudentFailedTwice(Class, User, Complaint, year, semester);
+    query.findStudentFailedTwice(Class, User, Complaint, year, semester);
 }
  
 

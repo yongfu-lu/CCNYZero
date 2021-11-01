@@ -55,7 +55,8 @@ exports.getUserSchema = function(){
         suspended:Boolean,
         warning:[],
         honor:[],
-        terminated:Boolean
+        terminated:Boolean,
+        masterDegreeObtained: Boolean
     });
     
 }
@@ -86,4 +87,14 @@ exports.getComplaintSchema = function(){
         decided: Boolean,
         isFromSystem:Boolean
     });
+}
+
+exports.getGraduationApplycationSchema = function(){
+    return new mongoose.Schema({
+        studentEmail: String,
+        studentName: String,
+        graduationYear:Number,
+        graduationSemester:String,
+        decided:Boolean
+    })
 }

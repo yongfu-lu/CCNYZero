@@ -7,12 +7,18 @@
     <title>My Academics</title>
 </head>
 <body>
+  
     <% userRole %>
     <h1>This is academics record page</h1>
     <a href="/"> Go Back To Home</a>
     <br>
     <%if (userRole == "instructor"){%>
         <a href="instructorMyClasses"> Go Back To My Class List</a>
+    <%}%>
+    <% if (userRole == "student") {%>
+        <br>
+        <a href="/applyGraduation">Apply Graduation</a>
+        <br>
     <%}%>
 
     <h3>Student:<%=studentName%> GPA: <%=GPA%> </h3>
@@ -25,6 +31,7 @@
             <th>Credit</th>
             <th>Grade</th>
         </tr>
+
         <%for(var i = 0; i< taken_classes.length; i++) { %>
             <tr>
                 <th><%=taken_classes[i].course_shortname%></th>
@@ -32,9 +39,19 @@
                 <th><%=taken_classes[i].semester%></th>
                 <th><%=taken_classes[i].credit%></th>
                 <th><%=taken_classes[i].grade%></th>
-
             </tr>
         <%} %>
+
+        <%for(var i = 0; i< taking_classes.length; i++) { %>
+            <tr>
+                <th><%=taking_classes[i].course_shortname%></th>
+                <th><%=taking_classes[i].year%></th>
+                <th><%=taking_classes[i].semester%></th>
+                <th><%=taking_classes[i].credit%></th>
+                <th>In Progress</th>
+            </tr>
+        <%} %>
+
     </table>
     
 </body>
