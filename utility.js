@@ -27,6 +27,7 @@ exports.calculateClassGPA = calculateClassGPA;
 exports.ifFailedTwice = ifFailedTwice;
 exports.calculateGPAFromTakenClasses = calculateGPAFromTakenClasses;
 exports.classAnalyze = classAnalyze;
+exports.editTabooWord =editTabooWord;
 
 function passTabooWordsCheck(text){
     var count = 0;
@@ -34,15 +35,15 @@ function passTabooWordsCheck(text){
         var re = new RegExp(tabooWords[i],'g');
         count += (text.match(re) || []).length;
     }
-    if(count > 2){
-        return false;
-    }else{
-        for(var i = 0; i<tabooWords.length; i++){
-            var re = new RegExp(tabooWords[i],'g');
-            text = text.replace(re, '*');
-        }
-        return text;
+    return count;
+}
+
+function editTabooWord(text){
+    for(var i = 0; i<tabooWords.length; i++){
+        var re = new RegExp(tabooWords[i],'g');
+        text = text.replace(re, '*');
     }
+    return text;  
 }
 
 /** after grade period, analyze grade **/
@@ -109,5 +110,5 @@ function classAnalyze(Class, User, Complaint, year, semester){
     //query.warnStudentsWithTooLessCourses(Class, User, Complaint, year, semester);
 
     //2. course less than 5 students will be canceled.
-    query.cancelClassesWithTooLessStudents(Class, User,Complaint,year, semester);
+    //query.cancelClassesWithTooLessStudents(Class, User,Complaint,year, semester);
 }

@@ -276,6 +276,7 @@ async function getEnrolledClassObjects(Class, ids){
 
 
 function giveWarning(User,username, warning){
+    
     User.updateOne({username:username},{$push:{warning:warning}}, function(err){
       if(err) console.log(err);
       console.log("You are given one warning");
@@ -652,9 +653,7 @@ function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester
                 giveWarning(User, foundInstructor.username,"Your class has been cancel because there were less than 5 students enrolled")
               }
             }
-          })
-
-          
+          }) 
         }
       }
     })

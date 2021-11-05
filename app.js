@@ -56,7 +56,7 @@ var currentSemester = "Fall";
 var today = time.today;
 
 /**************** do testing code here **********/
- var today = time.courseRegistrationBegin
+ var today = time.classRunningBegin
 // Class.update({},{canceled:false}, function(err){ 
 //     if (err) console.log(err);
 // })
@@ -474,13 +474,18 @@ app.post("/dropClass",function(req,res){
 
 app.post("/rateClass",function(req,res){
     var review = req.body.review;
-    if(!utility.passTabooWordsCheck(review)){
-        query,giveWarning(User,req.user.username,"Taboo Warning");
-        query,giveWarning(User,req.user.username,"Taboo Warning");
+    var count = utility.passTabooWordsCheck(review);
+    console.log(count)
+    if(count>2){
+        query.giveWarning(User, req.user.username, "Taboo Warning");
+        query.giveWarning(User, req.user.username, "Taboo Warning");
         res.redirect("/studentMyClasses");
         return;
     }else{
-        review = utility.passTabooWordsCheck(review);
+        if(count > 0){
+            query.giveWarning(User, req.user.username, "Taboo Warning");
+        }
+        review = utility.editTabooWord(review);
     }
     var newReview = {
         writer_name:req.user.fullname,
