@@ -414,7 +414,7 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
         year:year,
         semester:semester,
         credit:parseInt(classCredit),
-        grade:grade}}},async function(err){
+        grade:grade}}, $pull:{enrolled_class:classID}},async function(err){
         if(err) console.log(err)
         else{
           Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
@@ -425,7 +425,7 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
     }
     else{
       User.findOneAndUpdate({username: studentEmail,"taken_class.course_shortname":className,"taken_class.year": year, "taken_class.semester":semester},
-      {$set:{"taken_class.$.grade":grade} }
+      {$set:{"taken_class.$.grade":grade}, $pull:{enrolled_class:classID} }
       ,async function(err){
       if(err) console.log(err)
       else{
@@ -442,7 +442,6 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
 
 function updateGPA(User, studentEmail){
   User.findOne({username:studentEmail}, function(err, foundUser){
-    console.log(foundUser);
     var new_GPA = utility.calculateGPAFromTakenClasses(foundUser.taken_class);
     console.log(new_GPA);
     User.findOneAndUpdate({username:studentEmail},{GPA:new_GPA}, function(err){

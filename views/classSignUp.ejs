@@ -12,10 +12,11 @@
 
     <a href="/studentHome">Go Back To Student Home Page</a>
 
-    <% if(period != "courseRegistration"){ %>
+    <% if(period != "courseRegistration" && (!givenSpecialPeriod || !isSpecialPeriod) ){ %>
         <h3>It is not class sign up period right now, you cannot sign up class</h3>
     <%}%>
-
+       <%=isSpecialPeriod%>
+       <%=givenSpecialPeriod%>
     <h3>Classes List: </h3>
     <% for(var i = 0; i<classes.length; i++){ %>
         <form action="/classSignUp" method="post">
@@ -24,7 +25,7 @@
             <p><%= classes[i].course_shortname%><%= classes[i].section%>   -- <%= classes[i].course_fullname %> -- <%= classes[i].instructor%></p>
             <p><%= classes[i].schedule[0].day%> <%= classes[i].schedule[0].startTime%>-<%= classes[i].schedule[0].endTime%> </p>
             <p><%= classes[i].schedule[1].day%> <%= classes[i].schedule[1].startTime%>-<%= classes[i].schedule[1].endTime%> </p>
-            <% if(period == "courseRegistration"){ %>
+            <% if(period == "courseRegistration" || (isSpecialPeriod && givenSpecialPeriod)){ %>
                 <button type="submit"> Sign Up </button>
             <%}%>
             <hr>

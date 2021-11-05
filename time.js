@@ -16,7 +16,7 @@ const classRunningBegin = new Date("2021-08-21T00:00:00")
 const classRunningEnd = new Date("2021-12-20T00:00:00")
 const gradingPeroidBegin = new Date("2021-12-21T00:00:00")
 const gradingPeroidEnd = new Date("2021-12-25T00:00:00")
-
+const specialPeriodEnd = new Date("2021-08-25T00:00:00")
 
 exports.classSetUpBegin = classSetUpBegin;
 exports.classSetUpEnd = classSetUpEnd;
@@ -26,6 +26,8 @@ exports.classRunningBegin = classRunningBegin;
 exports.classRunningEnd = classRunningEnd;
 exports.gradingPeroidBegin = gradingPeroidBegin;
 exports.gradingPeroidEnd = gradingPeroidEnd;
+exports.specialPeriodEnd = specialPeriodEnd;
+
 
 exports.today = new Date();
 exports.setToday = setToday;

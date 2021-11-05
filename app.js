@@ -56,7 +56,8 @@ var currentSemester = "Fall";
 var today = time.today;
 
 /**************** do testing code here **********/
- var today = time.classRunningBegin
+ //var today = time.classRunningBegin
+ var today = new Date("2021-08-22T00:00:00")
 // Class.update({},{canceled:false}, function(err){ 
 //     if (err) console.log(err);
 // })
@@ -355,7 +356,15 @@ app.get("/classSignUp", async function(req,res){
         res.redirect("/logout");
     }else{
         const classes = await query.getAllCurrentClasses(Class);
-        res.render("classSignUp",{period:time.getPeriod(today),classes:classes});
+        var isSpecialPeriod =false;
+        if(time.getPeriod(today) == "classRunning" && today < time.specialPeriodEnd){
+            isSpecialPeriod = true;
+        }
+        console.log(time.getPeriod(today)=="classRunning")
+        console.log(today < time.specialPeriodEnd)
+        console.log(isSpecialPeriod)
+        res.render("classSignUp",{period:time.getPeriod(today),isSpecialPeriod:isSpecialPeriod,
+            givenSpecialPeriod:req.user.specialPeriod,classes:classes});
     }
 })
 
@@ -643,12 +652,12 @@ app.post("/instructorGrading", async function(req, res){
 
 /*****   This methods will be called only once after grading period end             *****/
 /*****   It will send warning or honor to students or instructors        *****/
-var gradeAnalyzed = false;
-if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
-    //year, semester, Class, User,
-    utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
-    gradeAnalyzed = true;
-}
+// var gradeAnalyzed = false;
+// if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
+//     //year, semester, Class, User,
+//     utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+//     gradeAnalyzed = true;
+// }
 
 
 /****************  This method will be called only once when class running period starts  *************/
