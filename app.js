@@ -360,11 +360,8 @@ app.get("/classSignUp", async function(req,res){
         if(time.getPeriod(today) == "classRunning" && today < time.specialPeriodEnd){
             isSpecialPeriod = true;
         }
-        console.log(time.getPeriod(today)=="classRunning")
-        console.log(today < time.specialPeriodEnd)
-        console.log(isSpecialPeriod)
         res.render("classSignUp",{period:time.getPeriod(today),isSpecialPeriod:isSpecialPeriod,
-            givenSpecialPeriod:req.user.specialPeriod,classes:classes});
+            student:req.user,classes:classes});
     }
 })
 
