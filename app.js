@@ -99,7 +99,8 @@ app.get("/studentHome",async function(req,res){
         topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("studentHome",{ myname:req.user.fullname,topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
+        res.render("studentHome",{ myname:req.user.fullname,graduated:req.user.masterDegreeObtained,
+            topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
     }
 })
 
