@@ -49,9 +49,40 @@
                     </form>
                 <%} %>
             </table>
+            <%if (teachingClasses[i].wait_list.length > 0){%>
+                <h3>Wait list:</h3>
+                <table>
+                    <tr>
+                        <th>Student_Name </th>
+                        <th>Student_Email</th>
+                        <th>Actions</th>
+                    </tr>
+                    <%for(var j = 0; j<teachingClasses[i].wait_list.length; j++){%>
+                        <form action="/instructorMyClasses", method="post">
+                            <input type="hidden" name="studentName" value= "<%= teachingClasses[i].wait_list[j].fullname %>" >
+                            <input type="hidden" name="studentEmail" value= "<%= teachingClasses[i].wait_list[j].email %>" >
+                            <input type="hidden" name="classID" value= "<%= teachingClasses[i]._id %>" >
+                            <input type="hidden" name="className" value= "<%= teachingClasses[i].course_shortname %>" >
+                            <input type="hidden" name="classCredit" value= "<%= teachingClasses[i].credit %>" >
+                            <input type="hidden" name="classYear" value= "<%= teachingClasses[i].year %>" >
+                            <input type="hidden" name="classSemester" value= "<%= teachingClasses[i].semester %>" >
+    
+                            <tr>
+                                <th><%= teachingClasses[i].wait_list[j].fullname %></th>
+                                <th><%= teachingClasses[i].wait_list[j].email %></th>
+                                <th>
+                                    <button type="submit" name="action" value="record"> Check Record </button>
+                                    <button type="submit" name="action" value="approve"> Approve </button>
+                                    <button type="submit" name="action" value="reject"> Reject </button>
+                                <th>
+                            </tr>
+                        </form>
+                    <%}%>
+                </table>
+            <%}%>
 
         </div>
         <hr>
-    <%} %>
+    <%}%>
 </body>
 </html>

@@ -25,7 +25,8 @@ exports.passTabooWordsCheck = passTabooWordsCheck;
 exports.gradeAnalyze = gradeAnalyze;
 exports.calculateClassGPA = calculateClassGPA;
 exports.ifFailedTwice = ifFailedTwice;
-exports.calculateGPAFromTakenClasses = calculateGPAFromTakenClasses
+exports.calculateGPAFromTakenClasses = calculateGPAFromTakenClasses;
+exports.classAnalyze = classAnalyze;
 
 function passTabooWordsCheck(text){
     var count = 0;
@@ -44,7 +45,7 @@ function passTabooWordsCheck(text){
     }
 }
 
-
+/** after grade period, analyze grade **/
 async function gradeAnalyze(Class, User, Complaint, year, semester){
     console.log("Analyzing grade")
     //1. after grading, if instructor did not grade all students, he will get warn
@@ -98,4 +99,15 @@ function calculateGPAFromTakenClasses(classes){
         totalPoint += classes[i].credit * gradePoint[classes[i].grade]
     }
     return (totalPoint / totalCredit).toFixed(3);
+}
+
+
+/** When class running period starts, analyze classes **/
+function classAnalyze(Class, User, Complaint, year, semester){
+    console.log("Inside classAnalyze")
+    //1. students with less than 2 coourses will be warned
+    //query.warnStudentsWithTooLessCourses(Class, User, Complaint, year, semester);
+
+    //2. course less than 5 students will be canceled.
+    query.cancelClassesWithTooLessStudents(Class, User,Complaint,year, semester);
 }

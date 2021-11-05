@@ -41,16 +41,19 @@
                 <th><%=taken_classes[i].grade%></th>
             </tr>
         <%} %>
+        
+        <%if(userRole == "student"){%>
+            <%for(var i = 0; i< taking_classes.length; i++) { %>
+                <tr>
+                    <th><%=taking_classes[i].course_shortname%></th>
+                    <th><%=taking_classes[i].year%></th>
+                    <th><%=taking_classes[i].semester%></th>
+                    <th><%=taking_classes[i].credit%></th>
+                    <th>In Progress</th>
+                </tr>
+            <%} %>
+        <%}%>
 
-        <%for(var i = 0; i< taking_classes.length; i++) { %>
-            <tr>
-                <th><%=taking_classes[i].course_shortname%></th>
-                <th><%=taking_classes[i].year%></th>
-                <th><%=taking_classes[i].semester%></th>
-                <th><%=taking_classes[i].credit%></th>
-                <th>In Progress</th>
-            </tr>
-        <%} %>
 
     </table>
     

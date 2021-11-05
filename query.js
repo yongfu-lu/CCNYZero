@@ -40,6 +40,8 @@ exports.getGraduationApplications  = getGraduationApplications;
 exports.getStudentObjectsByEmails = getStudentObjectsByEmails;
 exports.approveGraduation=approveGraduation;
 exports.denyGraduation =denyGraduation;
+exports.warnStudentsWithTooLessCourses =warnStudentsWithTooLessCourses;
+exports.cancelClassesWithTooLessStudents =cancelClassesWithTooLessStudents;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -176,7 +178,7 @@ async function getAvailableInstructors(User) {
 
 async function getAllCurrentClasses(Class) {
   var classes;
-  Class.find({year:2021, semester:"Fall"}).exec(async function (err, foundClasses) {
+  Class.find({year:2021, semester:"Fall", canceled:false}).exec(async function (err, foundClasses) {
     if (err) {
       console.log(err);
     } else {
@@ -239,22 +241,25 @@ async function getEnrolledSchedules(Class, ids){
 }
 
 async function addStudentToClass(Class, classID, username, fullname){
-    Class.updateOne({_id:classID}, {$push:{students:{email: username, fullname:fullname, grade:""}}}, function(err){
+    Class.updateOne({_id:classID}, {$push:{students:{email: username, fullname:fullname, grade:""}}, 
+    $pull:{wait_list:{email:username}}
+  }, function(err){
       if(err){
         console.log(err);
       }
     })
 }
 
-async function addStudentToWaitList(Class,classID, username){
-  console.log("in query");
-  console.log(username);
-  console.log(classID);
-  Class.updateOne({_id:classID}, {$push: {wait_list:username}},function(err){
-    if(err){
-      console.log(err);
-    }
+async function addStudentToWaitList(User,Class,classID, username){
+  User.findOne({username:username},function(err, foundUser){
+    if(err) console.log(err);
+    Class.updateOne({_id:classID}, {$push: {wait_list:{"fullname":foundUser.fullname,"email":username}}},function(err){
+      if(err){
+        console.log(err);
+      }
+    })
   })
+
 }
 
 
@@ -605,4 +610,52 @@ async function denyGraduation(GraduationApplication, User, applicationID, studen
       giveWarning(User,studentEmail,"Reckless graduation application. ")
     }
   })
+}
+
+
+function warnStudentsWithTooLessCourses(Class, User, Complaint,year, semester){
+  console.log("inside warnStudents with too less courses method")
+  User.find({role:"student"}, function(err, foundStudents){
+    if(err) console.log(err);
+    else{
+      for (var i = 0; i < foundStudents.length; i++){
+        if(foundStudents[i].enrolled_class.length == 1){
+          console.log()
+          giveWarning(User,foundStudents[i].username,"You number of classes you enrolled is too less.")
+        }
+      }
+    }
+  })
+}
+
+function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester){
+    Class.find({year:year, semester:semester}, function(err, foundClasses){
+      if(err) console.log(err);
+
+      for(var i = 0; i < foundClasses.length; i++){
+        if(foundClasses[i].students.length < 5){
+          Class.findOneAndUpdate({_id:foundClasses[i].id}, {canceled:true, students:[]}, function(err){})
+
+          for(var j = 0; j<foundClasses[i].students.length; j++){
+            User.updateOne({username:foundClasses[i].students[j].email},
+              {specialPeriod:true, $pull:{enrolled_class:foundClasses[i]._id.valueOf()}}, function(err){})
+          }
+
+          User.findOneAndUpdate({fullname:foundClasses[i].instructor}, {$pull:{assigned_class:foundClasses[i]._id.valueOf()}}, function(err){})
+
+          User.findOne({fullname:foundClasses[i].instructor}, function(err, foundInstructor){
+            if(err) console.log(err)
+            else{
+              if(foundInstructor.assigned_class.length == 0){
+                  suspendUser(User, foundInstructor.username)
+              }else{
+                giveWarning(User, foundInstructor.username,"Your class has been cancel because there were less than 5 students enrolled")
+              }
+            }
+          })
+
+          
+        }
+      }
+    })
 }

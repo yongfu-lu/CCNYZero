@@ -56,10 +56,12 @@ var currentSemester = "Fall";
 var today = time.today;
 
 /**************** do testing code here **********/
-//var today = new Date("2021-10-30T00:00:00")
-User.update({role:"student"},{masterDegreeObtained:false }, function(err){
+ var today = time.courseRegistrationBegin
+// Class.update({},{canceled:false}, function(err){ 
+//     if (err) console.log(err);
+// })
 
-})
+// User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -421,7 +423,7 @@ app.post("/classSignUp", async function(req,res){
     if(time.conflict(schedules, newClassSchedule)){
         res.render("classSignUpResult", {result:"Fail", detail:"Schedule Conflict"});
     }else if (studentsAlreadyInClass >= classSize){
-        query.addStudentToWaitList(Class,req.body.classID, req.user.username);
+        query.addStudentToWaitList(User,Class,req.body.classID, req.user.username);
         res.render("classSignUpResult", {result:"This class is full", detail:"You will be put in wait list."})
     }else{
         User.updateOne({username:req.user.username}, {$push:{enrolled_class:req.body.classID}}, function(err, user){
@@ -598,13 +600,28 @@ app.post("/instructorMyClasses", async function(req, res){
         else if(req.body.action == "record"){
             res.render("myAcademics",{userRole:"instructor",studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
         }
-        else{
+        else if (req.body.action == "grading"){
             res.render("instructorGrading",{studentName:foundStudent.fullname,
                 studentEmail:studentEmail,
                 className:req.body.className,
                 classID:req.body.classID,
                 classCredit:req.body.classCredit
             });
+        }else if (req.body.action == "approve"){
+            //********************** add student to class and remove from wait list *****/
+            User.updateOne({username:req.body.studentEmail}, {$push:{enrolled_class:req.body.classID}}, function(err, user){
+                if(err) console.log(err);
+                else{
+                    console.log("Add enrolled class to student");
+                    query.addStudentToClass(Class,req.body.classID, req.body.studentEmail, req.body.studentName);
+                    res.redirect("/instructorMyClasses");
+                }
+            });
+        }else if (req.body.action == "reject"){
+            // remove student from wait list
+            Class.updateOne({_id:req.body.classID},{$pull:{wait_list:{email:req.body.studentEmail}}},function(err){
+                res.redirect("/instructorMyClasses");
+            })
         }
     })
 })
@@ -619,7 +636,7 @@ app.post("/instructorGrading", async function(req, res){
 })
 
 
-/*****   These methods will be call after grading period end             *****/
+/*****   This methods will be called only once after grading period end             *****/
 /*****   It will send warning or honor to students or instructors        *****/
 var gradeAnalyzed = false;
 if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
@@ -628,6 +645,14 @@ if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
     gradeAnalyzed = true;
 }
 
+
+/****************  This method will be called only once when class running period starts  *************/
+/***It takes care of cancel classes, give student extra peroid to sign up, warning student etc. *******/
+// var classAnalyzed = false;
+// if(time.getPeriod(today) == "classRunning"){
+//     utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+//     gradeAnalyzed = true;
+// }
 
 
 /** server port **/

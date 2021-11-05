@@ -18,7 +18,8 @@ exports.getClassSchema = function(){
         rating: Number,
         prerequisites: [],      // [array of course_name] ??
         review:[],              //class review _id ??
-        wait_list:[]
+        wait_list:[],
+        canceled:Boolean
     });
 }
 
@@ -56,7 +57,8 @@ exports.getUserSchema = function(){
         warning:[],
         honor:[],
         terminated:Boolean,
-        masterDegreeObtained: Boolean
+        masterDegreeObtained: Boolean,
+        specialPeriod:Boolean,
     });
     
 }
