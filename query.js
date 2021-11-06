@@ -13,7 +13,7 @@ exports.getWorstClasses = getWorstClasses;
 exports.getStudentApplications = getStudentApplications;
 exports.getInstructorApplications = getInstructorApplications;
 exports.changePassword = changePassword;
-exports.getTotalStudents = getTotalStudents;
+exports.getAllStudents = getAllStudents;
 exports.getAvailableInstructors = getAvailableInstructors;
 exports.getAllCurrentClasses = getAllCurrentClasses;
 exports.getClassDetail = getClassDetail;
@@ -147,17 +147,18 @@ function changePassword(User, username, newpassword) {
 }
 
 //get total students in program
-async function getTotalStudents(User) {
-  var total;
+async function getAllStudents(User) {
+  var students;
   User.find({ role: "student" }).exec(async function (err, foundStudents) {
     if (err) {
       console.log(err);
-    } else {
-      total = foundStudents.length;
+    }
+    else{
+      students = foundStudents;
     }
   });
   await sleep();
-  return total;
+  return students;
 }
 
 async function getAvailableInstructors(User) {

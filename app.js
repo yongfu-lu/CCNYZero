@@ -86,7 +86,7 @@ app.get("/login", function(req,res){
 
 app.get("/logout", function(req, res){
     req.logout();
-    res.redirect("/");
+    res.redirect("/login");
 })
 
 //if non-student user try to access student homepage by typing url in the broswer, user will be directed to visitor homepage 
@@ -145,12 +145,15 @@ app.post("/login", function(req,res){
         username: req.body.username,
         password: req.body.password
     });
-
-    req.login(user, function(err){
+    req.login(user,function(err){
         if(err){
+          console.log(err);
+        }
+        else {
+          passport.authenticate("local", { failureRedirect: '/logout' })(req,res, function(err){
+            if(err)
             console.log(err);
-        }else{
-            passport.authenticate("local")(req, res, function(){
+            else{
                 User.findOne({username:user.username}, function(err, foundUser){
                     if(err){
                         console.log(err)
@@ -161,10 +164,13 @@ app.post("/login", function(req,res){
                             res.redirect("/" + foundUser.role +"home");
                         }
                     }
-                })
-            })
-        }
-    })
+                })         
+            }
+          }
+        );
+      }
+     
+      });
 })
 
 
@@ -279,11 +285,11 @@ app.post("/sendWarning", async function(req,res){
 app.get("/application", async function(req,res){
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
-    var totalStudents = await query.getTotalStudents(User);
+    var allStudents = await query.getAllStudents(User);
     res.render("application", {studentApplications:studentApplications, 
         instructorApplications:instructorApplications,
         programQuota:programQuota,
-        totalStudents:totalStudents});
+        totalStudents:allStudents.length});
 })
 
     //when admin make dicision about applications
@@ -329,6 +335,14 @@ app.post("/graduationApplication", async function(req, res){
     }else{}
 })
 
+app.get("/allStudents", async function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar')
+    res.redirect("/logout");
+else{
+    const allStudents = await query.getAllStudents(User);
+    res.render("allStudents", {students: allStudents});
+}
+})
 
 /**************************** Time related methods **********/
 app.post("/setToday", function(req,res){
