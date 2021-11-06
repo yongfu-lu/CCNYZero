@@ -59,6 +59,7 @@ exports.getUserSchema = function(){
         terminated:Boolean,
         masterDegreeObtained: Boolean,
         specialPeriod:Boolean,
+        balanceOwe:Number,
     });
     
 }

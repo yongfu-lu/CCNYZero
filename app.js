@@ -58,9 +58,7 @@ var today = time.today;
 /**************** do testing code here **********/
  //var today = time.classRunningBegin
  var today = new Date("2021-08-22T00:00:00")
-// Class.update({},{canceled:false}, function(err){ 
-//     if (err) console.log(err);
-// })
+
 
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
 /*********** All route from here ********/
@@ -516,7 +514,7 @@ app.post("/rateClass",function(req,res){
     
 })
 
-/******************************** student pages ***********************/
+/******************************** student's pages ***********************/
 app.get("/myAcademics", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
@@ -538,6 +536,14 @@ app.get("/studentMyClasses",async function(req,res){
         const enrolledClass = await query.getEnrolledClassObjects(Class, classIds);
         const period = time.getPeriod(today);
         res.render("studentMyClasses", {enrolledClasses:enrolledClass, period:period});
+    }
+})
+
+app.get("/balance", function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'student'){
+        res.redirect("/logout");
+    }else{
+        res.render("balance",{balance:req.user.balanceOwe});
     }
 })
 
@@ -595,6 +601,13 @@ app.post("/applyGraduation", function(req,res){
     res.redirect("/myAcademics");
 })
 
+
+app.post("/balance", function(req,res){
+    User.findOneAndUpdate({username:req.user.username},{balanceOwe:0}, function(err){
+        if(err) console.log(err)
+        else res.redirect("/balance");
+    })
+})
 /**********************  instructor's pages *********/
 app.get("/instructorMyClasses", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'instructor'){

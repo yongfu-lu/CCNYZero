@@ -299,7 +299,7 @@ function checkWarningNumber(User,username){
 }
 
 function suspendUser(User, username){
-  User.updateOne({username:username},{suspended:true}, function(err){
+  User.updateOne({username:username},{suspended:true, balanceOwe:500}, function(err){
     if(err) console.log(err);
     console.log("You are suspended");
   }) 
