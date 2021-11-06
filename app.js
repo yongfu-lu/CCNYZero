@@ -80,13 +80,18 @@ app.get("/login", function(req,res){
     if(req.user){
         res.redirect("/" + req.user.role +"home");
     } else{
-        res.render("login");
+        res.render("login", {wrongPassword:false});
     }
 })
 
 app.get("/logout", function(req, res){
     req.logout();
-    res.redirect("/login");
+    res.redirect("/login")
+})
+
+app.get("/wrongPassword", function(req,res){
+    req.logout();
+    res.render("login", {wrongPassword:true})
 })
 
 //if non-student user try to access student homepage by typing url in the broswer, user will be directed to visitor homepage 
@@ -150,7 +155,7 @@ app.post("/login", function(req,res){
           console.log(err);
         }
         else {
-          passport.authenticate("local", { failureRedirect: '/logout' })(req,res, function(err){
+          passport.authenticate("local", { failureRedirect: '/wrongPassword' })(req,res, function(err){
             if(err)
             console.log(err);
             else{

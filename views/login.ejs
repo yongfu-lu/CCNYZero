@@ -14,8 +14,10 @@
         <input type="password" name="password" placeholder="password">
         <button type="submit" > log in</button>
     </form>
-
-   
+    <%if(wrongPassword){%>
+        <p>Your password and username is not match. Please try again.</p>
+    <%}%>
+   <br>
     <a href="/">Go back to CCNY Home </a>
     
 </body>
