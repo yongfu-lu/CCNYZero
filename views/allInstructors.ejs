@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Instructors</title>
+</head>
+<body>
+    <a href="/"> Go Back </a>
+    <h3>All Instructor List: </h3>
+    <table>
+        <tr>
+            <th>CCNY ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Assigned Classes</th>
+            <th>warnings</th>
+            <th>Suspended</th>
+            <th>Terminated</th>
+        </tr>
+        
+        <%for(var i = 0; i<instructors.length; i++){%>
+            <tr>
+                <th> <%=instructors[i].CCNYID%> </th>
+                <th><%=instructors[i].fullname%></th>
+                <th><%=instructors[i].username%></th>
+                <th>show later</th>
+                <th>show later</th>
+                <th><%=instructors[i].suspended%></th>
+                <th><%=instructors[i].terminated%></th>   
+            </tr>
+
+        <%}%>
+        
+    </table>
+</body>
+</html>

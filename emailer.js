@@ -47,7 +47,7 @@ exports.sendRejectEmail = function(email, name){
 
 
 exports.sendAcceptEmail = function(email, name, gpa, User){
-    var newStudentID = Math.floor(Math.random()*1000).toString();
+    var newStudentID = Math.floor(Math.random()*10000).toString();
     var newStudentEmail = name+newStudentID+"@ccny";
     var password = "123";
 
@@ -67,6 +67,7 @@ exports.sendAcceptEmail = function(email, name, gpa, User){
     })
 
     User.register({
+        CCNYID:newStudentID,
         username:newStudentEmail,
         fullname:name,
         role:"student",
@@ -76,6 +77,12 @@ exports.sendAcceptEmail = function(email, name, gpa, User){
         takan_class:[],
         enrolled_class:[],
         firstLogin:true,
+        wrote_review :[],
+        terminated : false,
+        honor : [],
+        masterDegreeObtained : false,
+        specialPeriod : false,
+        balanceOwe:0,
         }, password, function(err,user){
             if(err){
                 console.log(err);

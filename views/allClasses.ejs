@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Classes</title>
+</head>
+<body>
+    <a href="/"> Go Back</a>
+    <br>
+    All Classes List:
+    <table>
+        <tr>
+            <th>Department</th>
+            <th>Course Name</th>
+            <th>Course Number</th>
+            <th>Credit</th>
+            <th>Section</th>
+            <th>Year</th>
+            <th>Semester</th>
+            <th>Schedule</th>
+            <th>Instructor</th>
+            <th>Students</th>
+            <th>Wait List</th>
+            <th>Rating</th>
+            <th>Reviews</th>
+            <th>Canceled</th>
+        </tr>
+        
+        <%for(var i = 0; i<classes.length; i++){%>
+            <tr>
+                <th> <%=classes[i].department%> </th>
+                <th><%=classes[i].course_fullname%></th>
+                <th><%=classes[i].course_shortname%></th>
+                <th><%=classes[i].credit%></th>
+                <th><%=classes[i].section%></th>
+                <th><%=classes[i].year%></th>
+                <th><%=classes[i].semester%></th>
+                <th>show later</th>
+                <th><%=classes[i].instructor%></th>
+                <th>show later</th>
+                <th>show later</th>
+                <th><%=classes[i].rating%></th>
+                <th>show later</th>
+                <th><%=classes[i].canceled%></th>  
+            </tr>
+
+        <%}%>
+        
+    </table>
+</body>
+</html>

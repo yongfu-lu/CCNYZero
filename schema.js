@@ -42,6 +42,7 @@ exports.getApplicantSchema = function(){
 exports.getUserSchema = function(){
     //console.log("This is user schema from schema.js")
     return new mongoose.Schema ({
+        CCNYID:String,
         email:String,
         password: String,
         fullname:String,

@@ -57,7 +57,7 @@ var today = time.today;
 
 /**************** do testing code here **********/
  //var today = time.classRunningBegin
- var today = new Date("2021-08-22T00:00:00")
+var today = new Date("2021-08-17T00:00:00")
 
 
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
@@ -343,10 +343,28 @@ app.post("/graduationApplication", async function(req, res){
 app.get("/allStudents", async function(req, res){
     if(!req.isAuthenticated() || req.user.role != 'registrar')
     res.redirect("/logout");
-else{
-    const allStudents = await query.getAllStudents(User);
-    res.render("allStudents", {students: allStudents});
-}
+    else{
+        const allStudents = await query.getAllStudents(User);
+        res.render("allStudents", {students: allStudents});
+    }
+})
+
+app.get("/allInstructors", async function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar')
+    res.redirect("/logout");
+    else{
+        const allInstructors = await query.getAllInstructors(User);
+        res.render("allInstructors", {instructors: allInstructors});
+    }
+})
+
+app.get("/allClasses", async function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar')
+    res.redirect("/logout");
+    else{
+        const allClasses = await query.getAllCurrentClasses(Class);
+        res.render("allClasses", {classes:allClasses});
+    }  
 })
 
 /**************************** Time related methods **********/

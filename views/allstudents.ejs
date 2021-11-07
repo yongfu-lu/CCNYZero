@@ -7,7 +7,40 @@
     <title>All Students </title>
 </head>
 <body>
-    All Student Page:
-    <%=students%>
+    <a href="/">Go Back</a>
+    <h3>All Students List:</h3>
+    <table>
+        <tr>
+            <th>CCNY ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>GPA</th>
+            <th>Taken Classes</th>
+            <th>Taking Classes</th>
+            <th>warnings</th>
+            <th>Honors</th>
+            <th>Balance due</th>
+            <th>Suspended</th>
+            <th>Terminated</th>
+        </tr>
+        
+        <%for(var i = 0; i<students.length; i++){%>
+            <tr>
+                <th> <%=students[i].CCNYID%> </th>
+                <th><%=students[i].fullname%></th>
+                <th><%=students[i].username%></th>
+                <th><%=students[i].GPA%></th>
+                <th>show later</th>
+                <th>show later</th>
+                <th>show later</th>
+                <th>show later</th>
+                <th><%=students[i].balanceOwe%></th>
+                <th><%=students[i].suspended%></th>
+                <th><%=students[i].terminated%></th>   
+            </tr>
+
+        <%}%>
+        
+    </table>
 </body>
 </html>

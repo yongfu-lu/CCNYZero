@@ -15,6 +15,7 @@ exports.getInstructorApplications = getInstructorApplications;
 exports.changePassword = changePassword;
 exports.getAllStudents = getAllStudents;
 exports.getAvailableInstructors = getAvailableInstructors;
+exports.getAllInstructors=getAllInstructors;
 exports.getAllCurrentClasses = getAllCurrentClasses;
 exports.getClassDetail = getClassDetail;
 exports.getEnrolledClasses = getEnrolledClasses;
@@ -176,6 +177,23 @@ async function getAvailableInstructors(User) {
   await sleep();
   return instructors;
 }
+
+async function getAllInstructors(User) {
+  var instructors;
+  User.find({ role: "instructor"}).exec(async function (
+    err,
+    foundInstructors
+  ) {
+    if (err) {
+      console.log(err);
+    } else {
+      instructors = foundInstructors;
+    }
+  });
+  await sleep();
+  return instructors;
+}
+
 
 async function getAllCurrentClasses(Class) {
   var classes;
