@@ -18,20 +18,88 @@
           </button>
     
           <div class="collapse navbar-collapse" id="navbarsExample04">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <ul class="navbar-nav ms-auto mb-2 mb-md-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Apply</a>
-                <ul class="dropdown-menu" aria-labelledby="dropdown04">
-                  <li><a class="dropdown-item" href="/applyStudent">Apply To Be A Student</a></li>
-                  <li><a class="dropdown-item" href="/applyInstructor">Apply To Be A Instructor</a></li>
-                </ul>
-              </li>
+
+              <%if(user!= null && user.role == "student"){%>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/classSignUp">Class Register</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/studentMyClasses">My Classes</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/myAcademics">My Academics</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/balance">Balance</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/fileComplaint">File Complaint</a>
+                </li>
+              <%}%>
+
+              <%if(user!= null && user.role == "instructor"){%>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/instructorMyClasses">My Classes</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/fileComplaint">File Complaint</a>
+                </li>
+              <%}%>
+
+              <%if(user!= null && user.role == "registrar"){%>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Applications</a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                    <li><a class="dropdown-item" href="/application">Admission Applications</a></li>
+                    <li><a class="dropdown-item" href="/graduationApplication">Graduation Applications</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/message">Message</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/classSetup">Class Setup</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Find</a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                    <li><a class="dropdown-item" href="/allStudents">Students</a></li>
+                    <li><a class="dropdown-item" href="/allInstructors">Instructors</a></li>
+                    <li><a class="dropdown-item" href="/allClasses">Classes</a></li>
+                  </ul>
+                </li>
+                <form action="/setToday", method="post">
+                  <input type="date" name="settoday"
+                  min="2021-01-01" max="2021-12-31">
+                  <button type="submit" class="btn-primary"> OK </button>
+              </form>
+              <%}%>
+
+              <%if(user == null){%>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Apply</a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                    <li><a class="dropdown-item" href="/applyStudent">Apply To Be A Student</a></li>
+                    <li><a class="dropdown-item" href="/applyInstructor">Apply To Be A Instructor</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/login">Login</a>
+                </li>
+              <%}%>
+              <%if(user != null){%>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Hello <%=user.fullname%></a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                    <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                  </ul>
+                </li>
+              <%}%>
             </ul>
           </div>
         </div>

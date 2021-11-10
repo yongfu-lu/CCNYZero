@@ -65,20 +65,16 @@ var today = new Date("2021-08-17T00:00:00")
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",async function(req, res){
-    if(req.user){
-        res.redirect("/" + req.user.role +"home");
-    }else{
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("visitorHome",{ topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
-    }
+        res.render("visitorHome",{ user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
 })
 
 //if user already login, redirect to their homepage, no need to log in again
 app.get("/login", function(req,res){
     if(req.user){
-        res.redirect("/" + req.user.role +"home");
+        res.redirect("/");
     } else{
         res.render("login", {wrongPassword:false});
     }
@@ -166,7 +162,7 @@ app.post("/login", function(req,res){
                         if(foundUser.firstLogin){
                             res.redirect("/changePassword");
                         }else{
-                            res.redirect("/" + foundUser.role +"home");
+                            res.redirect("/");
                         }
                     }
                 })         
@@ -372,7 +368,7 @@ app.post("/setToday", function(req,res){
     //"2021-12-21T00:00:00"
     const newToday = req.body.settoday + "T00:00:00";
     today = time.setToday(newToday);
-    res.redirect("/registrarHome");
+    res.redirect("/");
 })
 
 
