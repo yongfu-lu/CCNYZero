@@ -57,7 +57,7 @@ var today = time.today;
 
 /**************** do testing code here **********/
 //var today = time.classRunningBegin
-//var today = new Date("2021-08-17T00:00:00")
+var today = new Date("2021-08-17T00:00:00")
 
 
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
@@ -351,7 +351,7 @@ app.get("/classSignUp", async function(req,res){
             isSpecialPeriod = true;
         }
         res.render("classSignUp",{period:time.getPeriod(today),isSpecialPeriod:isSpecialPeriod,
-            student:req.user,classes:classes});
+            student:req.user,classes:classes,user:req.user});
     }
 })
 
@@ -404,30 +404,30 @@ app.post("/classSignUp", async function(req,res){
 
     //maximun enroll class is 4 classes
     if(req.user.enrolled_class.length >= 4){
-        res.render("classSignUpResult", {result:"Fail", detail:"You cannot sign up more than 4 classes"});
+        res.render("classSignUpResult", {user:req.user,result:"❗️Fail", detail:"You cannot sign up more than 4 classes"});
         return;
     }else{
         //if student already pass this class, cannot take it again
         for(var i = 0; i<takenClasses.length; i++){
             if(takenClasses[i].course_shortname == classShortName && takenClasses[i].grade != 'F' && takenClasses[i].grade != 'W'){
-                res.render("classSignUpResult", {result:"Fail", detail:"You already passed this class"});
+                res.render("classSignUpResult", {user:req.user,result:"❗️Fail", detail:"You already passed this class"});
                 return;
             }
         }
     }
     //if student schedule time conflit with new class, add class will fail
     if(time.conflict(schedules, newClassSchedule)){
-        res.render("classSignUpResult", {result:"Fail", detail:"Schedule Conflict"});
+        res.render("classSignUpResult", {user:req.user,result:"❗️Fail", detail:"Schedule Conflict"});
     }else if (studentsAlreadyInClass >= classSize){
         query.addStudentToWaitList(User,Class,req.body.classID, req.user.username);
-        res.render("classSignUpResult", {result:"This class is full", detail:"You will be put in wait list."})
+        res.render("classSignUpResult", {user:req.user,result:"❗️This class is full", detail:"You will be put in wait list."})
     }else{
         User.updateOne({username:req.user.username}, {$push:{enrolled_class:req.body.classID}}, function(err, user){
             if(err) console.log(err);
             else{
                 console.log("Add enrolled class to student");
                 query.addStudentToClass(Class,req.body.classID, req.user.username, req.user.fullname);
-                res.render("classSignUpResult", {result:"Success", detail:"You added new class to your schedule."});
+                res.render("classSignUpResult", {user:req.user,result:"✓Success", detail:"You added new class to your schedule."});
             }
         });
     }
