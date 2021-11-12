@@ -68,7 +68,7 @@ app.get("/",async function(req, res){
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("visitorHome",{ user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
+        res.render("home",{ user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
 })
 
 //if user already login, redirect to their homepage, no need to log in again
@@ -87,7 +87,7 @@ app.get("/logout", function(req, res){
 
 app.get("/wrongPassword", function(req,res){
     req.logout();
-    res.render("login", {wrongPassword:true})
+    res.render("login", {wrongPassword:true, user:req.user})
 })
 
 
