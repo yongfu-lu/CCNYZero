@@ -526,7 +526,7 @@ app.get("/studentMyClasses",async function(req,res){
         const classIds = req.user.enrolled_class;
         const enrolledClass = await query.getEnrolledClassObjects(Class, classIds);
         const period = time.getPeriod(today);
-        res.render("studentMyClasses", {enrolledClasses:enrolledClass, period:period});
+        res.render("studentMyClasses", {enrolledClasses:enrolledClass, period:period, user:req.user});
     }
 })
 
@@ -548,7 +548,31 @@ app.post("/studentMyClasses", async function(req,res){
     const year = req.body.year;
     const semester = req.body.semester;
     if(action == "drop"){
-        res.render("dropClass", {classID: classID, className:className, classSection: classSection, classCredit : classCredit, year:year, semester:semester});
+        User.findOneAndUpdate({username:req.user.username}, {$pull:{enrolled_class:req.body.classID}},function(err){
+            if(err)  console.log(err)
+            else{
+                if(time.getPeriod(today) == "classRunning"){
+                    //take off class from student
+                    User.findOneAndUpdate({username:req.user.username},
+                        {$push:{taken_class:{course_shortname:className, 
+                            year:year,
+                            semester:semester,
+                            credit:0,
+                            grade:"W"}}},function(err){
+                            if(err) console.log(err)
+                            query.ifDropAllClasses(User,req.user.username);
+                        })
+                }
+                //take off student from class
+                Class.findOneAndUpdate({_id:req.body.classID}, {$pull:{students:{email:req.user.username}}},function(err){
+                    if(err)console.log(err)
+                    else{
+                        res.redirect("/studentMyClasses");
+                    }
+                })
+            }
+        })
+
     }else{
         res.render("rateClass",{classID: classID, className:className,classSection:classSection, instructor:instructor});
     }

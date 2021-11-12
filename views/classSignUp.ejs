@@ -1,5 +1,5 @@
 <%- include("header")-%>
-    <div class="container" style="padding: 50px 0 50px 0;">
+    <div class="container" style="padding: 50px 0 50px 0; height:50vmax">
         <% if(period != "courseRegistration" && (!student.specialPeriod || !isSpecialPeriod) ){ %>
             <h3>❗️It is not class sign up period right now, you cannot sign up class</h3>
             <br>
@@ -40,22 +40,6 @@
             <%} %>
             </tbody>
           </table>
-
-        <!-- <% for(var i = 0; i<classes.length; i++){ %>
-            <%if(classes[i].canceled == false){%>
-                <form action="/classSignUp" method="post">
-                    <input type="hidden" name="classID" value= <%= classes[i].id %> >
-                    
-                    <p><%= classes[i].course_shortname%><%= classes[i].section%>   -- <%= classes[i].course_fullname %> -- <%= classes[i].instructor%></p>
-                    <p><%= classes[i].schedule[0].day%> <%= classes[i].schedule[0].startTime%>-<%= classes[i].schedule[0].endTime%> </p>
-                    <p><%= classes[i].schedule[1].day%> <%= classes[i].schedule[1].startTime%>-<%= classes[i].schedule[1].endTime%> </p>
-                    <% if( (period == "courseRegistration" || (isSpecialPeriod && student.specialPeriod)) && !student.suspended ){ %>
-                        <button type="submit"> Sign Up </button>
-                    <%}%>
-                    <hr>
-                </form>
-            <%}%>
-        <%} %> -->
     </div>
    
 
