@@ -56,8 +56,8 @@ var currentSemester = "Fall";
 var today = time.today;
 
 /**************** do testing code here **********/
- //var today = time.classRunningBegin
-var today = new Date("2021-08-17T00:00:00")
+//var today = time.classRunningBegin
+//var today = new Date("2021-08-17T00:00:00")
 
 
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
@@ -149,11 +149,11 @@ app.post("/changePassword", function(req, res){
 
 // ********************** apply-related methods *******************
 app.get("/applyStudent", function(req, res) {
-    res.render("applyStudent", {user:req.user});
+    res.render("apply", {user:req.user,role:"student"});
   })
   
 app.get("/applyInstructor", function(req, res) {
-    res.render("applyInstructor",{user:req.user});
+    res.render("apply",{user:req.user,role:"instructor"});
   })
   
   

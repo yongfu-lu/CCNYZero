@@ -1,0 +1,54 @@
+<%- include("header")-%>
+
+<div
+  class="container"
+  style="height: 80vh; text-align: center; width: 30%; display: table"
+>
+  <div style="display: table-cell; vertical-align: middle">
+    <%if(role == 'student'){%>
+      <h2>Apply to be a student:</h2>
+      <br />
+      <form class="" action="/applyStudent" method="post">
+        <div class="">
+          <input type="email" class="form-control" name="applicantEmail" value="" placeholder="Email" required />
+        </div>
+        <br />
+        <div class="">
+          <input type="text"  class="form-control" name="applicantName" value="" placeholder="Name" required />
+        </div>
+        <br />
+        <div class="">
+          <input type="text" class="form-control" name="applicantGPA" value="" placeholder="GPA" required />
+        </div>
+        <br />
+        <div class="">
+          <input type="text" class="form-control" name="major" value="" placeholder="Major" required />
+        </div>
+        <br />
+        <button class="btn btn-primary" type="submit" name="button">Apply</button>
+      </form>
+    <%}else{%>
+      <h2>Apply to be a Instructor: </h2><br>
+      <form class="" action="/applyInstructor" method="post">
+        <div class="">
+          <input type="email" name="applicantEmail" class="form-control" value="" placeholder="Email"  required>
+        </div>
+        <br>
+        <div class="">
+          <input type="text" name="applicantName"class="form-control"  value="" placeholder="Name" required>
+        </div>
+        <br>
+        <div class="">
+          <input type="text" name="department"class="form-control" placeholder="Department" value="">
+        </div>
+        <br>
+        <div class="">
+          <textarea name="selfStatement" class="form-control" cols="30" rows="4" placeholder="Self Statement"></textarea>
+        </div>
+        <br>
+        <button class="btn btn-primary" type="submit" name="button">Apply</button>
+      </form>
+    <%}%>
+  </div>
+</div>
+<%- include("footer")-%>
