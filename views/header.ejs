@@ -66,7 +66,7 @@
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Find</a>
-                  <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown04">
                     <li><a class="dropdown-item" href="/allStudents">Students</a></li>
                     <li><a class="dropdown-item" href="/allInstructors">Instructors</a></li>
                     <li><a class="dropdown-item" href="/allClasses">Classes</a></li>
@@ -75,14 +75,14 @@
                 <form action="/setToday", method="post">
                   <input type="date" name="settoday"
                   min="2021-01-01" max="2021-12-31">
-                  <button type="submit" class="btn-primary"> OK </button>
+                  <button type="submit" class="btn btn-primary"> OK </button>
               </form>
               <%}%>
 
               <%if(user == null){%>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Apply</a>
-                  <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown04">
                     <li><a class="dropdown-item" href="/applyStudent">Apply To Be A Student</a></li>
                     <li><a class="dropdown-item" href="/applyInstructor">Apply To Be A Instructor</a></li>
                   </ul>

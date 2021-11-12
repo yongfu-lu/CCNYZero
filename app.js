@@ -76,7 +76,7 @@ app.get("/login", function(req,res){
     if(req.user){
         res.redirect("/");
     } else{
-        res.render("login", {wrongPassword:false});
+        res.render("login", {wrongPassword:false, user:req.user});
     }
 })
 
@@ -88,48 +88,6 @@ app.get("/logout", function(req, res){
 app.get("/wrongPassword", function(req,res){
     req.logout();
     res.render("login", {wrongPassword:true})
-})
-
-//if non-student user try to access student homepage by typing url in the broswer, user will be directed to visitor homepage 
-app.get("/studentHome",async function(req,res){
-    if(!req.isAuthenticated() || req.user.role != 'student'){
-        res.redirect("/logout");
-    }else{
-        topStudents = await query.getTopStudents(User);
-         topClasses = await query.getTopClasses(Class);
-         worstClasses = await query.getWorstClasses(Class);
-        res.render("studentHome",{ myname:req.user.fullname,graduated:req.user.masterDegreeObtained,
-            topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
-    }
-})
-
-app.get("/registrarHome",async function(req,res){
-    if(!req.isAuthenticated() || req.user.role != 'registrar'){
-        res.redirect("/logout");
-    }else{
-        topStudents = await query.getTopStudents(User);
-         topClasses = await query.getTopClasses(Class);
-         worstClasses = await query.getWorstClasses(Class);
-        res.render("registrarHome",{ myname:req.user.fullname, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses,today:today});
-
-    }
-})
-
-
-app.get("/instructorHome",async function(req,res){
-    if(!req.isAuthenticated() || req.user.role !='instructor'){
-        res.redirect("/logout");
-    }else{
-        topStudents = await query.getTopStudents(User);
-         topClasses = await query.getTopClasses(Class);
-         worstClasses = await query.getWorstClasses(Class);
-        res.render("instructorHome",{ myname:req.user.fullname,
-            topStudents: topStudents, 
-            topClasses:topClasses, 
-            worstClasses:worstClasses,
-            today:today
-        });
-    }
 })
 
 
@@ -191,11 +149,11 @@ app.post("/changePassword", function(req, res){
 
 // ********************** apply-related methods *******************
 app.get("/applyStudent", function(req, res) {
-    res.render("applyStudent");
+    res.render("applyStudent", {user:req.user});
   })
   
 app.get("/applyInstructor", function(req, res) {
-    res.render("applyInstructor");
+    res.render("applyInstructor",{user:req.user});
   })
   
   
