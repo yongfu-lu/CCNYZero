@@ -1,36 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Balance</title>
-</head>
-<body>
-    <a href="/"> Go Back </a>
-    <h3>Account Balance</h3>
-    <%if(balance == 0){%>
-        <p>You don't have balance due.</p>
-    <%} else {%>
-        Your current balance due: 
-        <br>
-        <p>Suspended Fine: $<%=balance%> </p>
-    <%}%>
+<%-  include("header") -%>
 
-    <form action="/balance" method="post">
-        <label for="cardNumber">Card Number: </label>
-        <input type="text" name="cardNumber" required>
-        <label for="hoderName">Name on Card:</label>
-        <input type="text" name="holderName" required>
-        <br>
-        <label for="expirationDate">Expiration Date: </label>
-        <input type="date" name="expirationDate" required>
-        <label for="securityCode">Security Code:</label>
-        <input type="text" name="securityCode" required>
-        <br>
-        <button type="submit"> Pay Now </button>
-    </form>
+    <div class="container" style="text-align: center; height: 80vh;">
+        <br><br>
+        <h3>Account Balance</h3>
+        <%if(balance == 0){%>
+            <p>You don't have balance due.</p>
+        <%} else {%>
+            Your current balance due:
+            <br>
+            <p>Suspended Fine: $<%=balance%> </p>
+        <%}%>
+        <p>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              Pay Balance
+            </button>
+        </p>
+          <div class="collapse" id="collapseExample">
+            <div">
+            <form action="/balance" method="post">
+                <label for="cardNumber">Credit Card Number: </label>
+                <input type="text" name="cardNumber"  required>
+                <br><br>
+                <label for="hoderName">Name on Card:</label>
+                <input type="text" name="holderName" required>
+                <br><br>
+                <label for="expirationDate">Expiration Date: </label>
+                <input type="date" name="expirationDate" required>
+                <br><br>
+                <label for="securityCode">Security Code:</label>
+                <input type="text" name="securityCode" required>
+                <br> <br>
+                <button type="submit" class="btn btn-primary"> Pay Now </button>
+            </form>
+            </div>
+          </div>
 
-</body>
-</html>
+    </div>
+
+
+    <%-  include("footer") -%>

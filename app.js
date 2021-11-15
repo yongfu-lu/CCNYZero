@@ -57,10 +57,9 @@ var today = time.today;
 
 /**************** do testing code here **********/
 //var today = time.classRunningBegin
-var today = new Date("2021-08-17T00:00:00")
-
-
+var today = new Date("2021-12-22T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
+
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -95,7 +94,7 @@ app.get("/changePassword", function(req,res){
     if(!req.isAuthenticated()){
         res.redirect("/logout");
     }else{
-        res.render("changePassword");
+        res.render("changePassword",{user:req.user});
     }
 })
 
@@ -142,7 +141,7 @@ app.post("/changePassword", function(req, res){
         if(err){
             console.log(err);
         }else{
-            res.redirect("/" + role +"home");
+            res.redirect("/");
         }
     })
 })
@@ -198,7 +197,7 @@ app.get("/applyInstructor", function(req, res) {
 
 
 
-/**************************** admin related methods */
+/**************************** admin related methods ********************/
 
 app.get("/message", async function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'registrar')
@@ -433,41 +432,6 @@ app.post("/classSignUp", async function(req,res){
     }
 })
 
-
-app.post("/dropClass",function(req,res){
-    const confirm = req.body.confirm;
-    if(confirm == 'no'){
-        res.redirect("/studentMyClasses")
-    }else{
-        User.findOneAndUpdate({username:req.user.username}, {$pull:{enrolled_class:req.body.classID}},function(err){
-            if(err)  console.log(err)
-            else{
-                if(time.getPeriod(today) == "classRunning"){
-                    //take off class from student
-                    User.findOneAndUpdate({username:req.user.username},
-                        {$push:{taken_class:{course_shortname:req.body.className, 
-                            year:req.body.year,
-                            semester:req.body.semester,
-                            credit:0,
-                            grade:"W"}}},function(err){
-                            if(err) console.log(err)
-                            query.ifDropAllClasses(User,req.user.username);
-                        })
-                }
-                //take off student from class
-                Class.findOneAndUpdate({_id:req.body.classID}, {$pull:{students:{email:req.user.username}}},function(err){
-                    if(err)console.log(err)
-                    else{
-                        res.redirect("/studentMyClasses");
-                    }
-                })
-            }
-        })
-        
-    }
-})
-
-
 app.post("/rateClass",function(req,res){
     var review = req.body.review;
     var count = utility.passTabooWordsCheck(review);
@@ -512,9 +476,9 @@ app.get("/myAcademics", async function(req,res){
     }else{
         const enrolled_classes = req.user.enrolled_class;
         var taking_classes = await query.getEnrolledClassObjects(Class, enrolled_classes)
-        res.render("myAcademics",{userRole:"student",studentName:req.user.fullname,
+        res.render("myAcademics",{user:req.user,userRole:"student",studentName:req.user.fullname,
         taken_classes:req.user.taken_class, taking_classes:taking_classes,
-        GPA:req.user.GPA});
+        GPA:req.user.GPA, honors:req.user.honor, warnings:req.user.warning, studentID:req.user.CCNYID});
     }
 })
 
@@ -534,7 +498,7 @@ app.get("/balance", function(req, res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("balance",{balance:req.user.balanceOwe});
+        res.render("balance",{user:req.user,balance:req.user.balanceOwe});
     }
 })
 
@@ -583,7 +547,7 @@ app.get("/fileComplaint", function(req,res){
     if(!req.isAuthenticated()){
         res.redirect("/logout");
     }else{
-        res.render("fileComplaint", {userRole:req.user.role});
+        res.render("fileComplaint", {user:req.user,userRole:req.user.role});
     }
 })
 
@@ -600,7 +564,7 @@ app.get("/applyGraduation", function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("applyGraduation", {required_courses: required_courses})
+        res.render("applyGraduation", {user:req.user,required_courses: required_courses})
     }
 })
 
@@ -629,7 +593,7 @@ app.get("/instructorMyClasses", async function(req,res){
         res.redirect("/logout");
     }else{
         teachingClasses = await query.getTeachingClasses(Class,req.user.fullname,today.getFullYear(),currentSemester);
-        res.render("instructorMyClasses", {period: time.getPeriod(today), teachingClasses:teachingClasses})
+        res.render("instructorMyClasses", {user:req.user,period: time.getPeriod(today), teachingClasses:teachingClasses})
     }
 })
 
@@ -638,10 +602,10 @@ app.post("/instructorMyClasses", async function(req, res){
     User.findOne({username:studentEmail}, function(err, foundStudent){
         if(err) console.log(err);
         else if(req.body.action == "record"){
-            res.render("myAcademics",{userRole:"instructor",studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
+            res.render("myAcademics",{user:req.user,userRole:"instructor",studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
         }
         else if (req.body.action == "grading"){
-            res.render("instructorGrading",{studentName:foundStudent.fullname,
+            res.render("instructorGrading",{user:req.user,studentName:foundStudent.fullname,
                 studentEmail:studentEmail,
                 className:req.body.className,
                 classID:req.body.classID,
