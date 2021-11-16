@@ -286,7 +286,7 @@ app.post("/graduationApplication", async function(req, res){
     console.log(action);
     if(action == "record"){
         User.findOne({username:req.body.studentEmail},function(err, foundStudent){
-            res.render("graduationAcademicsRecord",{required_courses:required_courses,studentName:foundStudent.fullname ,taken_classes: foundStudent.taken_class});
+            res.render("graduationAcademicsRecord",{user:req.user,required_courses:required_courses,studentName:foundStudent.fullname ,taken_classes: foundStudent.taken_class});
         })
     }else if (action == "approve"){
         await query.approveGraduation(GraduationApplication, User,req.body.applicationID, req.body.studentEmail);

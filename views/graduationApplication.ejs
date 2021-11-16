@@ -3,20 +3,39 @@
     <div class="container" style="text-align: center; min-height: 80vh;">
         <br><br><br>
         <h3>Graduation Application List: </h3>
-        <% for(var i = 0; i<applications.length; i++){ %>
-            <div>
-                <form action="/graduationApplication" method="post">
-                    <input type="hidden" name="studentEmail" value ="<%=applications[i].studentEmail%>">
-                    <input type="hidden" name="applicationID" value ="<%=applications[i]._id%>">
-                    <p>Student Name: <%= applications[i].studentName%> <br>
-                     Graduation Time: <%=applications[i].graduationYear%> <%=applications[i].graduationSemester%></p>  
-                    <button type="submit" name="graduationApplicationButton" value="record"> Check Record</button>
-                    <button type="submit" name="graduationApplicationButton" value="approve"> Approve </button>
-                    <button type="submit" name="graduationApplicationButton" value="deny"> Deny And Send Warning</button>
-                    <hr>      
-                </form>
-            </div>
-        <%} %>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" style="width:25%">Student Name</th>
+                <th scope="col" style="width:25%">Graduation Time</th>
+                <th scope="col" style="width:25%">Academic Record</th>
+                <th scope="col" style="width:25%">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% for(var i = 0; i<applications.length; i++){ %>
+                    <tr>
+                        <td><%= applications[i].studentName%></td>
+                        <td><%=applications[i].graduationYear%> <%=applications[i].graduationSemester%></td>
+                        <td>
+                            <form action="/graduationApplication" method="post">
+                            <input type="hidden" name="studentEmail" value ="<%=applications[i].studentEmail%>">
+                            <input type="hidden" name="applicationID" value ="<%=applications[i]._id%>">
+                            <button class="btn btn-primary" type="submit" name="graduationApplicationButton" value="record"> Check Record</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/graduationApplication" method="post">
+                                <input type="hidden" name="studentEmail" value ="<%=applications[i].studentEmail%>">
+                                <input type="hidden" name="applicationID" value ="<%=applications[i]._id%>">
+                                <button class="btn btn-primary" type="submit" name="graduationApplicationButton" value="approve"> Approve </button>
+                                <button class="btn btn-primary" type="submit" name="graduationApplicationButton" value="deny"> Deny And Send Warning</button>
+                                </form>
+                        </td>
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
     </div>
 
 
