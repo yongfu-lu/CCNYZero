@@ -438,6 +438,9 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
         else{
           Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
             if(err) console.log(err);
+            else{
+              updateGPA(User, studentEmail);
+            }
         })
         }
       })
@@ -450,6 +453,9 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
       else{
         User.findOneAndUpdate({username:studentEmail},{$push:{taken_class:{course_shortname:className, year:year, semester:semester, credit:parseInt(classCredit),grade:grade}}},function(err){
           if(err) console.log(err);
+          else{
+            updateGPA(User, studentEmail);
+          }
         })
         Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
           if(err) console.log(err);
@@ -457,18 +463,9 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
       }
     })     
     }
-    updateGPA(User, studentEmail);
   })
   await sleep();
 }
-// User.findOneAndUpdate({username: "tom@ccny","taken_class.course_shortname":"CSC33500","taken_class.year": 2021, "taken_class.semester":"Fall"},
-//       {$pull:{taken_class:{"course_shortname":"CSC33500"}} }
-//       ,function(err){
-//       if(err) console.log(err)
-//       else{
-//           User.findOneAndUpdate({username:"tom@ccny"},{$push:{taken_class:{course_shortname:"CSC33500", year:2021, semester:"Fall", grade:"X"}}}, function(err){})
-//       }
-//     })
 
 function updateGPA(User, studentEmail){
   User.findOne({username:studentEmail}, function(err, foundUser){

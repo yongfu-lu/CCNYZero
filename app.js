@@ -241,10 +241,13 @@ app.post("/sendWarning", async function(req,res){
 })
 
 app.get("/application", async function(req,res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar')
+        res.redirect("/logout");
+    
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
     var allStudents = await query.getAllStudents(User);
-    res.render("application", {studentApplications:studentApplications, 
+    res.render("application", {user:req.user,studentApplications:studentApplications, 
         instructorApplications:instructorApplications,
         programQuota:programQuota,
         totalStudents:allStudents.length});
@@ -258,7 +261,8 @@ app.post("/application", function(req,res){
     }else{
         emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.GPA, User);
     }
-    Applicant.findOneAndUpdate({email:req.body.email, role:req.body.role},{decided:true}, function(err){
+
+    Applicant.updateMany({email:req.body.email, role:req.body.role},{decided:true}, function(err){
         if(err){
             console.log(err)
         }else{
@@ -273,7 +277,7 @@ app.get("/graduationApplication", async function(req, res){
         res.redirect("/logout");
     else{
         const graduationApplications = await query.getGraduationApplications(GraduationApplication);
-        res.render("graduationApplication", {applications: graduationApplications});
+        res.render("graduationApplication", {user:req.user, applications: graduationApplications});
     }
 })
 
