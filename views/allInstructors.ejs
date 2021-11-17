@@ -1,29 +1,71 @@
 <%-include("header")-%>
-    <h3>All Instructor List: </h3>
-    <table>
-        <tr>
-            <th>CCNY ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Assigned Classes</th>
-            <th>warnings</th>
-            <th>Suspended</th>
-            <th>Terminated</th>
-        </tr>
-        
-        <%for(var i = 0; i<instructors.length; i++){%>
-            <tr>
-                <th> <%=instructors[i].CCNYID%> </th>
-                <th><%=instructors[i].fullname%></th>
-                <th><%=instructors[i].username%></th>
-                <th>show later</th>
-                <th>show later</th>
-                <th><%=instructors[i].suspended%></th>
-                <th><%=instructors[i].terminated%></th>   
-            </tr>
+<br><br>
+    <div class="container" style="min-height: 80vh; text-align: center;">
+        <h3>All Instructor List: </h3>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" style="width:13.33%">CCNY ID</th>
+                <th scope="col" style="width:13.33%">Name</th>
+                <th scope="col" style="width:13.33%">Email</th>
+                <th scope="col" style="width:13.33%">Assigned Classes</th>
+                <th scope="col" style="width:20.00%">Warnings</th>
+                <th scope="col" style="width:13.33%">Suspended</th>
+                <th scope="col" style="width:13.33%">Terminated</th>
+              </tr>
+            </thead>
 
-        <%}%>
-        
-    </table>
+            <tbody>
+                <%for(var i = 0; i<instructors.length; i++){%>
+                    <tr>
+                        <td> <br><%=instructors[i].CCNYID%> </td>
+                        <td><br><%=instructors[i].fullname%></td>
+                        <td><br><%=instructors[i].username%></td>
+                        <td>
+                            <form action="/allInstructors" method="post">
+                                <input type="hidden" name="instructorName" value="<%=instructors[i].fullname%>"><br>
+                                <button class="btn btn-primary" type="submit" name="action" value="checkClasses">Classes Detail</button>
+                            </form>
+                        </td>
+                        <td>
+                            <%if(instructors[i].warning.length == 0){%>
+                                <br>No Warning Found
+                            <%} else {%>
+                                <br>
+                                <%for(var j = 0; j<instructors[i].warning.length; j++){%>
+                                    <%=instructors[i].warning[j]%>
+                                <%}%>
+                            <%}%>
+                        </td>
+                        <td>
+                            <form action="/allInstructors" method="post">
+                                <input type="hidden" name="email" value= <%=instructors[i].username%> >
+                                <%if(instructors[i].suspended){%>
+                                    <p>Yes</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="unsuspend"> Un-suspend</button>
+                                <%}else{%>
+                                    <p>No</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="suspend"> Suspend</button>
+                                <%}%>
+                            </form>
+                        </td>
+
+                        <td>
+                            <form action="/allInstructors" method="post">
+                                <input type="hidden" name="email" value= <%=instructors[i].username%> >
+                                <%if(instructors[i].terminated){%>
+                                    <p>Yes</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="unterminate"> Un-terminate</button>
+                                <%}else{%>
+                                    <p>No</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="terminate"> Terminate</button>
+                                <%}%>
+                            </form>
+                        </td>  
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+    </div>
 
 <%-include("footer")-%>

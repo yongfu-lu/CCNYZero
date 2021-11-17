@@ -321,7 +321,7 @@ app.get("/allClasses", async function(req, res){
     res.redirect("/logout");
     else{
         const allClasses = await query.getAllCurrentClasses(Class);
-        res.render("allClasses", {classes:allClasses});
+        res.render("allClasses", {user:req.user,classes:allClasses});
     }  
 })
 
@@ -354,6 +354,31 @@ app.post("/allstudents", function(req, res){
             if(err) console.log(err)
             else{
                 res.redirect("/allstudents");
+            }
+        })
+    }
+})
+
+app.post("/allInstructors", async function(req, res){
+    if(req.body.action == "checkClasses"){
+        var teachingClasses = await query.getTeachingClasses(Class,req.body.instructorName,today.getFullYear(),currentSemester);
+        res.render("instructorMyClasses", {user:req.user,period: time.getPeriod(today), teachingClasses:teachingClasses})
+    }else if (req.body.action == "unsuspend" ||req.body.action == "suspend" ){
+        var suspend = true;
+        if(req.body.action == "unsuspend") suspend = false;
+        User.findOneAndUpdate({username:req.body.email},{suspended:suspend},function(err){
+            if(err) console.log(err)
+            else{
+                res.redirect("/allInstructors");
+            }
+        })
+    }else if (req.body.action == "terminate" || req.body.action == "unterminate"){
+        var terminate = true;
+        if(req.body.action == "unterminate") terminate = false;
+        User.findOneAndUpdate({username:req.body.email},{terminated:terminate},function(err){
+            if(err) console.log(err)
+            else{
+                res.redirect("/allInstructors");
             }
         })
     }
