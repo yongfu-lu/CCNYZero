@@ -197,7 +197,7 @@ async function getAllInstructors(User) {
 
 async function getAllCurrentClasses(Class) {
   var classes;
-  Class.find({year:2021, semester:"Fall", canceled:false}).exec(async function (err, foundClasses) {
+  Class.find({year:2021, semester:"Fall"}).exec(async function (err, foundClasses) {
     if (err) {
       console.log(err);
     } else {

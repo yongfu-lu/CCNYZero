@@ -1,0 +1,82 @@
+<%-include("header")-%>
+<%targetClass%>
+<br><br>
+<div class="container" style="min-height: 80vh; text-align: center;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="2">Class Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>Class Name:</b> <%=targetClass.course_fullname%></td>
+                <td><b>Class Number</b>: <%=targetClass.course_shortname%></td>
+            </tr>
+            <tr>
+                <th>Class Schedule:</th>
+                <td>
+                    <%= targetClass.schedule[0].day%> <%= targetClass.schedule[0].startTime%> <%= targetClass.schedule[0].endTime%> <br>
+                    <%= targetClass.schedule[1].day%> <%= targetClass.schedule[1].startTime%>-<%= targetClass.schedule[1].endTime%>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Instructor:</b> <%=targetClass.instructor%></td>
+                <td>
+                    <b>Class Rating:</b> <%=targetClass.rating%>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+<br>
+    <b>Students in Class:</b>
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width:33%">Student Name</th>
+                <th style="width:33%">Student Email</th>
+                <th style="width:33%">Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%for(var i = 0; i<targetClass.students.length; i++){%>
+                <tr>
+                    <td><%=targetClass.students[i].fullname%></td>
+                    <td><%=targetClass.students[i].email%></td>
+                    <td><%=targetClass.students[i].grade%></td>
+
+                </tr>
+            <%}%>
+        </tbody>
+    </table>
+<br><br>
+    <b>Class Reviews:</b>
+    <table class="table">
+        <thead>
+            <tr>
+                <%if(user.role == "registrar"){%>
+                    <th style="width:20%">Writer Name</th>
+                    <th style="width:20%">Writer Email</th>
+                <%}%>
+
+                <th style="width:20%">Rating</th>
+                <th style="width:40%">Review</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%for(var i = 0; i<targetClass.review.length; i++){%>
+                <tr>
+                    <%if(user.role == "registrar"){%>
+                        <td><%=targetClass.review[i].writer_name%></td>
+                        <td><%=targetClass.review[i].writer_email%></td>
+                    <%}%>
+
+                    <td><%=targetClass.review[i].rate%></td>
+                    <td><%=targetClass.review[i].review%></td>
+                </tr>
+            <%}%>
+        </tbody>
+    </table>
+</div>
+<%-include("footer")-%>
+

@@ -1,54 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>All Classes</title>
-</head>
-<body>
-    <a href="/"> Go Back</a>
-    <br>
-    All Classes List:
-    <table>
-        <tr>
-            <th>Department</th>
-            <th>Course Name</th>
-            <th>Course Number</th>
-            <th>Credit</th>
-            <th>Section</th>
-            <th>Year</th>
-            <th>Semester</th>
-            <th>Schedule</th>
-            <th>Instructor</th>
-            <th>Students</th>
-            <th>Wait List</th>
-            <th>Rating</th>
-            <th>Reviews</th>
-            <th>Canceled</th>
-        </tr>
-        
-        <%for(var i = 0; i<classes.length; i++){%>
-            <tr>
-                <th> <%=classes[i].department%> </th>
-                <th><%=classes[i].course_fullname%></th>
-                <th><%=classes[i].course_shortname%></th>
-                <th><%=classes[i].credit%></th>
-                <th><%=classes[i].section%></th>
-                <th><%=classes[i].year%></th>
-                <th><%=classes[i].semester%></th>
-                <th>show later</th>
-                <th><%=classes[i].instructor%></th>
-                <th>show later</th>
-                <th>show later</th>
-                <th><%=classes[i].rating%></th>
-                <th>show later</th>
-                <th><%=classes[i].canceled%></th>  
-            </tr>
-
-        <%}%>
-        
+<%-include("header")-%>
+<div class="container" style="text-align: center; min-height: 80vh;">
+    <br><br>
+    <h3>All Classes List: </h3>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 15%;">Course Name</th>
+            <th scope="col" style="width: 15%;">Course Number</th>
+            <th scope="col" style="width: 12%;">Section</th>
+            <th scope="col" style="width: 15%;">Year</th>
+            <th scope="col" style="width: 15%;">Semester</th>
+            <th scope="col" style="width: 15%;">Class Details</th>
+            <th scope="col" style="width: 15%;">Canceled</th>
+          </tr>
+        </thead>
+        <tbody>
+            <%for(var i = 0; i<classes.length; i++){%>
+                <tr>
+                    <td><br><%=classes[i].course_fullname%></td>
+                    <td><br><%=classes[i].course_shortname%></td>
+                    <td><br><%=classes[i].section%></td>
+                    <td><br><%=classes[i].year%></td>
+                    <td><br><%=classes[i].semester%></td>
+                    <td>
+                        <form action="/allClasses" method="post">
+                            <br>
+                            <input type="hidden" name="classID" value="<%=classes[i]._id%>">
+                            <button class="btn btn-primary" type="submit" name="action" value="classDetails"> More Details</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/allClasses" method="post">
+                            <input type="hidden" name="classID" value="<%=classes[i]._id%>">
+                            <%if(classes[i].canceled){%>
+                                Yes
+                                <button class="btn btn-primary" type="submit" name="action" value="resumeClass"> Resume Class</button>
+                            <%}else{%>
+                                No
+                                <button class="btn btn-primary" type="submit" name="action" value="cancelClass"> Cancel Class</button>
+                            <%}%>
+                        </form>
+                        
+                    </td>
+                </tr>
+            <%}%>
+        </tbody>
     </table>
-</body>
-</html>
+    <br><br>
+</div>
+    
+<%-include("footer")-%>

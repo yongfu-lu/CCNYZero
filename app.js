@@ -384,6 +384,26 @@ app.post("/allInstructors", async function(req, res){
     }
 })
 
+app.post("/allClasses", function(req,res){
+    const action = req.body.action;
+    const classID = req.body.classID;
+    if(action == "resumeClass" || action == "cancelClass"){
+        var cancel = true;
+        if(action == "resumeClass") cancel = false;
+        Class.findOneAndUpdate({_id:classID},{canceled:cancel}, function(err){
+            res.redirect("/allClasses");
+        })
+    }else if (action == "classDetails"){
+        Class.findOne({_id:classID}, function(err, foundClass){
+            if(err) console.log(err);
+            else{
+                res.render("classDetails", {user:req.user,targetClass:foundClass});
+            }
+        })
+    }
+
+})
+
 /**************************** Time related methods **********/
 app.post("/setToday", function(req,res){
     //"2021-12-21T00:00:00"
