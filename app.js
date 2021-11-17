@@ -57,7 +57,7 @@ var today = time.today;
 
 /**************** do testing code here **********/
 //var today = time.classRunningBegin
-var today = new Date("2021-12-22T00:00:00")
+var today = new Date("2021-08-13T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
 
 /*********** All route from here ********/
@@ -204,19 +204,20 @@ app.get("/message", async function(req,res){
         res.redirect("/logout");
     else{
         var complaints = await query.getComplaints(Complaint);
-        res.render("message", {complaints : complaints});
+        res.render("message", {user:req.user, complaints : complaints});
     }
 
 })
 
-//when admin make dicision about a complaint
+//when admin make dicision about a complaint 
 app.post("/message", function(req,res){
     var decision = req.body.decision;
     var complaintId = req.body.complaintId;
     var fullName = req.body.fullName;
     var className = req.body.className;
+    console.log(fullName)
     if(decision == "issueWarning" || decision == "deregister"){
-        res.render("sendWarning", {decision:decision, complaintId: complaintId, fullName: fullName,className:className})
+        res.render("sendWarning", {user:req.user, decision:decision, complaintId: complaintId, fullName: fullName,className:className})
     }else{
         Complaint.updateOne({_id:complaintId},{decided:true}, function(err){
             if(err) console.log(err);
@@ -302,7 +303,7 @@ app.get("/allStudents", async function(req, res){
     res.redirect("/logout");
     else{
         const allStudents = await query.getAllStudents(User);
-        res.render("allStudents", {students: allStudents});
+        res.render("allStudents", {user:req.user, students: allStudents});
     }
 })
 
@@ -311,7 +312,7 @@ app.get("/allInstructors", async function(req, res){
     res.redirect("/logout");
     else{
         const allInstructors = await query.getAllInstructors(User);
-        res.render("allInstructors", {instructors: allInstructors});
+        res.render("allInstructors", {user:req.user,instructors: allInstructors});
     }
 })
 
@@ -322,6 +323,40 @@ app.get("/allClasses", async function(req, res){
         const allClasses = await query.getAllCurrentClasses(Class);
         res.render("allClasses", {classes:allClasses});
     }  
+})
+
+app.post("/allstudents", function(req, res){
+    if(req.body.action == "record"){
+        User.findOne({username:req.body.email}, function(err, foundStudent){
+            if(err) console.log(err)
+            else{
+                res.render("myAcademics",{user:req.user,userRole:"registrar",
+                studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, 
+                taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA,
+                honors:foundStudent.honor,
+                warnings:foundStudent.warning
+            })
+            }
+        })
+    }else if (req.body.action == "suspend" || req.body.action == "unsuspend"){
+        var suspend = true;
+        if(req.body.action == "unsuspend") suspend = false;
+        User.findOneAndUpdate({username:req.body.email},{suspended:suspend},function(err){
+            if(err) console.log(err)
+            else{
+                res.redirect("/allstudents");
+            }
+        })
+    }else if (req.body.action == "terminate" || req.body.action == "unterminate"){
+        var terminate = true;
+        if(req.body.action == "unterminate") terminate = false;
+        User.findOneAndUpdate({username:req.body.email},{terminated:terminate},function(err){
+            if(err) console.log(err)
+            else{
+                res.redirect("/allstudents");
+            }
+        })
+    }
 })
 
 /**************************** Time related methods **********/
@@ -339,7 +374,7 @@ app.get("/classSetUp", async function(req,res){
         res.redirect("/logout");
     }else{
         instructors = await query.getAvailableInstructors(User);
-        res.render("classSetUp", {period:time.getPeriod(today), instructors:instructors, justAdded:false});
+        res.render("classSetUp", {user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:false});
     }
 })
 
@@ -390,7 +425,7 @@ app.post("/classSetUp", function(req,res){
             }
         });
     });
-    res.render("classSetUp", {period:time.getPeriod(today), instructors:instructors, justAdded:true});
+    res.render("classSetUp", {user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:true});
 
 })
 

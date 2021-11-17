@@ -1,47 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>All Students </title>
-</head>
-<body>
-    <a href="/">Go Back</a>
-    <h3>All Students List:</h3>
-    <table>
-        <tr>
-            <th>CCNY ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>GPA</th>
-            <th>Taken Classes</th>
-            <th>Taking Classes</th>
-            <th>warnings</th>
-            <th>Honors</th>
-            <th>Balance due</th>
-            <th>Suspended</th>
-            <th>Terminated</th>
-        </tr>
-        
-        <%for(var i = 0; i<students.length; i++){%>
-            <tr>
-                <th> <%=students[i].CCNYID%> </th>
-                <th><%=students[i].fullname%></th>
-                <th><%=students[i].username%></th>
-                <th><%=students[i].GPA%></th>
-                <th>show later</th>
-                <th>show later</th>
-                <th>show later</th>
-                <th>show later</th>
-                <th><%=students[i].balanceOwe%></th>
-                <th><%=students[i].suspended%></th>
-                <th><%=students[i].terminated%></th>   
-            </tr>
+<%-include("header")-%>
+    <br><br>
+    <div class="container" style="text-align: center; min-height: 80vh;">
+        <h3>All Students List:</h3>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" style="width:12.5%">CCNY ID</th>
+                <th scope="col" style="width:12.5%">Name</th>
+                <th scope="col" style="width:12.5%">Email</th>
+                <th scope="col" style="width:12.5%">Academic Record</th>
+                <th scope="col" style="width:12.5%">Balance Due</th>
+                <th scope="col" style="width:12.5%">Suspended</th>
+                <th scope="col" style="width:12.5%">terminated</th>
+              </tr>
+            </thead>
+            <tbody>
+                <%for(var i = 0; i<students.length; i++){%>
+                    <tr>
+                        <td> <%=students[i].CCNYID%> </td>
+                        <td><%=students[i].fullname%></td>
+                        <td><%=students[i].username%></td>
+                        <td>
+                            <form action="/allstudents" method="post">
+                                <input type="hidden" name="email" value= <%=students[i].username%> >
+                                <button class="btn btn-primary" type="submit" name="action" value="record"> Check Record</button>
+                            </form>
+                        </td>
+                        <td><%=students[i].balanceOwe%></td>
+                        <td>
+                            <form action="/allstudents" method="post">
+                                <input type="hidden" name="email" value= <%=students[i].username%> >
+                                <%if(students[i].suspended){%>
+                                    <p>Yes</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="unsuspend"> Un-suspend</button>
+                                <%}else{%>
+                                    <p>No</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="suspend"> Suspend</button>
+                                <%}%>
+                            </form>
+                        </td>
 
-        <%}%>
-        
-    </table>
-</body>
-</html>
+                        <td>
+                            <form action="/allstudents" method="post">
+                                <input type="hidden" name="email" value= <%=students[i].username%> >
+                                <%if(students[i].terminated){%>
+                                    <p>Yes</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="unterminate"> Un-terminate</button>
+                                <%}else{%>
+                                    <p>No</p>
+                                    <button class="btn btn-primary" type="submit" name="action" value="terminate"> terminate</button>
+                                <%}%>
+                            </form>
+                        </td> 
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+        <br><br><br>
+    </div>
+    
+
+<%-include("footer")-%>

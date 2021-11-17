@@ -1,67 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Class Set Up</title>
+<%-include("header")-%>
     <% period %>
     <% instructors %>
     <% days = ["Mon","Tue", "Wed", "Thu", "Fri","Sat", "Sun"]%>
-</head>
-<body>
-    <h1>This is class set up page for admin</h1>
-    <%if(justAdded == true){%>
-        <h2>Added New Class Success, Please Add Another One</h2>
-    <%}%>
-    <% if(period != "classSetUp"){ %>
-        <h1>It is not class set up period right now</h1>
-    <%} else{%>
-        <form action="/classSetUp" method="post">
-            <input type="text" name="department" placeholder="department"> <br>
-            <input type="text" name="classFullName" placeholder="Class Full Name"> <br>
-            <input type="text" name="classShortName" placeholder="Class Short Name"> <br>
-            <input type="text" name="classSection" placeholder="Class Section"> <br>
-            <input type="number" name="classCredit" placeholder="Credit"> <br>
-            <input type="number" name="classSize" placeholder="Class Size"> <br>
-
-            <label for="instructor">Instructor</label>
-            <select name="instructor" id="instructor">
-                <% for (var i = 0; i < instructors.length; i++ ) { %>
-                    <option value="<%= instructors[i].fullname %>"> <%= instructors[i].fullname %></option>
-                <%}%>
-            </select> <br>
-
-            <label for="day1">Day 1</label>
-            <select name="day1" id="day1">
-                <% for (var i = 0; i < days.length; i++ ) { %>
-                    <option value="<%= days[i] %>"> <%= days[i]%></option>
-                <%}%>
-            </select>
-
-            <label for="startTime1">Start Time:</label>
-                <input type="time" id="startTime1" name="startTime1" required>
-            
-            <label for="endTime1">End Time:</label>
-                <input type="time" id="endTime1" name="endTime1" required>
+    <br><br><br>
+    <div class="container" style="min-height: 80vh; text-align: center;">
+        <%if(justAdded == true){%>
+            <h2>Added New Class Success, Please Add Another One</h2>
+        <%}%>
+        <% if(period != "classSetUp"){ %>
+            <h1>It is not class set up period right now</h1>
+        <%} else{%>
+            <form action="/classSetUp" method="post">
+                <input class="form-control" style="width:30%; margin: auto;" type="text" name="department" placeholder="department"> <br>
+                <input class="form-control" style="width:30%; margin: auto;" type="text" name="classFullName" placeholder="Class Full Name"> <br>
+                <input class="form-control" style="width:30%; margin: auto;" type="text" name="classShortName" placeholder="Class Number, Ex: CSC10000"> <br>
+                <input class="form-control" style="width:30%; margin: auto;" type="text" name="classSection" placeholder="Class Section"> <br>
+                <input class="form-control" style="width:30%; margin: auto;" type="number" name="classCredit" placeholder="Credit"> <br>
+                <input class="form-control" style="width:30%; margin: auto;" type="number" name="classSize" placeholder="Class Size"> <br>
+                <div class="row">
+                    <div class="col" style="text-align: right; margin-top: 6px;">
+                        <label for="instructor">Instructor: </label>
+                    </div>
+                    <div class="col" style="text-align: left;">
+                        <select class="form-select" name="instructor" id="instructor" style="width:20%; margin-right: auto;">
+                            <% for (var i = 0; i < instructors.length; i++ ) { %>
+                                <option value="<%= instructors[i].fullname %>"> <%= instructors[i].fullname %></option>
+                            <%}%>
+                        </select> 
+                    </div>
+                </div>
             <br>
-
-            <label for="day2">Day 2</label>
-                <select name="day2" id="day2">
+                <p>Set Schedule: </p>
+                <label for="day1">Day 1</label>
+                <select name="day1" id="day1">
                     <% for (var i = 0; i < days.length; i++ ) { %>
                         <option value="<%= days[i] %>"> <%= days[i]%></option>
                     <%}%>
                 </select>
     
-            <label for="startTime2">Start Time:</label>
-                <input type="time" id="startTime2" name="startTime2" required>
-            <label for="endTime2">End Time:</label>
-                <input type="time" id="endTime2" name="endTime2" required>
-            <br><button type="submit" > Set Up New Class</button>
-        </form>
-    <%}%>
-    <br><br>
-    <a href="/registrarHome"> Admin Home </a>
-</body>
-</html>
+                <label for="startTime1">Start Time:</label>
+                    <input type="time" id="startTime1" name="startTime1" required>
+                
+                <label for="endTime1">End Time:</label>
+                    <input type="time" id="endTime1" name="endTime1" required>
+                <br>
+    
+                <label for="day2">Day 2</label>
+                    <select name="day2" id="day2">
+                        <% for (var i = 0; i < days.length; i++ ) { %>
+                            <option value="<%= days[i] %>"> <%= days[i]%></option>
+                        <%}%>
+                    </select>
+                <label for="startTime2">Start Time:</label>
+                    <input type="time" id="startTime2" name="startTime2" required>
+                <label for="endTime2">End Time:</label>
+                    <input type="time" id="endTime2" name="endTime2" required>
+                <br><br><button class="btn btn-primary" type="submit" > Set Up New Class</button>
+            </form>
+        <%}%>
+        <br><br>
+    </div>
+
+
+<%-include("footer")-%>
