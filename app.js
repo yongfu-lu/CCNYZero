@@ -56,8 +56,7 @@ var currentSemester = "Fall";
 var today = time.today;
 
 /**************** do testing code here **********/
-//var today = time.classRunningBegin
-var today = new Date("2021-08-13T00:00:00")
+//var today = new Date("2021-08-13T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
 
 /*********** All route from here ********/
@@ -622,7 +621,7 @@ app.post("/studentMyClasses", async function(req,res){
         })
 
     }else{
-        res.render("rateClass",{classID: classID, className:className,classSection:classSection, instructor:instructor});
+        res.render("rateClass",{user:req.user,classID: classID, className:className,classSection:classSection, instructor:instructor});
     }
 })
 

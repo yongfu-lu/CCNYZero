@@ -1,11 +1,12 @@
-.stars {
+/* .stars {
     display:flex;
-}
+} */
 
 .stars a{
     opacity:40%;
     cursor:pointer;
     padding:3px;
+    text-decoration: none;
 }
 
 .stars:hover a{
