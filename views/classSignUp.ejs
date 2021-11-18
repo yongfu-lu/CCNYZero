@@ -13,6 +13,7 @@
                 <th scope="col">Course Name</th>
                 <th scope="col">Instructor</th>
                 <th scope="col">Schedule</th>
+                <th scope="col">Review</th>
                 <% if( (period == "courseRegistration" || (isSpecialPeriod && student.specialPeriod)) && !student.suspended ){ %>
                     <th scope="col"> Action </th>
                 <%}%>
@@ -30,8 +31,11 @@
                         <td><%= classes[i].schedule[0].day%> <%= classes[i].schedule[0].startTime%>-<%= classes[i].schedule[0].endTime%> <br>
                             <%= classes[i].schedule[1].day%> <%= classes[i].schedule[1].startTime%>-<%= classes[i].schedule[1].endTime%>
                         </td>
+                        <td>
+                            <button class="btn btn-primary"type="submit" name="action" value="checkReview"> Reviews </button>
+                        </td>
                         <% if( (period == "courseRegistration" || (isSpecialPeriod && student.specialPeriod)) && !student.suspended ){ %>
-                            <td><button class="btn btn-primary"type="submit"> Sign Up </button></td>
+                            <td><button class="btn btn-primary"type="submit" name="action" value="signup"> Sign Up </button></td>
                         <%}%>
 
                     </form>

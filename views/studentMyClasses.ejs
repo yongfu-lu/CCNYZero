@@ -1,5 +1,5 @@
 <%- include("header")-%>
-<div class="container" style="padding: 50px 0 50px 0; height:80vh">
+<div class="container" style="padding: 50px 0 50px 0; min-height: 80vh; text-align: center;">
     <h2 style="text-align: center;">My Classes Schedule</h2>
     <table class="table table-hover">
         <thead>
@@ -8,6 +8,7 @@
             <th scope="col">Course Name</th>
             <th scope="col">Instructor</th>
             <th scope="col">Schedule</th>
+            <th scope="col">Review</th>
             <th scope="col"> Action </th>
           </tr>
         </thead>
@@ -27,7 +28,11 @@
                         <td><%= enrolledClasses[i].course_fullname%></td>
                         <td><%= enrolledClasses[i].instructor%></td>
                         <td><%= enrolledClasses[i].schedule[0].day%> <%= enrolledClasses[i].schedule[0].startTime%> <%= enrolledClasses[i].schedule[0].endTime%> <br>
-                            <%= enrolledClasses[i].schedule[1].day%> <%= enrolledClasses[i].schedule[1].startTime%>-<%= enrolledClasses[i].schedule[1].endTime%></td>
+                            <%= enrolledClasses[i].schedule[1].day%> <%= enrolledClasses[i].schedule[1].startTime%>-<%= enrolledClasses[i].schedule[1].endTime%>
+                        </td>
+                        <th>
+                            <button type="submit" name="action" value="checkReview" class="btn btn-primary"> Check Review </button>
+                        </th>
                         <td>
                         <% if(period != "grading"){ %>
                             <!-- Button trigger modal -->
