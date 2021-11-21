@@ -107,8 +107,8 @@ function calculateGPAFromTakenClasses(classes){
 function classAnalyze(Class, User, Complaint, year, semester){
     console.log("Inside classAnalyze")
     //1. students with less than 2 coourses will be warned
-    //query.warnStudentsWithTooLessCourses(Class, User, Complaint, year, semester);
+    query.warnStudentsWithTooLessCourses(Class, User, Complaint, year, semester);
 
     //2. course less than 5 students will be canceled.
-    //query.cancelClassesWithTooLessStudents(Class, User,Complaint,year, semester);
+    query.cancelClassesWithTooLessStudents(Class, User,Complaint,year, semester);
 }

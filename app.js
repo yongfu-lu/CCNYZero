@@ -747,9 +747,9 @@ app.post("/instructorGrading", async function(req, res){
 /****************  This method will be called only once when class running period starts  *************/
 /***It takes care of cancel classes, give student extra peroid to sign up, warning student etc. *******/
 // var classAnalyzed = false;
-// if(time.getPeriod(today) == "classRunning"){
+// if(time.getPeriod(today) == "classRunning" !classAnalyzed){
 //     utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
-//     gradeAnalyzed = true;
+//     classAnalyzed = true;
 // }
 
 

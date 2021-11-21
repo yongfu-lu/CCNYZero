@@ -2,22 +2,21 @@
 const mongoose = require("mongoose");
 
 exports.getClassSchema = function(){
-    //console.log("getting classSchema");
     return new mongoose.Schema({
-        department:String,            //example: computer science 
-        course_fullname:String,       //example: Algorithm
-        course_shortname:String,      // CSC22000
-        section: String,              //example: A, B, K
+        department:String,            
+        course_fullname:String,       
+        course_shortname:String,      
+        section: String,              
         credit: Number,         
-        instructor:String,            // name of professor ??
+        instructor:String,            
         year: Number,
         semester: String,
-        students: [],           // array of student's name or id??
+        students: [],           
         max_capacity: Number,   
         schedule: [],      
         rating: Number,
-        prerequisites: [],      // [array of course_name] ??
-        review:[],              //class review _id ??
+        prerequisites: [],      
+        review:[],              
         wait_list:[],
         canceled:Boolean
     });
@@ -25,14 +24,13 @@ exports.getClassSchema = function(){
 
 
 exports.getApplicantSchema = function(){
-    //console.log("This is applicant schema from schema.js")
     return new mongoose.Schema ({
         email:String,
         fullname:String,
-        role:String,        //admin, student, instructor, visitor
+        role:String,        
         major: String,
         GPA:Number,
-        decided: Boolean,   //only show undecided application to admin's message box
+        decided: Boolean,   
         department:String,
         selfStatement:String,
     });
@@ -40,18 +38,17 @@ exports.getApplicantSchema = function(){
 }
 
 exports.getUserSchema = function(){
-    //console.log("This is user schema from schema.js")
     return new mongoose.Schema ({
         CCNYID:String,
         email:String,
         password: String,
         fullname:String,
-        role:String,        //admin, student, instructor, visitor
+        role:String,        
         GPA:Number,         
         enrolled_class: [],
         taken_class: [],
-        required_course: [],      //required courses for graduation
-        assigned_class:[],        //when user role is professor, assigned class is what class he teaching
+        required_course: [],      
+        assigned_class:[],        
         wrote_review:[],
         firstLogin: Boolean,
         suspended:Boolean,
@@ -67,12 +64,11 @@ exports.getUserSchema = function(){
 
 
 exports.getClassReviewSchema = function(){
-    //console.log("getting classReviewSchema");
     return new mongoose.Schema({
-        writer_name:String,           //student name
-        writer_email:String,          //student email
-        write_to_classID: String,  // class id??
-        write_to_className: String, //class name??
+        writer_name:String,           
+        writer_email:String,          
+        write_to_classID: String,  
+        write_to_className: String, 
         rate: Number,
         review: String
     })

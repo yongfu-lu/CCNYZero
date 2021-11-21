@@ -43,7 +43,7 @@ function setToday(customDate){
 
 //find which period is today
 function getPeriod(day){
-   var period;
+   var period =" ";
    if(day >= classSetUpBegin && day <= classSetUpEnd ){
      period = "classSetUp";
    }else if (day >= courseRegistrationBegin && day <= courseRegistrationEnd){
