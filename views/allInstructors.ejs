@@ -28,14 +28,11 @@
                             </form>
                         </td>
                         <td>
-                            <%if(instructors[i].warning.length == 0){%>
-                                <br>No Warning Found
-                            <%} else {%>
+                            <form action="/allInstructors" method="post">
                                 <br>
-                                <%for(var j = 0; j<instructors[i].warning.length; j++){%>
-                                    <%=instructors[i].warning[j]%>
-                                <%}%>
-                            <%}%>
+                                <input type="hidden" name="email" value= <%=instructors[i].username%> >
+                                <button class="btn btn-primary" name="action" value="checkWarning"> Warning Record </button>
+                            </form>
                         </td>
                         <td>
                             <form action="/allInstructors" method="post">

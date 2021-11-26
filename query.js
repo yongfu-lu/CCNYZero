@@ -322,7 +322,7 @@ function suspendUser(User, username){
   User.updateOne({username:username},{suspended:true, balanceOwe:500}, function(err){
     if(err) console.log(err);
     console.log("You are suspended");
-  }) 
+  })
 }
 
 
@@ -687,9 +687,6 @@ function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester
 }
 
 function changeInstructor(Class,User, classID, oldInstructor, newInstructor){
-  //1. update class ducument, change the instructor's name
-  //2. update old instructor's assigned class
-  //3. update new instructor's assigned class
   Class.updateOne({_id:classID},{instructor:newInstructor}, function(err){
     if (err) console.log(err);
     else{
@@ -704,3 +701,4 @@ function changeInstructor(Class,User, classID, oldInstructor, newInstructor){
     }
   })
 }
+

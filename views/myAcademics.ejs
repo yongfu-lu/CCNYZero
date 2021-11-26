@@ -69,18 +69,30 @@
                     <thead>
                         <tr>
                             <th>Warnings</th>
+                            <%if(userRole == "registrar"){%>
+                                <th>Action</th>
+                            <%}%>
                         </tr>
                     </thead>
                     <tbody>
                         <%for(var i = 0; i<warnings.length; i++){%>
                             <tr>
                                 <th><%=warnings[i]%></th>
+                                <%if(userRole == "registrar"){%>
+                                    <th>
+                                        <form action="/studentWarnings" method="post">
+                                            <input type="hidden" name="studentID" value="<%=studentID%>" >
+                                            <input type="hidden" name="warningIndex" value="<%=i%>">
+                                            <button class="btn btn-primary"> Remove Warning </button>
+                                        </form>
+                                    </th>
+                                <%}%>
                             </tr>
                         <%}%>
                     </tbody>
                 </table>
             <%}%>
-            <% if (userRole == "student") {%>
+            <% if (userRole == "student" && !user.suspended && !user.terminated) {%>
                 <br>
                 <a href="/applyGraduation" class="btn btn-primary">Apply Graduation</a>
                 <br>
@@ -91,6 +103,6 @@
         
     
     </div>
-    
+     
 
 <%- include("footer")-%>

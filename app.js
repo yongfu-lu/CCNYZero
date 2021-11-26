@@ -327,7 +327,7 @@ app.get("/allClasses", async function(req, res){
     }  
 })
 
-app.post("/allstudents", function(req, res){
+app.post("/allstudents", async function(req, res){
     if(req.body.action == "record"){
         User.findOne({username:req.body.email}, function(err, foundStudent){
             if(err) console.log(err)
@@ -340,14 +340,13 @@ app.post("/allstudents", function(req, res){
             })
             }
         })
-    }else if (req.body.action == "suspend" || req.body.action == "unsuspend"){
-        var suspend = true;
-        if(req.body.action == "unsuspend") suspend = false;
-        User.findOneAndUpdate({username:req.body.email},{suspended:suspend},function(err){
-            if(err) console.log(err)
-            else{
-                res.redirect("/allstudents");
-            }
+    }else if (req.body.action == "suspend"){
+        await query.suspendUser(User,req.body.email);
+        res.redirect("/allstudents");
+    }else if (req.body.action == "unsuspend"){
+        User.updateOne({username:req.body.email},{suspended:false},function(err){
+            if(err) console.log(err);
+            res.redirect("/allstudents");
         })
     }else if (req.body.action == "terminate" || req.body.action == "unterminate"){
         var terminate = true;
@@ -382,6 +381,10 @@ app.post("/allInstructors", async function(req, res){
             else{
                 res.redirect("/allInstructors");
             }
+        })
+    }else if (req.body.action == "checkWarning"){
+        User.findOne({username:req.body.email},function(err, foundUser){
+            res.render("instructorWarnings", {instructor:foundUser, user:req.user})
         })
     }
 })
@@ -425,6 +428,42 @@ app.post("/setTabooWords", function(req, res){
         res.redirect("/");
     })
 })
+
+
+app.post("/instructorWarnings", async function(req, res){
+    var warnings = []
+    User.findOne({username:req.body.email},function(err, foundUser){
+        warnings = foundUser.warning;
+        warnings.splice(req.body.warningIndex, 1);
+        User.updateOne({username:req.body.email},{warning:warnings}, function(err){
+            if(err) console.log(err)
+            else{
+                res.render("instructorWarnings", {instructor:foundUser, user:req.user})
+            }
+        })
+    })
+})
+
+app.post("/studentWarnings", function(req,res){
+    var warnings = []
+    User.findOne({CCNYID:req.body.studentID}, function(err, foundStudent){
+        warnings = foundStudent.warning;
+        warnings.splice(req.body.warningIndex, 1);
+        User.update({CCNYID:req.body.studentID},{warning:warnings}, function(err){
+            if(err) console.log(err)
+            else{
+                res.render("myAcademics",{user:req.user,userRole:"registrar",
+                    studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, 
+                    taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA,
+                    honors:foundStudent.honor,
+                    warnings:foundStudent.warning
+                })
+            }
+        })
+    })
+})
+
+
 
 /**************************** Time related methods **********/
 app.post("/setToday", function(req,res){
@@ -755,6 +794,8 @@ app.post("/instructorGrading", async function(req, res){
     
         res.redirect("/instructorMyClasses")
 })
+
+
 
 
 /*****   This methods will be called only once after grading period end             *****/
