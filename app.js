@@ -54,10 +54,14 @@ const programQuota = 30;
 const required_courses = utility.required_courses;
 var currentSemester = "Fall";
 var today = time.today;
-
+var tabooWords = []
+User.findOne({role:"registrar"}, function(err, foundUser){
+    tabooWords = foundUser.tabooWords;
+})
 /**************** do testing code here **********/
 //var today = new Date("2021-08-13T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
+
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -414,6 +418,14 @@ app.post("/classDetails", function(req,res){
 
 })
 
+app.post("/setTabooWords", function(req, res){
+    const words = req.body.taboowords.split(" ");
+    User.updateOne({role:"registrar"}, {tabooWords:words}, function(err){
+        if(err) console.log(err);
+        res.redirect("/");
+    })
+})
+
 /**************************** Time related methods **********/
 app.post("/setToday", function(req,res){
     //"2021-12-21T00:00:00"
@@ -535,7 +547,7 @@ app.post("/classSignUp", async function(req,res){
 
 app.post("/rateClass",function(req,res){
     var review = req.body.review;
-    var count = utility.passTabooWordsCheck(review);
+    var count = utility.passTabooWordsCheck(review, tabooWords);
     console.log(count)
     if(count>2){
         query.giveWarning(User, req.user.username, "Taboo Warning");
@@ -546,7 +558,7 @@ app.post("/rateClass",function(req,res){
         if(count > 0){
             query.giveWarning(User, req.user.username, "Taboo Warning");
         }
-        review = utility.editTabooWord(review);
+        review = utility.editTabooWord(review, tabooWords);
     }
     var newReview = {
         writer_name:req.user.fullname,

@@ -58,6 +58,7 @@ exports.getUserSchema = function(){
         masterDegreeObtained: Boolean,
         specialPeriod:Boolean,
         balanceOwe:Number,
+        tabooWords: [],
     });
     
 }

@@ -1,5 +1,5 @@
 const query = require(__dirname + "/query.js");
-const tabooWords = ["fuck","shit"];
+
 const gradePoint = {
     "A+":4,
     "A":4,
@@ -29,7 +29,7 @@ exports.calculateGPAFromTakenClasses = calculateGPAFromTakenClasses;
 exports.classAnalyze = classAnalyze;
 exports.editTabooWord =editTabooWord;
 
-function passTabooWordsCheck(text){
+function passTabooWordsCheck(text,tabooWords){
     var count = 0;
     for(var i = 0; i<tabooWords.length; i++){
         var re = new RegExp(tabooWords[i],'g');
@@ -38,7 +38,7 @@ function passTabooWordsCheck(text){
     return count;
 }
 
-function editTabooWord(text){
+function editTabooWord(text, tabooWords){
     for(var i = 0; i<tabooWords.length; i++){
         var re = new RegExp(tabooWords[i],'g');
         text = text.replace(re, '*');
