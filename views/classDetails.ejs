@@ -23,8 +23,28 @@
             <tr>
                 <td><b>Instructor:</b> <%=targetClass.instructor%></td>
                 <td>
+                <form action="/classDetails" method="post">
+                        <input type="hidden" name="oldInstructor" value="<%=targetClass.instructor%>">
+                        <input type="hidden" name="classID" value="<%=targetClass._id%>">
+                        <div class="row">
+                            <div class="col"></div>
+                            <button class="btn btn-primary col"> Change Instructor </button> 
+                            <select class="form-select col" name="newInstructor" id="instructor" style="width:20%; margin: auto;">
+                                <% for (var i = 0; i < instructors.length; i++ ) { %>
+                                    <option value="<%= instructors[i].fullname %>"> <%= instructors[i].fullname %></option>
+                                <%}%>
+                            </select>
+                            <div class="col"></div>
+                        </div>
+                </form>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <b>Class Rating:</b> <%=targetClass.rating%>
                 </td>
+                <td></td>
             </tr>
         </tbody>
     </table>

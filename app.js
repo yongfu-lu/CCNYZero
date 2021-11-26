@@ -58,7 +58,6 @@ var today = time.today;
 /**************** do testing code here **********/
 //var today = new Date("2021-08-13T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
-
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -383,9 +382,10 @@ app.post("/allInstructors", async function(req, res){
     }
 })
 
-app.post("/allClasses", function(req,res){
+app.post("/allClasses", async function(req,res){
     const action = req.body.action;
     const classID = req.body.classID;
+    const allInstructors = await query.getAllInstructors(User);
     if(action == "resumeClass" || action == "cancelClass"){
         var cancel = true;
         if(action == "resumeClass") cancel = false;
@@ -396,10 +396,21 @@ app.post("/allClasses", function(req,res){
         Class.findOne({_id:classID}, function(err, foundClass){
             if(err) console.log(err);
             else{
-                res.render("classDetails", {user:req.user,targetClass:foundClass});
+                res.render("classDetails", {user:req.user,targetClass:foundClass, instructors:allInstructors});
             }
         })
     }
+})
+
+app.post("/classDetails", function(req,res){
+    const oldInstructor = req.body.oldInstructor;
+    const newInstructor = req.body.newInstructor;
+    const classID = req.body.classID;
+    console.log(oldInstructor)
+    console.log(newInstructor)
+    console.log(classID)
+    query.changeInstructor(Class,User, classID, oldInstructor, newInstructor);
+    res.redirect("/allClasses")
 
 })
 

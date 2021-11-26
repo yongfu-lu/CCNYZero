@@ -43,6 +43,7 @@ exports.approveGraduation=approveGraduation;
 exports.denyGraduation =denyGraduation;
 exports.warnStudentsWithTooLessCourses =warnStudentsWithTooLessCourses;
 exports.cancelClassesWithTooLessStudents =cancelClassesWithTooLessStudents;
+exports.changeInstructor = changeInstructor;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -683,4 +684,23 @@ function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester
         }
       }
     })
+}
+
+function changeInstructor(Class,User, classID, oldInstructor, newInstructor){
+  //1. update class ducument, change the instructor's name
+  //2. update old instructor's assigned class
+  //3. update new instructor's assigned class
+  Class.updateOne({_id:classID},{instructor:newInstructor}, function(err){
+    if (err) console.log(err);
+    else{
+      User.updateOne({fullname:oldInstructor},{$pull:{assigned_class:classID}}, function(err){
+        if(err) console.log(err)
+        else{
+          User.updateOne({fullname:newInstructor},{$push:{assigned_class:classID}}, function(err){
+            if(err) console.log(err)
+          })
+        }
+      })
+    }
+  })
 }
