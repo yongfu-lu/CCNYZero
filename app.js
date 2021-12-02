@@ -33,7 +33,8 @@ const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
 const applicantSchema = schema.getApplicantSchema();
 const complaintSchema = schema.getComplaintSchema();
-const graduationApplicationSchema = schema.getGraduationApplycationSchema()
+const graduationApplicationSchema = schema.getGraduationApplycationSchema();
+const messageSchema = schema.getMessageSchema();
 userSchema.plugin(passportLocalMongoose);
 
 const User = new mongoose.model("User", userSchema);
@@ -41,6 +42,7 @@ const Class = new mongoose.model("Class", classSchema);
 const Applicant = new mongoose.model("Applicant", applicantSchema);
 const Complaint = new mongoose.model('Complaint', complaintSchema);
 const GraduationApplication = new mongoose.model("GraduationApplication",graduationApplicationSchema);
+const Message = new mongoose.model("Message", messageSchema);
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
@@ -61,7 +63,14 @@ User.findOne({role:"registrar"}, function(err, foundUser){
 /**************** do testing code here **********/
 //var today = new Date("2021-08-13T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
-
+const newmessage = new Message({
+    from:"It's me",
+    fromEmail:"admin@ccny",
+    to:"Jerry@ccny",
+    dateTime: time.today,
+    message:"Sending this email to jerry"
+});
+newmessage.save();
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -202,11 +211,12 @@ app.get("/applyInstructor", function(req, res) {
 /**************************** admin related methods ********************/
 
 app.get("/message", async function(req,res){
-    if(!req.isAuthenticated() || req.user.role != 'registrar')
+    if(!req.isAuthenticated())
         res.redirect("/logout");
     else{
         var complaints = await query.getComplaints(Complaint);
-        res.render("message", {user:req.user, complaints : complaints});
+        var messages = await query.getMessages(Message);
+        res.render("message", {user:req.user, complaints : complaints, messages:messages});
     }
 
 })
@@ -239,6 +249,19 @@ app.post("/sendWarning", async function(req,res){
             res.redirect("/message");
         })
 
+    })
+})
+
+app.post("/sendMessage", function(req, res){
+    const newMessage = Message({
+        from: req.user.fullname,
+        fromEmail: req.user.username,
+        to:req.body.sendTo,
+        dateTime: time.today,
+        message:req.body.message
+    })
+    newMessage.save( function(err, doc){
+        res.redirect("/message");
     })
 })
 

@@ -99,3 +99,13 @@ exports.getGraduationApplycationSchema = function(){
         decided:Boolean
     })
 }
+
+exports.getMessageSchema = function(){
+    return new mongoose.Schema({
+        from: String,
+        fromEmail: String,
+        to:String,
+        dateTime: String,
+        message:String
+    })
+}

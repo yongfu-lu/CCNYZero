@@ -2,77 +2,184 @@
 
     <div class="container" style="text-align: center; min-height: 80vh;">
         <br><br>
-        <h3>Complaints</h3>
-        <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col" style="width:16.7%">Complaint From</th>
-                <th scope="col" style="width:16.7%">Email</th>
-                <th scope="col" style="width:16.7%">Complaint About</th>
-                <th scope="col" style="width:16.7%">Class</th>
-                <th scope="col" style="width:16.7%">Details</th>
-                <th scope="col" style="width:16.7%">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-                <% for (var i = 0; i < complaints.length; i++) { %>
-                    <% if(!complaints[i].isFromSystem){ %>
-                        <tr>
-                            <td><%=complaints[i].complaintFromName%> (<%=complaints[i].complaintFromRole%>)</td>
-                            <td><%=complaints[i].complaintFrom %></td>
-                            <td><%=complaints[i].complaintAbout%> (<%=complaints[i].complaintAboutRole%>)</td>
-                            <td><%=complaints[i].className %></td>
-                            <td><%=complaints[i].detail%></td>
-                            <td>
-                                <form action="/message" method="post">
-                                    <input type="hidden" name="complaintId" value= <%= complaints[i]._id%>  >
-                                    <input type="hidden" name="fullName" value= "<%= complaints[i].complaintAbout %>" >
-                                    <input type="hidden" name="className" value= <%= complaints[i].className %>>
-                                    <button class="btn btn-primary" type="submit" name="decision" value="issueWarning" style="margin: 3px 0 3px 0;"> Issue Warning </button> 
-                                    <button class="btn btn-primary" type="submit" name ="decision" value="acknowledge" style="margin: 3px 0 3px 0;"> acknowledge </button>
-                                    <% if (complaints[i].complaintFromRole == 'instructor'){ %>
-                                        <button class="btn btn-primary" type="submit" name ="decision" value="deregister" style="margin: 3px 0 3px 0;"> De-register </button>
-                                    <%}%>
-                                </form>
-                            </td>
-                        </tr>
-                    <%}%>
-                <%}%>
-            </tbody>
-        </table>
-        <br><br><br>
+        <!-- @@@@@@@ -->
+        <div class="accordion" id="accordionExample">
+            <%if(user.role == 'registrar'){%>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <b>Complaints</b>
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col" style="width:16.7%">Complaint From</th>
+                            <th scope="col" style="width:16.7%">Email</th>
+                            <th scope="col" style="width:16.7%">Complaint About</th>
+                            <th scope="col" style="width:16.7%">Class</th>
+                            <th scope="col" style="width:16.7%">Details</th>
+                            <th scope="col" style="width:16.7%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for (var i = 0; i < complaints.length; i++) { %>
+                                <% if(!complaints[i].isFromSystem){ %>
+                                    <tr>
+                                        <td><%=complaints[i].complaintFromName%> (<%=complaints[i].complaintFromRole%>)</td>
+                                        <td><%=complaints[i].complaintFrom %></td>
+                                        <td><%=complaints[i].complaintAbout%> (<%=complaints[i].complaintAboutRole%>)</td>
+                                        <td><%=complaints[i].className %></td>
+                                        <td><%=complaints[i].detail%></td>
+                                        <td>
+                                            <form action="/message" method="post">
+                                                <input type="hidden" name="complaintId" value= <%= complaints[i]._id%>  >
+                                                <input type="hidden" name="fullName" value= "<%= complaints[i].complaintAbout %>" >
+                                                <input type="hidden" name="className" value= <%= complaints[i].className %>>
+                                                <button class="btn btn-primary" type="submit" name="decision" value="issueWarning" style="margin: 3px 0 3px 0;"> Issue Warning </button> 
+                                                <button class="btn btn-primary" type="submit" name ="decision" value="acknowledge" style="margin: 3px 0 3px 0;"> acknowledge </button>
+                                                <% if (complaints[i].complaintFromRole == 'instructor'){ %>
+                                                    <button class="btn btn-primary" type="submit" name ="decision" value="deregister" style="margin: 3px 0 3px 0;"> De-register </button>
+                                                <%}%>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <%}%>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <b>Adbormal Grade Detected</b>
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col" style="width:25%">Class</th>
+                            <th scope="col" style="width:25%">Instructor</th>
+                            <th scope="col" style="width:25%">Details</th>
+                            <th scope="col" style="width:25%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for (var i = 0; i < complaints.length; i++) { %>
+                                <% if(complaints[i].isFromSystem){ %>
+                                    <tr>
+                                        <td><%=complaints[i].className%></td>
+                                        <td><%=complaints[i].complaintAbout%></td>
+                                        <td><%=complaints[i].detail%></td>
+                                        <td>
+                                            <form action="/message" method="post">
+                                                <input type="hidden" name="complaintId" value= <%= complaints[i]._id%>  >
+                                                <input type="hidden" name="fullName" value= "<%= complaints[i].complaintAbout %>" >
+                                                <input type="hidden" name="className" value= <%= complaints[i].className %>>
+                                                <button class="btn btn-primary" type="submit" name="decision" value="issueWarning" style="margin: 3px 0 3px 0;"> Issue Warning </button> 
+                                                <button class="btn btn-primary" type="submit" name ="decision" value="acknowledge" style="margin: 3px 0 3px 0;"> acknowledge </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <%}%>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+        <%}%>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  <b>In Box</b>
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col" style="width:16%">From</th>
+                            <th scope="col" style="width:17%">Email</th>
+                            <th scope="col" style="width:17%">Time</th>
+                            <th scope="col" style="width:50%">Message</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for (var i = 0; i < messages.length; i++) { %>
+                                <% if(messages[i].to == user.username){ %>
+                                    <tr>
+                                        <td><%=messages[i].from%></td>
+                                        <td><%=messages[i].fromEmail%></td>
+                                        <td><%=messages[i].dateTime%></td>
+                                        <td><%=messages[i].message%></td>
+                                    </tr>
+                                <%}%>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <b>Sent</b>
+                  </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                      <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th scope="col" style="width:16%">To</th>
+                              <th scope="col" style="width:17%">Time</th>
+                              <th scope="col" style="width:50%">Message</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <% for (var i = 0; i < messages.length; i++) { %>
+                                  <% if(messages[i].fromEmail == user.username){ %>
+                                      <tr>
+                                          <td><%=messages[i].to%></td>
+                                          <td><%=messages[i].dateTime%></td>
+                                          <td><%=messages[i].message%></td>
+                                      </tr>
+                                  <%}%>
+                              <%}%>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    <b>Send New Message</b>
+                  </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                      
+                        <form action="/sendMessage" method="post">
+                            <input type="text" class="form-control" name="sendTo" style="width: 30%; margin: auto;" placeholder="Send To Email"><br>
+                            <textarea name="message" cols="80" rows="10" placeholder="Type Your Message Here"></textarea><br>
+                            <button class="btn btn-primary" type="submit"> Send </button>
+                        </form>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <!-- @@@@@@@ -->
+        
 
-        <h3>Abnormal Grade Detected:</h3>
-        <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col" style="width:25%">Class</th>
-                <th scope="col" style="width:25%">Instructor</th>
-                <th scope="col" style="width:25%">Details</th>
-                <th scope="col" style="width:25%">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-                <% for (var i = 0; i < complaints.length; i++) { %>
-                    <% if(complaints[i].isFromSystem){ %>
-                        <tr>
-                            <td><%=complaints[i].className%></td>
-                            <td><%=complaints[i].complaintAbout%></td>
-                            <td><%=complaints[i].detail%></td>
-                            <td>
-                                <form action="/message" method="post">
-                                    <input type="hidden" name="complaintId" value= <%= complaints[i]._id%>  >
-                                    <input type="hidden" name="fullName" value= "<%= complaints[i].complaintAbout %>" >
-                                    <input type="hidden" name="className" value= <%= complaints[i].className %>>
-                                    <button class="btn btn-primary" type="submit" name="decision" value="issueWarning" style="margin: 3px 0 3px 0;"> Issue Warning </button> 
-                                    <button class="btn btn-primary" type="submit" name ="decision" value="acknowledge" style="margin: 3px 0 3px 0;"> acknowledge </button>
-                                </form>
-                            </td>
-                        </tr>
-                    <%}%>
-                <%}%>
-            </tbody>
-        </table>
-        <br><br><br>
+        
 </div>
 <%-include("footer")-%>

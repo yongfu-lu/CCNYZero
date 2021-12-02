@@ -6,6 +6,7 @@ const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
 const applicantSchema = schema.getApplicantSchema();
 const complaintSchema = schema.getComplaintSchema();
+const messageSchema = schema.getMessageSchema();
 
 exports.getTopStudents = getTopStudents;
 exports.getTopClasses = getTopClasses;
@@ -44,6 +45,7 @@ exports.denyGraduation =denyGraduation;
 exports.warnStudentsWithTooLessCourses =warnStudentsWithTooLessCourses;
 exports.cancelClassesWithTooLessStudents =cancelClassesWithTooLessStudents;
 exports.changeInstructor = changeInstructor;
+exports.getMessages = getMessages;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -702,3 +704,14 @@ function changeInstructor(Class,User, classID, oldInstructor, newInstructor){
   })
 }
 
+async function getMessages(Message){
+  var messages;
+  Message.find({},function(err, foundMessages){
+    if(err) console.log(err);
+    else{
+      messages = foundMessages;
+    }
+  })
+  await sleep();
+  return messages;
+}
