@@ -106,20 +106,27 @@
                     <table class="table table-hover">
                         <thead>
                           <tr>
-                            <th scope="col" style="width:16%">From</th>
-                            <th scope="col" style="width:17%">Email</th>
-                            <th scope="col" style="width:17%">Time</th>
+                            <th scope="col" style="width:12.5%">From</th>
+                            <th scope="col" style="width:12.5%">Email</th>
+                            <th scope="col" style="width:12.5%">Time</th>
                             <th scope="col" style="width:50%">Message</th>
+                            <th scope="col" style="width:12.5%"></th>
                           </tr>
                         </thead>
                         <tbody>
                             <% for (var i = 0; i < messages.length; i++) { %>
-                                <% if(messages[i].to == user.username){ %>
+                                <% if(messages[i].to == user.username && messages[i].hideInBox==false){ %>
                                     <tr>
                                         <td><%=messages[i].from%></td>
                                         <td><%=messages[i].fromEmail%></td>
                                         <td><%=messages[i].dateTime%></td>
                                         <td><%=messages[i].message%></td>
+                                        <td>
+                                          <form action="/hideMessage" method="post">
+                                            <input type="hidden" name="messageID" value="<%=messages[i]._id%>">
+                                            <button class="btn btn-primary" name="hide" value="hideInBox">Delete</button>
+                                          </form>
+                                        </td>
                                     </tr>
                                 <%}%>
                             <%}%>
@@ -142,15 +149,22 @@
                               <th scope="col" style="width:16%">To</th>
                               <th scope="col" style="width:17%">Time</th>
                               <th scope="col" style="width:50%">Message</th>
+                              <th scope="col" style="width:17%"></th>
                             </tr>
                           </thead>
                           <tbody>
                               <% for (var i = 0; i < messages.length; i++) { %>
-                                  <% if(messages[i].fromEmail == user.username){ %>
+                                  <% if(messages[i].fromEmail == user.username && messages[i].hideSentBox==false){ %>
                                       <tr>
                                           <td><%=messages[i].to%></td>
                                           <td><%=messages[i].dateTime%></td>
                                           <td><%=messages[i].message%></td>
+                                          <td>
+                                            <form action="/hideMessage" method="post">
+                                              <input type="hidden" name="messageID" value="<%=messages[i]._id%>">
+                                              <button class="btn btn-primary" name="hide" value="hideSentBox">Delete</button>
+                                            </form>
+                                          </td>
                                       </tr>
                                   <%}%>
                               <%}%>

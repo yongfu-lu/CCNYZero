@@ -63,14 +63,7 @@ User.findOne({role:"registrar"}, function(err, foundUser){
 /**************** do testing code here **********/
 //var today = new Date("2021-08-13T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
-const newmessage = new Message({
-    from:"It's me",
-    fromEmail:"admin@ccny",
-    to:"Jerry@ccny",
-    dateTime: time.today,
-    message:"Sending this email to jerry"
-});
-newmessage.save();
+
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
@@ -159,11 +152,11 @@ app.post("/changePassword", function(req, res){
 
 // ********************** apply-related methods *******************
 app.get("/applyStudent", function(req, res) {
-    res.render("apply", {title:"Apply student",user:req.user,role:"student"});
+    res.render("apply", {title:"Apply Student",user:req.user,role:"student"});
   })
   
 app.get("/applyInstructor", function(req, res) {
-    res.render("apply",{title:"Apply instructor",user:req.user,role:"instructor"});
+    res.render("apply",{title:"Apply Instructor",user:req.user,role:"instructor"});
   })
   
   
@@ -258,11 +251,28 @@ app.post("/sendMessage", function(req, res){
         fromEmail: req.user.username,
         to:req.body.sendTo,
         dateTime: time.today,
-        message:req.body.message
+        message:req.body.message,
+        hideInBox:false,
+        hideSentBox:false
     })
     newMessage.save( function(err, doc){
         res.redirect("/message");
     })
+})
+
+app.post("/hideMessage", function(req,res){
+    const messageID = req.body.messageID;
+    if(req.body.hide=="hideSentBox")
+        Message.updateOne({_id:messageID},{hideSentBox:true},function(err){
+            if(err) console.log(err);
+            else res.redirect("/message")
+        })
+    else{
+        Message.updateOne({_id:messageID},{hideInBox:true},function(err){
+            if(err) console.log(err);
+            else res.redirect("/message")
+        })
+    }
 })
 
 app.get("/application", async function(req,res){
@@ -302,7 +312,7 @@ app.get("/graduationApplication", async function(req, res){
         res.redirect("/logout");
     else{
         const graduationApplications = await query.getGraduationApplications(GraduationApplication);
-        res.render("graduationApplication", {title:"Graduation application",user:req.user, applications: graduationApplications});
+        res.render("graduationApplication", {title:"Graduation Application",user:req.user, applications: graduationApplications});
     }
 })
 
@@ -311,7 +321,7 @@ app.post("/graduationApplication", async function(req, res){
     console.log(action);
     if(action == "record"){
         User.findOne({username:req.body.studentEmail},function(err, foundStudent){
-            res.render("graduationAcademicsRecord",{title:"Academic Record",user:req.user,required_courses:required_courses,studentName:foundStudent.fullname ,taken_classes: foundStudent.taken_class});
+            res.render("graduationAcademicsRecord",{title:"Academics Record",user:req.user,required_courses:required_courses,studentName:foundStudent.fullname ,taken_classes: foundStudent.taken_class});
         })
     }else if (action == "approve"){
         await query.approveGraduation(GraduationApplication, User,req.body.applicationID, req.body.studentEmail);
@@ -327,7 +337,7 @@ app.get("/allStudents", async function(req, res){
     res.redirect("/logout");
     else{
         const allStudents = await query.getAllStudents(User);
-        res.render("allStudents", {title:"All students",user:req.user, students: allStudents});
+        res.render("allStudents", {title:"All Students",user:req.user, students: allStudents});
     }
 })
 
@@ -354,7 +364,7 @@ app.post("/allstudents", async function(req, res){
         User.findOne({username:req.body.email}, function(err, foundStudent){
             if(err) console.log(err)
             else{
-                res.render("myAcademics",{title:"Academics",user:req.user,userRole:"registrar",
+                res.render("myAcademics",{title:"Academics Record",user:req.user,userRole:"registrar",
                 studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, 
                 taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA,
                 honors:foundStudent.honor,
@@ -406,7 +416,7 @@ app.post("/allInstructors", async function(req, res){
         })
     }else if (req.body.action == "checkWarning"){
         User.findOne({username:req.body.email},function(err, foundUser){
-            res.render("instructorWarnings", {title:"Warning",instructor:foundUser, user:req.user})
+            res.render("instructorWarnings", {title:"Warnings",instructor:foundUser, user:req.user})
         })
     }
 })
@@ -425,7 +435,7 @@ app.post("/allClasses", async function(req,res){
         Class.findOne({_id:classID}, function(err, foundClass){
             if(err) console.log(err);
             else{
-                res.render("classDetails", {title:"Class detail",user:req.user,targetClass:foundClass, instructors:allInstructors});
+                res.render("classDetails", {title:"Class Detail",user:req.user,targetClass:foundClass, instructors:allInstructors});
             }
         })
     }
@@ -471,7 +481,7 @@ app.post("/studentWarnings", function(req,res){
         User.update({CCNYID:req.body.studentID},{warning:warnings}, function(err){
             if(err) console.log(err)
             else{
-                res.render("myAcademics",{title:"Academics",user:req.user,userRole:"registrar",
+                res.render("myAcademics",{title:"Academics Record",user:req.user,userRole:"registrar",
                     studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, 
                     taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA,
                     honors:foundStudent.honor,
@@ -513,7 +523,7 @@ app.get("/classSignUp", async function(req,res){
         if(time.getPeriod(today) == "classRunning" && today < time.specialPeriodEnd){
             isSpecialPeriod = true;
         }
-        res.render("classSignUp",{title:"Class signup",period:time.getPeriod(today),isSpecialPeriod:isSpecialPeriod,
+        res.render("classSignUp",{title:"Class Signup",period:time.getPeriod(today),isSpecialPeriod:isSpecialPeriod,
             student:req.user,classes:classes,user:req.user});
     }
 })
@@ -550,7 +560,7 @@ app.post("/classSetUp", function(req,res){
             }
         });
     });
-    res.render("classSetUp", {title:"Class setup",user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:true});
+    res.render("classSetUp", {title:"Class Setup",user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:true});
 
 })
 
@@ -597,7 +607,7 @@ app.post("/classSignUp", async function(req,res){
         }
     }else if (req.body.action == "checkReview"){
         Class.findOne({_id:req.body.classID}, function(err, foundClass){
-            res.render("classDetails", {title:"Class detail",user:req.user,targetClass:foundClass});
+            res.render("classDetails", {title:"Class Detail",user:req.user,targetClass:foundClass});
         })
     }
     
@@ -646,7 +656,7 @@ app.get("/myAcademics", async function(req,res){
     }else{
         const enrolled_classes = req.user.enrolled_class;
         var taking_classes = await query.getEnrolledClassObjects(Class, enrolled_classes)
-        res.render("myAcademics",{title:"Academics",user:req.user,userRole:"student",studentName:req.user.fullname,
+        res.render("myAcademics",{title:"Academics Record",user:req.user,userRole:"student",studentName:req.user.fullname,
         taken_classes:req.user.taken_class, taking_classes:taking_classes,
         GPA:req.user.GPA, honors:req.user.honor, warnings:req.user.warning, studentID:req.user.CCNYID});
     }
@@ -708,7 +718,7 @@ app.post("/studentMyClasses", async function(req,res){
         })
 
     }else if (action == "rate"){
-        res.render("rateClass",{title:"Rate  Class",user:req.user,classID: classID, className:className,classSection:classSection, instructor:instructor});
+        res.render("rateClass",{title:"Rate Class",user:req.user,classID: classID, className:className,classSection:classSection, instructor:instructor});
     }else if (action == "checkReview"){
         Class.findOne({_id:classID}, function(err, foundClass){
             res.render("classDetails", {title:"Class Detail",user:req.user,targetClass:foundClass});
@@ -776,7 +786,7 @@ app.post("/instructorMyClasses", async function(req, res){
     User.findOne({username:studentEmail}, function(err, foundStudent){
         if(err) console.log(err);
         else if(req.body.action == "record"){
-            res.render("myAcademics",{title:"Academics",user:req.user,userRole:"instructor",studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
+            res.render("myAcademics",{title:"Academics Record",user:req.user,userRole:"instructor",studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
         }
         else if (req.body.action == "grading"){
             res.render("instructorGrading",{title:"Grading",user:req.user,studentName:foundStudent.fullname,

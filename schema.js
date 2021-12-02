@@ -106,6 +106,8 @@ exports.getMessageSchema = function(){
         fromEmail: String,
         to:String,
         dateTime: String,
-        message:String
+        message:String,
+        hideInBox:Boolean,
+        hideSentBox:Boolean,
     })
 }
