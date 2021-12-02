@@ -146,10 +146,14 @@
 </div>
 
 <script type="text/javascript">
-  if (<%=user.suspended%> || <%=user.terminated%> ){
-    $(window).on('load', function() {
-      $('#myModal2').modal('show');  
-  });
-  }
+    <%if(user != null){%>
+      if (<%=user.suspended%> || <%=user.terminated%> ){
+      $(window).on('load', function() {
+        $('#myModal2').modal('show');  
+    });
+    }
+    <%}%>
+
+  
 </script>
 <%- include("footer")-%>
