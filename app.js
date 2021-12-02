@@ -217,7 +217,6 @@ app.post("/message", function(req,res){
     var complaintId = req.body.complaintId;
     var fullName = req.body.fullName;
     var className = req.body.className;
-    console.log(fullName)
     if(decision == "issueWarning" || decision == "deregister"){
         res.render("sendWarning", {user:req.user, decision:decision, complaintId: complaintId, fullName: fullName,className:className})
     }else{
@@ -413,9 +412,6 @@ app.post("/classDetails", function(req,res){
     const oldInstructor = req.body.oldInstructor;
     const newInstructor = req.body.newInstructor;
     const classID = req.body.classID;
-    console.log(oldInstructor)
-    console.log(newInstructor)
-    console.log(classID)
     query.changeInstructor(Class,User, classID, oldInstructor, newInstructor);
     res.redirect("/allClasses")
 
@@ -587,7 +583,6 @@ app.post("/classSignUp", async function(req,res){
 app.post("/rateClass",function(req,res){
     var review = req.body.review;
     var count = utility.passTabooWordsCheck(review, tabooWords);
-    console.log(count)
     if(count>2){
         query.giveWarning(User, req.user.username, "Taboo Warning");
         query.giveWarning(User, req.user.username, "Taboo Warning");
@@ -795,7 +790,13 @@ app.post("/instructorGrading", async function(req, res){
         res.redirect("/instructorMyClasses")
 })
 
-
+app.get("/instructorWarning", function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'instructor'){
+        res.redirect("/logout");
+    }else{
+        res.render("instructorWarnings", {instructor:req.user, user:req.user})
+    } 
+})
 
 
 /*****   This methods will be called only once after grading period end             *****/
