@@ -129,6 +129,27 @@
               </table>
         </div>
         <br><br>   
-
         
+<!-- Modal -->
+<div id="myModal2" class="modal fade">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">You are suspended</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" data-target="#myModal2">&times;</button>
+          </div>
+          <div class="modal-body">
+              <p>You are suspended, please send message to admin@ccny to contact program registrar.</p>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (<%=user.suspended%> || <%=user.terminated%> ){
+    $(window).on('load', function() {
+      $('#myModal2').modal('show');  
+  });
+  }
+</script>
 <%- include("footer")-%>
