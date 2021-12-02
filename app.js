@@ -78,7 +78,7 @@ app.get("/",async function(req, res){
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("home",{ user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
+        res.render("home",{ title:"Home",user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
 })
 
 //if user already login, redirect to their homepage, no need to log in again
@@ -86,7 +86,7 @@ app.get("/login", function(req,res){
     if(req.user){
         res.redirect("/");
     } else{
-        res.render("login", {wrongPassword:false, user:req.user});
+        res.render("login", {title:"Login",wrongPassword:false, user:req.user});
     }
 })
 
@@ -97,7 +97,7 @@ app.get("/logout", function(req, res){
 
 app.get("/wrongPassword", function(req,res){
     req.logout();
-    res.render("login", {wrongPassword:true, user:req.user})
+    res.render("login", {title:"Login",wrongPassword:true, user:req.user})
 })
 
 
@@ -105,7 +105,7 @@ app.get("/changePassword", function(req,res){
     if(!req.isAuthenticated()){
         res.redirect("/logout");
     }else{
-        res.render("changePassword",{user:req.user});
+        res.render("changePassword",{title:"Change Password",user:req.user});
     }
 })
 
@@ -159,11 +159,11 @@ app.post("/changePassword", function(req, res){
 
 // ********************** apply-related methods *******************
 app.get("/applyStudent", function(req, res) {
-    res.render("apply", {user:req.user,role:"student"});
+    res.render("apply", {title:"Apply student",user:req.user,role:"student"});
   })
   
 app.get("/applyInstructor", function(req, res) {
-    res.render("apply",{user:req.user,role:"instructor"});
+    res.render("apply",{title:"Apply instructor",user:req.user,role:"instructor"});
   })
   
   
@@ -216,7 +216,7 @@ app.get("/message", async function(req,res){
     else{
         var complaints = await query.getComplaints(Complaint);
         var messages = await query.getMessages(Message);
-        res.render("message", {user:req.user, complaints : complaints, messages:messages});
+        res.render("message", {title:"Message",user:req.user, complaints : complaints, messages:messages});
     }
 
 })
@@ -228,7 +228,7 @@ app.post("/message", function(req,res){
     var fullName = req.body.fullName;
     var className = req.body.className;
     if(decision == "issueWarning" || decision == "deregister"){
-        res.render("sendWarning", {user:req.user, decision:decision, complaintId: complaintId, fullName: fullName,className:className})
+        res.render("sendWarning", {title:"Send Warning", user:req.user, decision:decision, complaintId: complaintId, fullName: fullName,className:className})
     }else{
         Complaint.updateOne({_id:complaintId},{decided:true}, function(err){
             if(err) console.log(err);
@@ -272,7 +272,7 @@ app.get("/application", async function(req,res){
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
     var allStudents = await query.getAllStudents(User);
-    res.render("application", {user:req.user,studentApplications:studentApplications, 
+    res.render("application", {title:"Application",user:req.user,studentApplications:studentApplications, 
         instructorApplications:instructorApplications,
         programQuota:programQuota,
         totalStudents:allStudents.length});
@@ -302,7 +302,7 @@ app.get("/graduationApplication", async function(req, res){
         res.redirect("/logout");
     else{
         const graduationApplications = await query.getGraduationApplications(GraduationApplication);
-        res.render("graduationApplication", {user:req.user, applications: graduationApplications});
+        res.render("graduationApplication", {title:"Graduation application",user:req.user, applications: graduationApplications});
     }
 })
 
@@ -311,7 +311,7 @@ app.post("/graduationApplication", async function(req, res){
     console.log(action);
     if(action == "record"){
         User.findOne({username:req.body.studentEmail},function(err, foundStudent){
-            res.render("graduationAcademicsRecord",{user:req.user,required_courses:required_courses,studentName:foundStudent.fullname ,taken_classes: foundStudent.taken_class});
+            res.render("graduationAcademicsRecord",{title:"Academic Record",user:req.user,required_courses:required_courses,studentName:foundStudent.fullname ,taken_classes: foundStudent.taken_class});
         })
     }else if (action == "approve"){
         await query.approveGraduation(GraduationApplication, User,req.body.applicationID, req.body.studentEmail);
@@ -327,7 +327,7 @@ app.get("/allStudents", async function(req, res){
     res.redirect("/logout");
     else{
         const allStudents = await query.getAllStudents(User);
-        res.render("allStudents", {user:req.user, students: allStudents});
+        res.render("allStudents", {title:"All students",user:req.user, students: allStudents});
     }
 })
 
@@ -336,7 +336,7 @@ app.get("/allInstructors", async function(req, res){
     res.redirect("/logout");
     else{
         const allInstructors = await query.getAllInstructors(User);
-        res.render("allInstructors", {user:req.user,instructors: allInstructors});
+        res.render("allInstructors", {title:"All Instructors",user:req.user,instructors: allInstructors});
     }
 })
 
@@ -345,7 +345,7 @@ app.get("/allClasses", async function(req, res){
     res.redirect("/logout");
     else{
         const allClasses = await query.getAllCurrentClasses(Class);
-        res.render("allClasses", {user:req.user,classes:allClasses});
+        res.render("allClasses", {title:"All Classes",user:req.user,classes:allClasses});
     }  
 })
 
@@ -354,7 +354,7 @@ app.post("/allstudents", async function(req, res){
         User.findOne({username:req.body.email}, function(err, foundStudent){
             if(err) console.log(err)
             else{
-                res.render("myAcademics",{user:req.user,userRole:"registrar",
+                res.render("myAcademics",{title:"Academics",user:req.user,userRole:"registrar",
                 studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, 
                 taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA,
                 honors:foundStudent.honor,
@@ -385,7 +385,7 @@ app.post("/allstudents", async function(req, res){
 app.post("/allInstructors", async function(req, res){
     if(req.body.action == "checkClasses"){
         var teachingClasses = await query.getTeachingClasses(Class,req.body.instructorName,today.getFullYear(),currentSemester);
-        res.render("instructorMyClasses", {user:req.user,period: time.getPeriod(today), teachingClasses:teachingClasses})
+        res.render("instructorMyClasses", {title:"My Classes",user:req.user,period: time.getPeriod(today), teachingClasses:teachingClasses})
     }else if (req.body.action == "unsuspend" ||req.body.action == "suspend" ){
         var suspend = true;
         if(req.body.action == "unsuspend") suspend = false;
@@ -406,7 +406,7 @@ app.post("/allInstructors", async function(req, res){
         })
     }else if (req.body.action == "checkWarning"){
         User.findOne({username:req.body.email},function(err, foundUser){
-            res.render("instructorWarnings", {instructor:foundUser, user:req.user})
+            res.render("instructorWarnings", {title:"Warning",instructor:foundUser, user:req.user})
         })
     }
 })
@@ -425,7 +425,7 @@ app.post("/allClasses", async function(req,res){
         Class.findOne({_id:classID}, function(err, foundClass){
             if(err) console.log(err);
             else{
-                res.render("classDetails", {user:req.user,targetClass:foundClass, instructors:allInstructors});
+                res.render("classDetails", {title:"Class detail",user:req.user,targetClass:foundClass, instructors:allInstructors});
             }
         })
     }
@@ -457,7 +457,7 @@ app.post("/instructorWarnings", async function(req, res){
         User.updateOne({username:req.body.email},{warning:warnings}, function(err){
             if(err) console.log(err)
             else{
-                res.render("instructorWarnings", {instructor:foundUser, user:req.user})
+                res.render("instructorWarnings", {title:"Warnings",instructor:foundUser, user:req.user})
             }
         })
     })
@@ -471,7 +471,7 @@ app.post("/studentWarnings", function(req,res){
         User.update({CCNYID:req.body.studentID},{warning:warnings}, function(err){
             if(err) console.log(err)
             else{
-                res.render("myAcademics",{user:req.user,userRole:"registrar",
+                res.render("myAcademics",{title:"Academics",user:req.user,userRole:"registrar",
                     studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, 
                     taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA,
                     honors:foundStudent.honor,
@@ -499,7 +499,7 @@ app.get("/classSetUp", async function(req,res){
         res.redirect("/logout");
     }else{
         instructors = await query.getAvailableInstructors(User);
-        res.render("classSetUp", {user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:false});
+        res.render("classSetUp", {title:"Class setup",user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:false});
     }
 })
 
@@ -513,7 +513,7 @@ app.get("/classSignUp", async function(req,res){
         if(time.getPeriod(today) == "classRunning" && today < time.specialPeriodEnd){
             isSpecialPeriod = true;
         }
-        res.render("classSignUp",{period:time.getPeriod(today),isSpecialPeriod:isSpecialPeriod,
+        res.render("classSignUp",{title:"Class signup",period:time.getPeriod(today),isSpecialPeriod:isSpecialPeriod,
             student:req.user,classes:classes,user:req.user});
     }
 })
@@ -550,7 +550,7 @@ app.post("/classSetUp", function(req,res){
             }
         });
     });
-    res.render("classSetUp", {user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:true});
+    res.render("classSetUp", {title:"Class setup",user:req.user,period:time.getPeriod(today), instructors:instructors, justAdded:true});
 
 })
 
@@ -568,36 +568,36 @@ app.post("/classSignUp", async function(req,res){
     if(req.body.action == "signup"){
         //maximun enroll class is 4 classes
         if(req.user.enrolled_class.length >= 4){
-            res.render("classSignUpResult", {user:req.user,result:"❗️Fail", detail:"You cannot sign up more than 4 classes"});
+            res.render("classSignUpResult", {title:"Result",user:req.user,result:"❗️Fail", detail:"You cannot sign up more than 4 classes"});
             return;
         }else{
             //if student already pass this class, cannot take it again
             for(var i = 0; i<takenClasses.length; i++){
                 if(takenClasses[i].course_shortname == classShortName && takenClasses[i].grade != 'F' && takenClasses[i].grade != 'W'){
-                    res.render("classSignUpResult", {user:req.user,result:"❗️Fail", detail:"You already passed this class"});
+                    res.render("classSignUpResult", {title:"Result",user:req.user,result:"❗️Fail", detail:"You already passed this class"});
                     return;
                 }
             }
         }
         //if student schedule time conflit with new class, add class will fail
         if(time.conflict(schedules, newClassSchedule)){
-            res.render("classSignUpResult", {user:req.user,result:"❗️Fail", detail:"Schedule Conflict"});
+            res.render("classSignUpResult", {title:"Result",user:req.user,result:"❗️Fail", detail:"Schedule Conflict"});
         }else if (studentsAlreadyInClass >= classSize){
             query.addStudentToWaitList(User,Class,req.body.classID, req.user.username);
-            res.render("classSignUpResult", {user:req.user,result:"❗️This class is full", detail:"You will be put in wait list."})
+            res.render("classSignUpResult", {title:"Result",user:req.user,result:"❗️This class is full", detail:"You will be put in wait list."})
         }else{
             User.updateOne({username:req.user.username}, {$push:{enrolled_class:req.body.classID}}, function(err, user){
                 if(err) console.log(err);
                 else{
                     console.log("Add enrolled class to student");
                     query.addStudentToClass(Class,req.body.classID, req.user.username, req.user.fullname);
-                    res.render("classSignUpResult", {user:req.user,result:"✓Success", detail:"You added new class to your schedule."});
+                    res.render("classSignUpResult", {title:"Result",user:req.user,result:"✓Success", detail:"You added new class to your schedule."});
                 }
             });
         }
     }else if (req.body.action == "checkReview"){
         Class.findOne({_id:req.body.classID}, function(err, foundClass){
-            res.render("classDetails", {user:req.user,targetClass:foundClass});
+            res.render("classDetails", {title:"Class detail",user:req.user,targetClass:foundClass});
         })
     }
     
@@ -646,7 +646,7 @@ app.get("/myAcademics", async function(req,res){
     }else{
         const enrolled_classes = req.user.enrolled_class;
         var taking_classes = await query.getEnrolledClassObjects(Class, enrolled_classes)
-        res.render("myAcademics",{user:req.user,userRole:"student",studentName:req.user.fullname,
+        res.render("myAcademics",{title:"Academics",user:req.user,userRole:"student",studentName:req.user.fullname,
         taken_classes:req.user.taken_class, taking_classes:taking_classes,
         GPA:req.user.GPA, honors:req.user.honor, warnings:req.user.warning, studentID:req.user.CCNYID});
     }
@@ -660,7 +660,7 @@ app.get("/studentMyClasses",async function(req,res){
         const classIds = req.user.enrolled_class;
         const enrolledClass = await query.getEnrolledClassObjects(Class, classIds);
         const period = time.getPeriod(today);
-        res.render("studentMyClasses", {enrolledClasses:enrolledClass, period:period, user:req.user});
+        res.render("studentMyClasses", {title:"My Classes",enrolledClasses:enrolledClass, period:period, user:req.user});
     }
 })
 
@@ -668,7 +668,7 @@ app.get("/balance", function(req, res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("balance",{user:req.user,balance:req.user.balanceOwe});
+        res.render("balance",{title:"Balance",user:req.user,balance:req.user.balanceOwe});
     }
 })
 
@@ -708,10 +708,10 @@ app.post("/studentMyClasses", async function(req,res){
         })
 
     }else if (action == "rate"){
-        res.render("rateClass",{user:req.user,classID: classID, className:className,classSection:classSection, instructor:instructor});
+        res.render("rateClass",{title:"Rate  Class",user:req.user,classID: classID, className:className,classSection:classSection, instructor:instructor});
     }else if (action == "checkReview"){
         Class.findOne({_id:classID}, function(err, foundClass){
-            res.render("classDetails", {user:req.user,targetClass:foundClass});
+            res.render("classDetails", {title:"Class Detail",user:req.user,targetClass:foundClass});
         })
     }
 })
@@ -721,7 +721,7 @@ app.get("/fileComplaint", function(req,res){
     if(!req.isAuthenticated()){
         res.redirect("/logout");
     }else{
-        res.render("fileComplaint", {user:req.user,userRole:req.user.role});
+        res.render("fileComplaint", {title:"File Complaint",user:req.user,userRole:req.user.role});
     }
 })
 
@@ -738,7 +738,7 @@ app.get("/applyGraduation", function(req,res){
     if(!req.isAuthenticated() || req.user.role != 'student'){
         res.redirect("/logout");
     }else{
-        res.render("applyGraduation", {user:req.user,required_courses: required_courses})
+        res.render("applyGraduation", {title:"Apply Graduation",user:req.user,required_courses: required_courses})
     }
 })
 
@@ -767,7 +767,7 @@ app.get("/instructorMyClasses", async function(req,res){
         res.redirect("/logout");
     }else{
         teachingClasses = await query.getTeachingClasses(Class,req.user.fullname,today.getFullYear(),currentSemester);
-        res.render("instructorMyClasses", {user:req.user,period: time.getPeriod(today), teachingClasses:teachingClasses})
+        res.render("instructorMyClasses", {title:"My Classes",user:req.user,period: time.getPeriod(today), teachingClasses:teachingClasses})
     }
 })
 
@@ -776,10 +776,10 @@ app.post("/instructorMyClasses", async function(req, res){
     User.findOne({username:studentEmail}, function(err, foundStudent){
         if(err) console.log(err);
         else if(req.body.action == "record"){
-            res.render("myAcademics",{user:req.user,userRole:"instructor",studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
+            res.render("myAcademics",{title:"Academics",user:req.user,userRole:"instructor",studentID:foundStudent.CCNYID,studentName: foundStudent.fullname, taken_classes:foundStudent.taken_class, GPA:foundStudent.GPA})
         }
         else if (req.body.action == "grading"){
-            res.render("instructorGrading",{user:req.user,studentName:foundStudent.fullname,
+            res.render("instructorGrading",{title:"Grading",user:req.user,studentName:foundStudent.fullname,
                 studentEmail:studentEmail,
                 className:req.body.className,
                 classID:req.body.classID,
@@ -817,7 +817,7 @@ app.get("/instructorWarning", function(req, res){
     if(!req.isAuthenticated() || req.user.role != 'instructor'){
         res.redirect("/logout");
     }else{
-        res.render("instructorWarnings", {instructor:req.user, user:req.user})
+        res.render("instructorWarnings", {title:"Warnings",instructor:req.user, user:req.user})
     } 
 })
 

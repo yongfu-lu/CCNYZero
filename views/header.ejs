@@ -12,7 +12,7 @@
     />
     <link rel="stylesheet" href="styles/styles.css" />
     <link rel="stylesheet" href="fontawesome/css/font-awesome.css" />
-    <title>Home</title>
+    <title><%=title%></title>
   </head>
   <body>
     <nav
@@ -36,38 +36,38 @@
         <div class="collapse navbar-collapse" id="navbarsExample04">
           <ul class="navbar-nav ms-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
+              <a class="nav-link" id="Home" aria-current="page" href="/">Home</a>
             </li>
             <%if(user!= null){%>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/message"
+                <a class="nav-link" id="Message" aria-current="page" href="/message"
                   >Message</a
                 >
               </li>
             <%}%>
             <%if(user!= null && user.role == "student"){%>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/classSignUp"
+              <a class="nav-link" id="Class signup"aria-current="page" href="/classSignUp"
                 >Class Register</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/studentMyClasses"
+              <a class="nav-link" id="My Classes" aria-current="page" href="/studentMyClasses"
                 >My Classes</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/myAcademics"
+              <a class="nav-link" id="Academics" aria-current="page" href="/myAcademics"
                 >My Academics</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/balance"
+              <a class="nav-link" id="Balance"aria-current="page" href="/balance"
                 >Balance</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/fileComplaint"
+              <a class="nav-link" id="File Complaint" aria-current="page" href="/fileComplaint"
                 >File Complaint</a
               >
             </li>
@@ -76,17 +76,18 @@
               <a
                 class="nav-link"
                 aria-current="page"
+                id="My Classes"
                 href="/instructorMyClasses"
                 >My Classes</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/fileComplaint"
+              <a class="nav-link" aria-current="page" id="File Complaint" href="/fileComplaint"
                 >File Complaint</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/instructorWarning"
+              <a class="nav-link" aria-current="page" id="Warnings" href="/instructorWarning"
                 >My Warning</a
               >
             </li>
@@ -114,7 +115,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/classSetup"
+              <a class="nav-link" id="Class setup"aria-current="page" href="/classSetup"
                 >Class Setup</a
               >
             </li>
@@ -270,3 +271,7 @@
     </nav>
   </body>
 </html>
+
+<script>
+    document.getElementById("<%=title%>").classList.add('active');
+</script>
