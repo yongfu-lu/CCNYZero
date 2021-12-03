@@ -10,7 +10,7 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-    
+
     <link rel="stylesheet" href="styles/styles.css" />
     <link rel="stylesheet" href="fontawesome/css/font-awesome.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -40,6 +40,13 @@
             <li class="nav-item">
               <a class="nav-link" id="Home" aria-current="page" href="/">Home</a>
             </li>
+            <%if(user!=null && user.role=="student" && user.showTutorial){%>
+              <li class="nav-item">
+                <a class="nav-link" id="Tutorial"aria-current="page" href="/tutorial"
+                  >Tutorial</a
+                >
+              </li>
+            <%}%>
             <%if(user!= null){%>
               <li class="nav-item">
                 <a class="nav-link" id="Message" aria-current="page" href="/message"
@@ -48,6 +55,7 @@
               </li>
             <%}%>
             <%if(user!= null && user.role == "student"){%>
+
             <li class="nav-item">
               <a class="nav-link" id="Class signup"aria-current="page" href="/classSignUp"
                 >Class Register</a

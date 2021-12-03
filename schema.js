@@ -59,6 +59,7 @@ exports.getUserSchema = function(){
         specialPeriod:Boolean,
         balanceOwe:Number,
         tabooWords: [],
+        showTutorial:Boolean,
     });
     
 }

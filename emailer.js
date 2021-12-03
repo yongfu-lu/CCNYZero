@@ -46,10 +46,14 @@ exports.sendRejectEmail = function(email, name){
 }
 
 
-exports.sendAcceptEmail = function(email, name, gpa, User){
+exports.sendAcceptEmail = function(email, name, role, User){
     var newStudentID = Math.floor(Math.random()*10000).toString();
     var newStudentEmail = name+newStudentID+"@ccny";
     var password = "123";
+    var showTutorial = false;
+    if(role == "student"){
+        showTutorial = true;
+    }
 
     const options = {
         from: "ccnyzero@hotmail.com",
@@ -70,7 +74,7 @@ exports.sendAcceptEmail = function(email, name, gpa, User){
         CCNYID:newStudentID,
         username:newStudentEmail,
         fullname:name,
-        role:"student",
+        role:role,
         GPA:0,
         warning:[],
         suspended:false,
@@ -83,6 +87,7 @@ exports.sendAcceptEmail = function(email, name, gpa, User){
         masterDegreeObtained : false,
         specialPeriod : false,
         balanceOwe:0,
+        showTutorial:showTutorial,
         }, password, function(err,user){
             if(err){
                 console.log(err);

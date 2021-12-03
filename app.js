@@ -294,7 +294,7 @@ app.post("/application", function(req,res){
     if(decision == "reject"){
         emailer.sendRejectEmail(req.body.email,req.body.fullname);
     }else{
-        emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.GPA, User);
+        emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.role, User);
     }
 
     Applicant.updateMany({email:req.body.email, role:req.body.role},{decided:true}, function(err){
