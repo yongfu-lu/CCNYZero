@@ -61,7 +61,7 @@ User.findOne({role:"registrar"}, function(err, foundUser){
     tabooWords = foundUser.tabooWords;
 })
 /**************** do testing code here **********/
-//var today = new Date("2021-08-13T00:00:00")
+var today = new Date("2021-08-13T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
 
 /*********** All route from here ********/
@@ -848,21 +848,21 @@ app.get("/instructorWarning", function(req, res){
 
 /*****   This methods will be called only once after grading period end             *****/
 /*****   It will send warning or honor to students or instructors        *****/
-// var gradeAnalyzed = false;
-// if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
-//     //year, semester, Class, User,
-//     utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
-//     gradeAnalyzed = true;
-// }
+var gradeAnalyzed = false;
+if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
+    //year, semester, Class, User,
+    utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+    gradeAnalyzed = true;
+}
 
 
 /****************  This method will be called only once when class running period starts  *************/
 /***It takes care of cancel classes, give student extra peroid to sign up, warning student etc. *******/
-// var classAnalyzed = false;
-// if(time.getPeriod(today) == "classRunning" !classAnalyzed){
-//     utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
-//     classAnalyzed = true;
-// }
+var classAnalyzed = false;
+if(time.getPeriod(today) == "classRunning" && !classAnalyzed){
+    utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+    classAnalyzed = true;
+}
 
 
 /** server port **/

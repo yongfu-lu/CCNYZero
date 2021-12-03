@@ -119,7 +119,7 @@
                                     <tr>
                                         <td><%=messages[i].from%></td>
                                         <td><%=messages[i].fromEmail%></td>
-                                        <td><%=messages[i].dateTime%></td>
+                                        <td><%=messages[i].dateTime.slice(0,24)%></td>
                                         <td><%=messages[i].message%></td>
                                         <td>
                                           <form action="/hideMessage" method="post">
@@ -157,7 +157,7 @@
                                   <% if(messages[i].fromEmail == user.username && messages[i].hideSentBox==false){ %>
                                       <tr>
                                           <td><%=messages[i].to%></td>
-                                          <td><%=messages[i].dateTime%></td>
+                                          <td><%=messages[i].dateTime.slice(0,24)%></td>
                                           <td><%=messages[i].message%></td>
                                           <td>
                                             <form action="/hideMessage" method="post">
