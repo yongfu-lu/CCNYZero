@@ -102,3 +102,7 @@
     right:0;
     left:auto !important;
   }
+
+  .tutorial-image{
+      width:70%;
+  }

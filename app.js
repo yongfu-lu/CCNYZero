@@ -135,6 +135,20 @@ app.post("/login", function(req,res){
       });
 })
 
+app.get("/tutorial", function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'student'){
+        res.redirect("/logout");
+    }else{
+        res.render("tutorial", {title:"Tutorial", user:req.user});
+    }
+})
+
+app.post("/showTutorial", function(req,res){
+    User.updateOne({username:req.user.username}, {showTutorial:false}, function(err){
+        if(err) console.log(err)
+        else res.redirect("/");
+    })
+})
 
 app.post("/changePassword", function(req, res){
     const username = req.user.username
