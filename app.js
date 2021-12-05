@@ -552,7 +552,8 @@ app.post("/classSetUp", function(req,res){
         instructor:req.body.instructor,
         year: today.getFullYear(),
         semester: "Fall",
-        max_capacity: req.body.classSize,   
+        max_capacity: req.body.classSize, 
+        canceled:false,  
         schedule: [
         {
             day: req.body.day1,

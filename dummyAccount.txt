@@ -1,6 +1,15 @@
 admin@ccny      qqq        registrar
+ironman@ccny    333        instructor
+spider@ccny     123        instructor
+
 tom@ccny        333        student
 jerry@ccny      123        student
 bob@ccny        123        student
-ironman@ccny    333        instructor
-spider@ccny     123        instructor
+Zelda@ccny
+link@ccny  
+pikachu@ccny
+mario@ccny
+luigi@ccny
+chopper@ccny
+doreamon@ccny
+xueqi476@ccny
