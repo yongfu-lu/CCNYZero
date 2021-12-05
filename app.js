@@ -61,7 +61,7 @@ User.findOne({role:"registrar"}, function(err, foundUser){
     tabooWords = foundUser.tabooWords;
 })
 /**************** do testing code here **********/
-var today = new Date("2021-08-13T00:00:00")
+var today = new Date("2021-08-17T00:00:00")
 // User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
 
 /*********** All route from here ********/
@@ -707,6 +707,8 @@ app.post("/studentMyClasses", async function(req,res){
     const year = req.body.year;
     const semester = req.body.semester;
     if(action == "drop"){
+        console.log(classID)
+        console.log(className)
         User.findOneAndUpdate({username:req.user.username}, {$pull:{enrolled_class:req.body.classID}},function(err){
             if(err)  console.log(err)
             else{
