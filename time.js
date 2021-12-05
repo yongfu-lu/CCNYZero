@@ -79,7 +79,11 @@ function conflict(schedules, newClassSchedule){
            }else{
              //if new class start time is between any old class start and end time.
              //or new class end time is between any old class start and end time, conflit
-             if(newClassSchedule[j][1] >= temp[1] && newClassSchedule[j][1] < temp[2] || newClassSchedule[j][2] >= temp[1] && newClassSchedule[j][2] < temp[2]){
+             var begin_1 = parseInt(newClassSchedule[j][1].replace(":",""))
+             var begin_2 = parseInt(temp[1].replace(":",""))
+             var end_1 = parseInt(newClassSchedule[j][2].replace(":",""))
+             var end_2 = parseInt(temp[2].replace(":",""));
+             if( (begin_1 >= begin_2 && begin_1 < end_2) || (end_1 >= begin_2 && end_1< end_2)){
                return true;
              }
            }
