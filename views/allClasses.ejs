@@ -33,10 +33,10 @@
                         <form action="/allClasses" method="post">
                             <input type="hidden" name="classID" value="<%=classes[i]._id%>">
                             <%if(classes[i].canceled){%>
-                                Yes
+                                Yes <br>
                                 <button class="btn btn-primary" type="submit" name="action" value="resumeClass"> Resume Class</button>
                             <%}else{%>
-                                No
+                                No <br>
                                 <button class="btn btn-primary" type="submit" name="action" value="cancelClass"> Cancel Class</button>
                             <%}%>
                         </form>

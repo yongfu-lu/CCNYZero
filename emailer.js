@@ -28,12 +28,12 @@ const tranporter = nodemailer.createTransport({
 //     })
 // }
 
-exports.sendRejectEmail = function(email, name){
+exports.sendRejectEmail = function(email, name, justification){
     const options = {
         from: "ccnyzero@hotmail.com",
         to:email,
         subject:"You are rejected by CCNY",
-        text:"Hello "+ name + ", thank you for applying for CCNY. Unfortunately, we cannot accept you."
+        text:"Hello "+ name + ", thank you for applying for CCNY. Unfortunately, we cannot accept you. \n Reason: " + justification
     };
     
     tranporter.sendMail(options, function(err,info){

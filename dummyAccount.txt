@@ -1,4 +1,5 @@
 admin@ccny      qqq        registrar
+sheldon@ccny               instructor
 ironman@ccny    333        instructor
 spider@ccny     123        instructor
 

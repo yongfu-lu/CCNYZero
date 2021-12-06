@@ -57,17 +57,37 @@ const required_courses = utility.required_courses;
 var currentSemester = "Fall";
 var today = time.today;
 var tabooWords = []
+var gradeAnalyzed = false;
+var classAnalyzed = false;
 User.findOne({role:"registrar"}, function(err, foundUser){
     tabooWords = foundUser.tabooWords;
 })
 /**************** do testing code here **********/
 var today = new Date("2021-08-17T00:00:00")
-// User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
+User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
+Class.updateMany({}, {canceled:false}, function(err){
+})
 
 /*********** All route from here ********/
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",async function(req, res){
+        /*****   This methods will be called only once after grading period end             *****/
+        /*****   It will send warning or honor to students or instructors        *****/
+        if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
+            //year, semester, Class, User,
+            console.log("I am going to grade analyze method")
+            utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+            gradeAnalyzed = true;
+        }
+
+        /****************  This method will be called only once when class running period starts  *************/
+        /***It takes care of cancel classes, give student extra peroid to sign up, warning student etc. *******/
+        if(time.getPeriod(today) == "classRunning" && !classAnalyzed){
+            console.log("I am going to class analyzed method")
+            utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+            classAnalyzed = true;
+        }
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
@@ -306,7 +326,7 @@ app.get("/application", async function(req,res){
 app.post("/application", function(req,res){
     var decision = req.body.decision;
     if(decision == "reject"){
-        emailer.sendRejectEmail(req.body.email,req.body.fullname);
+        emailer.sendRejectEmail(req.body.email,req.body.fullname, req.body.justification);
     }else{
         emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.role, User);
     }
@@ -438,7 +458,7 @@ app.post("/allInstructors", async function(req, res){
 app.post("/allClasses", async function(req,res){
     const action = req.body.action;
     const classID = req.body.classID;
-    const allInstructors = await query.getAllInstructors(User);
+    const allInstructors = await query.getAvailableInstructors(User);
     if(action == "resumeClass" || action == "cancelClass"){
         var cancel = true;
         if(action == "resumeClass") cancel = false;
@@ -849,23 +869,6 @@ app.get("/instructorWarning", function(req, res){
 })
 
 
-/*****   This methods will be called only once after grading period end             *****/
-/*****   It will send warning or honor to students or instructors        *****/
-var gradeAnalyzed = false;
-if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
-    //year, semester, Class, User,
-    utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
-    gradeAnalyzed = true;
-}
-
-
-/****************  This method will be called only once when class running period starts  *************/
-/***It takes care of cancel classes, give student extra peroid to sign up, warning student etc. *******/
-var classAnalyzed = false;
-if(time.getPeriod(today) == "classRunning" && !classAnalyzed){
-    utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
-    classAnalyzed = true;
-}
 
 
 /** server port **/
