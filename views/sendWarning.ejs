@@ -3,7 +3,7 @@
     <div class="container" style="text-align: center; min-height: 80vh;">
         <form action="/sendWarning" method="post">
             <input type="hidden" name="complaintId" value= <%= complaintId %>  >
-            <input type="hidden" name="fullName" value= <%= fullName %>>
+            <input type="hidden" name="fullName" value= "<%= fullName %>" >
             <input type="hidden" name="decision" value= <%= decision %>>
             <input type="hidden" name="className" value= <%= className %>>
             <h4>Please include a message, this message will be sent to <%=fullName%> </h4><br><br>

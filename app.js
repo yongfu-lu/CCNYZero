@@ -254,31 +254,38 @@ app.post("/message", function(req,res){
     var complaintId = req.body.complaintId;
     var fullName = req.body.fullName;
     var className = req.body.className;
+    var complainter = req.body.complainter;
     if(decision == "issueWarning" || decision == "deregister"){
         res.render("sendWarning", {title:"Send Warning", user:req.user, decision:decision, complaintId: complaintId, fullName: fullName,className:className})
-    }else{
+    }else if (decision == "warnComplainter"){
+        res.render("sendWarning", {title:"Send Warning", user:req.user, decision:decision, complaintId: complaintId, fullName: complainter,className:className})
+    }
+    else{
         Complaint.updateOne({_id:complaintId},{decided:true}, function(err){
             if(err) console.log(err);
             res.redirect("/message");
         })
     }
- })
+ }) 
 
 app.post("/sendWarning", async function(req,res){
     User.findOne({fullname:req.body.fullName},function(err, foundUser){
-        if ( req.body.decision == 'issueWarning'){
-            query,giveWarning(User,foundUser.username,req.body.reason);
-        } else{
-            query.deregister(User,Class, foundUser.username,req.body.className);
+        if(foundUser != null){
+            if ( req.body.decision == 'issueWarning' || req.body.decision == "warnComplainter"){
+                query,giveWarning(User,foundUser.username,req.body.reason);
+            } else if (req.body.decision == "deregister"){
+                query,giveWarning(User,foundUser.username,req.body.reason);
+                query.deregister(User,Class, foundUser.username,req.body.className);
+            }
         }
+
         Complaint.updateOne({_id:req.body.complaintId},{decided:true}, function(err){
             if(err) console.log(err);
             res.redirect("/message");
         })
-
     })
 })
-
+ 
 app.post("/sendMessage", function(req, res){
     const newMessage = Message({
         from: req.user.fullname,
