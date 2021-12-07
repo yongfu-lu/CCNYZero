@@ -83,7 +83,7 @@ function conflict(schedules, newClassSchedule){
              var begin_2 = parseInt(temp[1].replace(":",""))
              var end_1 = parseInt(newClassSchedule[j][2].replace(":",""))
              var end_2 = parseInt(temp[2].replace(":",""));
-             if( (begin_1 >= begin_2 && begin_1 < end_2) || (end_1 >= begin_2 && end_1< end_2)){
+             if( (begin_1 >= begin_2 && begin_1 < end_2) || (end_1 > begin_2 && end_1<= end_2)){
                return true;
              }
            }

@@ -343,6 +343,8 @@ function calculateRating(User,Class, classID){
   Class.findOne({_id:classID}, function(err,foundClass){
       if(err) console.log(err);
       const originalRate = foundClass.rating;
+      console.log("original rate is: ")
+      console.log(originalRate)
       reviews = foundClass.review
       for(var i = 0; i<reviews.length; i++){
           sumOfRating += reviews[i].rate;
@@ -352,13 +354,13 @@ function calculateRating(User,Class, classID){
         var overallRate = (sumOfRating / numOfRating).toFixed(2);
         Class.updateOne({_id:classID},{rating:overallRate},function(err){
           if(err) console.log(err);
-          if(originalRate > 2 && overallRate < 2){
+          if( (originalRate >= 2 || originalRate == null || originalRate == 0 || originalRate == undefined) && overallRate < 2){
               User.findOne({fullname:foundClass.instructor}, function(error, foundUser){
                 giveWarning(User,foundUser.username,"Class Rating Too Low");
               })
           }
         })
-      }
+      } 
   })
 }
 
@@ -658,8 +660,8 @@ function warnStudentsWithTooLessCourses(Class, User, Complaint,year, semester){
   })
 }
 
-function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester){
-    Class.find({year:year, semester:semester}, function(err, foundClasses){
+async function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester){
+    Class.find({year:year, semester:semester}, async function(err, foundClasses){
       if(err) console.log(err);
 
       for(var i = 0; i < foundClasses.length; i++){
@@ -671,11 +673,15 @@ function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester
               {specialPeriod:true, $pull:{enrolled_class:foundClasses[i]._id.valueOf()}}, function(err){})
           }
 
-          User.findOneAndUpdate({fullname:foundClasses[i].instructor}, {$pull:{assigned_class:foundClasses[i]._id.valueOf()}}, function(err){})
-
+          User.findOneAndUpdate({fullname:foundClasses[i].instructor}, {$pull:{assigned_class:foundClasses[i]._id.valueOf()}}, function(err){
+            if(err) console.log(err)
+            else console.log("Remove class Id from instructor's assign_ed class")
+          })
+          await sleep();
           User.findOne({fullname:foundClasses[i].instructor}, function(err, foundInstructor){
             if(err) console.log(err)
             else{
+              console.log("check if instructor still has class left")
               if(foundInstructor.assigned_class.length == 0){
                   suspendUser(User, foundInstructor.username)
               }else{
@@ -684,7 +690,7 @@ function cancelClassesWithTooLessStudents(Class, User, Complaint, year, semester
             }
           }) 
         }
-      }
+      } 
     })
 }
 

@@ -59,14 +59,11 @@ var today = time.today;
 var tabooWords = []
 var gradeAnalyzed = false;
 var classAnalyzed = false;
-User.findOne({role:"registrar"}, function(err, foundUser){
-    tabooWords = foundUser.tabooWords;
-})
 /**************** do testing code here **********/
 var today = new Date("2021-08-17T00:00:00")
-User.updateMany({},{suspended:false, warning:[], terminated:false}, function(err){})
+User.updateMany({},{suspended:false, warning:[], terminated:false, specialPeriod:false }, function(err){})
 Class.updateMany({}, {canceled:false}, function(err){
-})
+}) 
 
 /*********** All route from here ********/
 
@@ -78,7 +75,7 @@ app.get("/",async function(req, res){
             //year, semester, Class, User,
             console.log("I am going to grade analyze method")
             utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
-            gradeAnalyzed = true;
+            gradeAnalyzed = true; 
         }
 
         /****************  This method will be called only once when class running period starts  *************/
@@ -88,6 +85,9 @@ app.get("/",async function(req, res){
             utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
             classAnalyzed = true;
         }
+        User.findOne({role:"registrar"}, function(err, foundUser){
+            tabooWords = foundUser.tabooWords;
+        })
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
