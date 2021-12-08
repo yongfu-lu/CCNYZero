@@ -908,6 +908,11 @@ app.get("/instructorWarning", function(req, res){
 
 
 /** server port **/
-app.listen(3000, function(){
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, function(){
     console.log("Server is running on part 3000");
 })
