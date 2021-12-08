@@ -1,0 +1,127 @@
+<%- include("header")-%>
+<div class="container" style="padding: 50px 0 50px 0; min-height: 80vh; text-align: center;">
+    <br>
+    <%if(invalidPeropd){%>
+        <h3>The new periods date are not valid. Please try again.</h3>
+    <%}%>
+    <br>
+    <form action="/setPeriod" , method="post">
+        <label for="classSetUpBegin"> Class Setup Period Begins at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="classSetUpBegin"
+          id="classSetUpBegin"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-08-10"
+        />
+        <br>
+        <label for="classSetUpEnd"> Class Setup Period Ends at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="classSetUpEnd"
+          id="classSetUpEnd"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-08-15"
+        />
+        <br>
+
+        <label for="courseRegistrationBegin"> Course Registraion Begins at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="courseRegistrationBegin"
+          id="courseRegistrationBegin"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-08-16"
+        />
+        <br>
+
+        <label for="courseRegistrationEnd"> Course Registraion Ends at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="courseRegistrationEnd"
+          id="courseRegistrationEnd"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-08-20"
+        />
+        <br>
+
+        <label for="specialPeriodEnd"> Course Registraion Special Period Ends at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="specialPeriodEnd"
+          id="specialPeriodEnd"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-08-25"
+        />
+        <br>
+
+        <label for="classRunningBegin"> Class Running Begins at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="classRunningBegin"
+          id="classRunningBegin"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-08-21"
+        />
+        <br>
+
+        <label for="classRunningEnd"> Class Running Ends at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="classRunningEnd"
+          id="classRunningEnd"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-12-20"
+        />
+        <br>
+
+        <label for="gradingPeriodBegin"> Grading Period Begins at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="gradingPeriodBegin"
+          id="gradingPeriodBegin"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-12-21"
+        />
+        <br>
+
+        <label for="gradingPeriodEnd"> Grading Period Ends at: </label>
+        <input
+          type="date"
+          class="form-control"
+          style="width: 15%; margin: auto;"
+          name="gradingPeriodEnd"
+          id="gradingPeriodEnd"
+          min="2021-01-01"
+          max="2021-12-31"
+          value="2021-12-25"
+        />
+        <br>
+        <button type="submit" class="btn btn-primary">Set Period</button>
+      </form>
+</div>
+<%- include("footer")-%>

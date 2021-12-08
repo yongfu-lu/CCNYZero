@@ -56,20 +56,25 @@ const programQuota = 30;
 const required_courses = utility.required_courses;
 var currentSemester = "Fall";
 var today = time.today;
+time.initializePeriod();
 var tabooWords = []
 var gradeAnalyzed = false;
 var classAnalyzed = false;
 /**************** do testing code here **********/
-var today = new Date("2021-09-30T00:00:00")
-User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false }, function(err){})
-Class.updateMany({}, {canceled:false}, function(err){
-}) 
- 
+var today = new Date("2021-08-16T00:00:00")
+// User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false }, function(err){})
+// Class.updateMany({}, {canceled:false}, function(err){
+// }) 
+// time.classSetUpBegin = new Date("2021-09-10T00:00:00");
+// console.log(time.classSetUpBegin)
+// time.classSetUpEnd = new Date("2021-09-15T00:00:00");
+// console.log(time.classSetUpEnd)
+console.log(time.getPeriod(today))
 
 /*********** All route from here ********/ 
- 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",async function(req, res){
+        console.log(time.getPeriod(today))
         /*****   This methods will be called only once after grading period end             *****/
         /*****   It will send warning or honor to students or instructors        *****/
         if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
@@ -547,6 +552,26 @@ app.post("/setToday", function(req,res){
     res.redirect("/");
 })
 
+
+app.get("/setPeriod", function(req, res){
+    if(!req.isAuthenticated() || req.user.role != 'registrar'){
+        res.redirect("/logout");
+    }else{
+        res.render("setPeriod", {title:"Set Period", user:req.user, invalidPeropd:false})
+    }
+})
+
+app.post("/setPeriod", function(req, res){
+    if (time.isValidPeriod(req.body.classSetUpBegin, req.body.classSetUpEnd, req.body.courseRegistrationBegin, req.body.courseRegistrationEnd,
+        req.body.classRunningBegin, req.body.classRunningEnd, req.body.gradingPeriodBegin, req.body.gradingPeriodEnd, req.body.specialPeriodEnd)){
+
+            time.setPeriods(req.body.classSetUpBegin, req.body.classSetUpEnd, req.body.courseRegistrationBegin, req.body.courseRegistrationEnd,
+                req.body.classRunningBegin, req.body.classRunningEnd, req.body.gradingPeriodBegin, req.body.gradingPeriodEnd, req.body.specialPeriodEnd)
+            res.redirect("/setPeriod");
+    }else{
+        res.render("setPeriod", {title:"Set Period", user:req.user, invalidPeropd:true})
+    }
+})
 
 /******************************* Class related route  ***************/
 app.get("/classSetUp", async function(req,res){
