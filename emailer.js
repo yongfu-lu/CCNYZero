@@ -11,22 +11,6 @@ const tranporter = nodemailer.createTransport({
         }
 })
 
-// const options = {
-//     from: "ccnyzero@hotmail.com",
-//     to:"reveiver's email address",
-//     subject:"Email from nodemailer",
-//     text:"This is an email sent by nodemailer!"
-// };
-
-// exports.sendEmail = function(){
-//     tranporter.sendMail(options,function(err,info){
-//         if(err){
-//             console.log(err);
-//             return;
-//         }
-//         console.log("sent : "+ info.response);
-//     })
-// }
 
 exports.sendRejectEmail = function(email, name, justification){
     const options = {

@@ -24,16 +24,16 @@ exports.initializePeriod = function(){
   this.courseRegistrationEnd = new Date("2021-08-20T00:00:00")
   this.classRunningBegin = new Date("2021-08-21T00:00:00")
   this.classRunningEnd = new Date("2021-12-20T00:00:00")
-  this.gradingPeroidBegin = new Date("2021-12-21T00:00:00")
-  this.gradingPeroidEnd = new Date("2021-12-25T00:00:00")
+  this.gradingPeriodBegin = new Date("2021-12-21T00:00:00")
+  this.gradingPeriodEnd = new Date("2021-12-25T00:00:00")
   this.specialPeriodEnd = new Date("2021-08-25T00:00:00")
 }
 
 
 exports.isValidPeriod = function(classSetUpBegin, classSetUpEnd, courseRegistrationBegin, courseRegistrationEnd,
   classRunningBegin, classRunningEnd, gradingPeriodBegin, gradingPeriodEnd, specialPeriodEnd){
-    return (classSetUpBegin < classSetUpEnd && courseRegistrationBegin < courseRegistrationEnd && 
-      classRunningBegin < classRunningEnd && gradingPeriodBegin < gradingPeriodEnd && specialPeriodEnd >classRunningBegin)
+    return (classSetUpBegin < classSetUpEnd && classSetUpEnd < courseRegistrationBegin && courseRegistrationBegin < courseRegistrationEnd && 
+      courseRegistrationEnd < classRunningBegin && classRunningBegin < classRunningEnd && classRunningEnd < gradingPeriodBegin && gradingPeriodBegin < gradingPeriodEnd && specialPeriodEnd >classRunningBegin)
 }
 
 
@@ -66,8 +66,8 @@ exports.courseRegistrationBegin = courseRegistrationBegin;
 exports.courseRegistrationEnd = courseRegistrationEnd;
 exports.classRunningBegin = classRunningBegin;
 exports.classRunningEnd = classRunningEnd;
-exports.gradingPeroidBegin = gradingPeroidBegin;
-exports.gradingPeroidEnd = gradingPeroidEnd;
+exports.gradingPeriodBegin = gradingPeroidBegin;
+exports.gradingPeriodEnd = gradingPeroidEnd;
 exports.specialPeriodEnd = specialPeriodEnd;
 
 
@@ -92,9 +92,9 @@ function getPeriod(day){
      period = "courseRegistration";
    }else if (day >= this.classRunningBegin && day <= this.classRunningEnd){
      period = "classRunning";
-   }else if (day >= this.gradingPeroidBegin && day <= this.gradingPeroidEnd){
+   }else if (day >= this.gradingPeriodBegin && day <= this.gradingPeriodEnd){
      period = "grading";
-   }else if (day > this.gradingPeroidEnd){
+   }else if (day > this.gradingPeriodEnd){
      period = "afterGrading";
    }else {
    

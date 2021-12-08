@@ -61,14 +61,10 @@ var tabooWords = []
 var gradeAnalyzed = false;
 var classAnalyzed = false;
 /**************** do testing code here **********/
-var today = new Date("2021-08-16T00:00:00")
-// User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false }, function(err){})
-// Class.updateMany({}, {canceled:false}, function(err){
-// }) 
-// time.classSetUpBegin = new Date("2021-09-10T00:00:00");
-// console.log(time.classSetUpBegin)
-// time.classSetUpEnd = new Date("2021-09-15T00:00:00");
-// console.log(time.classSetUpEnd)
+var today = new Date("2021-08-13T00:00:00")
+User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false, balanceOwe:0 }, function(err){})
+Class.updateMany({}, {canceled:false}, function(err){
+}) 
 console.log(time.getPeriod(today))
 
 /*********** All route from here ********/ 
@@ -78,7 +74,6 @@ app.get("/",async function(req, res){
         /*****   This methods will be called only once after grading period end             *****/
         /*****   It will send warning or honor to students or instructors        *****/
         if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
-            //year, semester, Class, User,
             console.log("I am going to grade analyze method")
             utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester, Message);
             gradeAnalyzed = true; 
@@ -97,7 +92,12 @@ app.get("/",async function(req, res){
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-        res.render("home",{ title:"Home",user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, today:today});
+         await query.sleep();
+        res.render("home",{ title:"Home",user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, 
+        today:today, classSetUpBegin:time.classSetUpBegin, classSetUpEnd: time.classSetUpEnd,
+        courseRegistrationBegin: time.courseRegistrationBegin, courseRegistrationEnd: time.courseRegistrationEnd,
+        classRunningBegin: time.classRunningBegin, classRunningEnd:time.classRunningEnd,
+        gradingPeriodBegin:time.gradingPeriodBegin, gradingPeriodEnd:time.gradingPeriodEnd,specialPeriodEnd:time.specialPeriodEnd});
 })
 
 //if user already login, redirect to their homepage, no need to log in again

@@ -48,6 +48,7 @@ exports.cancelClassesWithTooLessStudents =cancelClassesWithTooLessStudents;
 exports.changeInstructor = changeInstructor;
 exports.getMessages = getMessages;
 exports.getPastApplications = getPastApplications;
+exports.sleep = sleep;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
