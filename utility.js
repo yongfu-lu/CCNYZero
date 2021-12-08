@@ -47,22 +47,22 @@ function editTabooWord(text, tabooWords){
 }
 
 /** after grade period, analyze grade **/
-async function gradeAnalyze(Class, User, Complaint, year, semester){
+async function gradeAnalyze(Class, User, Complaint, year, semester, Message){
     console.log("Analyzing grade")
     //1. after grading, if instructor did not grade all students, he will get warn
-    query.didNotGradeAllStudents(Class, User, year, semester);
+    query.didNotGradeAllStudents(Class, User, year, semester, Message);
     
     //2. if class GPA is > 3.5 or <2.5, send message to admin, admin can decide warn or not
-    query.analyzeClassGPA(Class, User, Complaint,year, semester);
+    query.analyzeClassGPA(Class, User, Complaint,year, semester, Message);
 
     /*3. student GPA less than 2 will be terminate, 
       between 2 and 2.25 will receive a warning demanding interview
       currentSemester GPA > 3.75 or overall GPA > 3.6 receive a honor, one honor cancel one warning. */
-    query.analyzeStudentsGPA(Class,User,Complaint,year, semester);
+    query.analyzeStudentsGPA(Class,User,Complaint,year, semester, Message);
     
     
     //4. student fail same course twice will be terminated
-    query.findStudentFailedTwice(Class, User, Complaint, year, semester);
+    query.findStudentFailedTwice(Class, User, Complaint, year, semester, Message);
 }
  
 
@@ -104,11 +104,11 @@ function calculateGPAFromTakenClasses(classes){
 
 
 /** When class running period starts, analyze classes **/
-function classAnalyze(Class, User, Complaint, year, semester){
+function classAnalyze(Class, User, Complaint, year, semester, Message){
     console.log("Inside classAnalyze")
     //1. students with less than 2 coourses will be warned
-    query.warnStudentsWithTooLessCourses(Class, User, Complaint, year, semester);
+    query.warnStudentsWithTooLessCourses(Class, User, Complaint, year, semester, Message);
 
     //2. course less than 5 students will be canceled.
-    query.cancelClassesWithTooLessStudents(Class, User,Complaint,year, semester);
+    query.cancelClassesWithTooLessStudents(Class, User,Complaint,year, semester, Message);
 }

@@ -46,32 +46,46 @@
                 <td>
                     <b>Class Rating:</b> <%=targetClass.rating%>
                 </td>
-                <td></td>
+                <td>
+                
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Class Capacity:</b> <%=targetClass.max_capacity%>
+                </td>
+                <td>
+                    <b>Seat left:</b> <%=targetClass.max_capacity - targetClass.students.length%>
+                </td>
             </tr>
         </tbody>
     </table>
 <br>
-    <b>Students in Class:</b>
-    <table class="table">
-        <thead>
-            <tr>
-                <th style="width:33%">Student Name</th>
-                <th style="width:33%">Student Email</th>
-                <th style="width:33%">Grade</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%for(var i = 0; i<targetClass.students.length; i++){%>
+    <%if(user.role != "student"){%>
+        <b>Students in Class:</b>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td><%=targetClass.students[i].fullname%></td>
-                    <td><%=targetClass.students[i].email%></td>
-                    <td><%=targetClass.students[i].grade%></td>
-
+                    <th style="width:33%">Student Name</th>
+                    <th style="width:33%">Student Email</th>
+                    <th style="width:33%">Grade</th>
                 </tr>
-            <%}%>
-        </tbody>
-    </table>
-<br><br>
+            </thead>
+            <tbody>
+                <%for(var i = 0; i<targetClass.students.length; i++){%>
+                    <tr>
+                        <td><%=targetClass.students[i].fullname%></td>
+                        <td><%=targetClass.students[i].email%></td>
+                        <td><%=targetClass.students[i].grade%></td>
+    
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+    <br><br>
+    <%}%>
+
+
     <b>Class Reviews:</b>
     <table class="table">
         <thead>

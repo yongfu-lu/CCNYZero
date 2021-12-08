@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const schema = require(__dirname + "/schema.js");
 const utility = require(__dirname+"/utility");
+const time = require(__dirname+"/time.js");
 
 const userSchema = schema.getUserSchema();
 const classSchema = schema.getClassSchema();
@@ -431,8 +432,11 @@ async function getTeachingClasses(Class, instructorName,year, semester ) {
 }
  
 async function assignGrade(User, Class, studentEmail, className,classID, classCredit, grade,year, semester){
-  User.findOne({username:studentEmail,"taken_class.course_shortname":className,"taken_class.year":year,"taken_class.semester":semester},function(err,foundUser){
+  //  console.log(studentEmail + " " + className + " " + classID + " " + classCredit + " " + grade + " " + year + " " +semester)
+  User.findOne({username:studentEmail,"taken_class.course_shortname":className,"taken_class.year":year,"taken_class.semester":"kkk"},function(err,foundUser){
+    //  console.log(foundUser)
     if(foundUser == null){
+      console.log("I found this class is not grade yet, I will create a new grade record");
       User.findOneAndUpdate({username: studentEmail},
         {$push:{taken_class:{course_shortname:className, 
         year:year,
@@ -449,8 +453,9 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
         })
         }
       })
-    }
+    } 
     else{
+      console.log("I found this class already been grade")
       User.findOneAndUpdate({username: studentEmail,"taken_class.course_shortname":className,"taken_class.year": year, "taken_class.semester":semester},
       {$pull:{taken_class:{"course_shortname":className}}}
       ,async function(err){
@@ -527,7 +532,7 @@ async function analyzeClassGPA (Class, User,Complaint, year, semester){
   })
 }
 
-
+ 
 function reportObnormalGrade(Complaint,className, section,instructor, GPA){
     const newComplaint = new Complaint({
         title:"Detected Obnormal Grade! ",
@@ -543,27 +548,38 @@ function reportObnormalGrade(Complaint,className, section,instructor, GPA){
 }
 
 
-function findStudentFailedTwice(Class, User,Complaint, year, semester){
+function findStudentFailedTwice(Class, User,Complaint, year, semester, Message){
   User.find({role:"student"},function(err, foundStudents){
       if(err) console.log(err);
       else{
         for(var i = 0; i<foundStudents.length; i++){
           if(utility.ifFailedTwice(foundStudents[i])){
-              terminateStudent(User,foundStudents[i]);
+              terminateStudent(User,foundStudents[i], Message);
           }
         } 
       }
   })
 }
 
-function terminateStudent(User,student){
+function terminateStudent(User,student, Message){
   console.log(student.fullname + " will be terminated ")
+  const newMessage = Message({
+    from: "Registrar",
+    fromEmail: "admin@ccny",
+    to:student.username,
+    dateTime: time.today,
+    message:"You are terminated because your academic record does not meet the requirement. Place contact admin@ccny for more information.",
+    hideInBox:false,
+    hideSentBox:false
+})
+    newMessage.save( function(err, doc){
+    })
   User.findOneAndUpdate({username:student.username}, {terminated:true},function(err){
     if(err) console.log(err);
   });
 }
 
-function analyzeStudentsGPA(Class,User,Complaint,year, semester){
+function analyzeStudentsGPA(Class,User,Complaint,year, semester, Message){
     User.find({role:"student"}, function(err, foundStudents){
         for(var i = 0; i< foundStudents.length; i++){
           if(foundStudents[i].taken_class.length > 0){
@@ -578,7 +594,7 @@ function analyzeStudentsGPA(Class,User,Complaint,year, semester){
               currentSemesterGPA = utility.calculateGPAFromTakenClasses(currentSemesterClasses)
               overallGPA = utility.calculateGPAFromTakenClasses(allTakanClasses)
               if(overallGPA < 2){
-                terminateStudent(User,foundStudents[i]);
+                terminateStudent(User,foundStudents[i], Message);
               }else if (overallGPA >= 2 && overallGPA <= 2.25){
                 giveWarning(User, foundStudents[i].username,"Your GPA is low, Please make an appointment of interview with registrar.")
               }else if (currentSemesterGPA > 3.75 || overallGPA > 3.5){

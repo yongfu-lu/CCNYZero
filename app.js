@@ -60,12 +60,13 @@ var tabooWords = []
 var gradeAnalyzed = false;
 var classAnalyzed = false;
 /**************** do testing code here **********/
-var today = new Date("2021-08-17T00:00:00")
+var today = new Date("2021-12-22T00:00:00")
 User.updateMany({},{suspended:false, warning:[], terminated:false, specialPeriod:false }, function(err){})
 Class.updateMany({}, {canceled:false}, function(err){
 }) 
 
-/*********** All route from here ********/
+
+/*********** All route from here ********/ 
 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",async function(req, res){
@@ -74,15 +75,15 @@ app.get("/",async function(req, res){
         if(time.getPeriod(today) == "afterGrading" && !gradeAnalyzed){
             //year, semester, Class, User,
             console.log("I am going to grade analyze method")
-            utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+            utility.gradeAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester, Message);
             gradeAnalyzed = true; 
-        }
+        } 
 
         /****************  This method will be called only once when class running period starts  *************/
         /***It takes care of cancel classes, give student extra peroid to sign up, warning student etc. *******/
         if(time.getPeriod(today) == "classRunning" && !classAnalyzed){
             console.log("I am going to class analyzed method")
-            utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester);
+            utility.classAnalyze(Class, User, Complaint, today.getFullYear(), currentSemester, Message);
             classAnalyzed = true;
         }
         User.findOne({role:"registrar"}, function(err, foundUser){
