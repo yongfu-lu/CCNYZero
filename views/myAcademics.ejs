@@ -92,9 +92,14 @@
                     </tbody>
                 </table>
             <%}%>
-            <% if (userRole == "student" && !user.suspended && !user.terminated) {%>
+            <% if (userRole == "student" && !user.suspended && !user.terminated &&!user.masterDegreeObtained) {%>
                 <br>
                 <a href="/applyGraduation" class="btn btn-primary">Apply Graduation</a>
+                <br>
+            <%}%>
+            <% if (userRole == "student" && user.masterDegreeObtained) {%>
+                <br>
+                <h3>Congraduations! You've earned your Master Degree!</h3>
                 <br>
             <%}%>
         <%}%>

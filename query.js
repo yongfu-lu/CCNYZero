@@ -433,9 +433,33 @@ async function getTeachingClasses(Class, instructorName,year, semester ) {
  
 async function assignGrade(User, Class, studentEmail, className,classID, classCredit, grade,year, semester){
   //  console.log(studentEmail + " " + className + " " + classID + " " + classCredit + " " + grade + " " + year + " " +semester)
-  User.findOne({username:studentEmail,"taken_class.course_shortname":className,"taken_class.year":year,"taken_class.semester":"kkk"},function(err,foundUser){
-    //  console.log(foundUser)
-    if(foundUser == null){
+  var taken_class = [];
+  var graded = false;
+  User.findOne({username:studentEmail}, function(err, foundUser){
+    taken_class = foundUser.taken_class;
+    for (var i = 0; i<taken_class.length; i++){
+      if(taken_class[i].course_shortname == className && taken_class[i].year==year && taken_class[i].semester==semester){
+        console.log("I found this class already been grade")
+        graded = true;
+        User.findOneAndUpdate({username: studentEmail,"taken_class.course_shortname":className,"taken_class.year": year, "taken_class.semester":semester},
+        {$pull:{taken_class:{"course_shortname":className,"year":year, "semester":semester}}}
+        ,async function(err){
+        if(err) console.log(err)
+        else{
+          User.findOneAndUpdate({username:studentEmail},{$push:{taken_class:{course_shortname:className, year:year, semester:semester, credit:parseInt(classCredit),grade:grade}}},function(err){
+            if(err) console.log(err);
+            else{
+              updateGPA(User, studentEmail);
+            }
+          })
+          Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
+            if(err) console.log(err);
+        })
+        }
+      })   
+      }
+    }
+    if(!graded){
       console.log("I found this class is not grade yet, I will create a new grade record");
       User.findOneAndUpdate({username: studentEmail},
         {$push:{taken_class:{course_shortname:className, 
@@ -453,27 +477,49 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
         })
         }
       })
-    } 
-    else{
-      console.log("I found this class already been grade")
-      User.findOneAndUpdate({username: studentEmail,"taken_class.course_shortname":className,"taken_class.year": year, "taken_class.semester":semester},
-      {$pull:{taken_class:{"course_shortname":className}}}
-      ,async function(err){
-      if(err) console.log(err)
-      else{
-        User.findOneAndUpdate({username:studentEmail},{$push:{taken_class:{course_shortname:className, year:year, semester:semester, credit:parseInt(classCredit),grade:grade}}},function(err){
-          if(err) console.log(err);
-          else{
-            updateGPA(User, studentEmail);
-          }
-        })
-        Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
-          if(err) console.log(err);
-      })
-      }
-    })     
     }
   })
+  //======
+  // User.findOne({username:studentEmail,"taken_class.course_shortname":className,"taken_class.year":year,"taken_class.semester":"kkk"},function(err,foundUser){
+  //   if(foundUser == null){
+  //     console.log("I found this class is not grade yet, I will create a new grade record");
+  //     User.findOneAndUpdate({username: studentEmail},
+  //       {$push:{taken_class:{course_shortname:className, 
+  //       year:year,
+  //       semester:semester,
+  //       credit:parseInt(classCredit),
+  //       grade:grade}}, $pull:{enrolled_class:classID}},async function(err){
+  //       if(err) console.log(err)
+  //       else{
+  //         Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
+  //           if(err) console.log(err);
+  //           else{
+  //             updateGPA(User, studentEmail);
+  //           }
+  //       })
+  //       }
+  //     })
+  //   } 
+  //   else{
+  //     console.log("I found this class already been grade")
+  //     User.findOneAndUpdate({username: studentEmail,"taken_class.course_shortname":className,"taken_class.year": year, "taken_class.semester":semester},
+  //     {$pull:{taken_class:{"course_shortname":className}}}
+  //     ,async function(err){
+  //     if(err) console.log(err)
+  //     else{
+  //       User.findOneAndUpdate({username:studentEmail},{$push:{taken_class:{course_shortname:className, year:year, semester:semester, credit:parseInt(classCredit),grade:grade}}},function(err){
+  //         if(err) console.log(err);
+  //         else{
+  //           updateGPA(User, studentEmail);
+  //         }
+  //       })
+  //       Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
+  //         if(err) console.log(err);
+  //     })
+  //     }
+  //   })     
+  //   }
+  // })
   await sleep();
 }
 
@@ -596,14 +642,14 @@ function analyzeStudentsGPA(Class,User,Complaint,year, semester, Message){
               if(overallGPA < 2){
                 terminateStudent(User,foundStudents[i], Message);
               }else if (overallGPA >= 2 && overallGPA <= 2.25){
-                giveWarning(User, foundStudents[i].username,"Your GPA is low, Please make an appointment of interview with registrar.")
+                giveWarning(User, foundStudents[i].username,"Your GPA is low, Please send message to admin@ccny to make an appointment for interviewing with registrar.")
               }else if (currentSemesterGPA > 3.75 || overallGPA > 3.5){
                 giveHonor(User, foundStudents[i].username, "Your academic record is excellen. -- "+ year.toString() +", " + semester );
               }else{}
               User.findOneAndUpdate({username:foundStudents[i].username}, {GPA:overallGPA}, function(err){});
           }
         } 
-    })  
+    })   
 }   
 
 function giveHonor(User, username, reason){

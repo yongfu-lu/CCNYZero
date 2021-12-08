@@ -60,14 +60,14 @@ var tabooWords = []
 var gradeAnalyzed = false;
 var classAnalyzed = false;
 /**************** do testing code here **********/
-var today = new Date("2021-12-22T00:00:00")
-User.updateMany({},{suspended:false, warning:[], terminated:false, specialPeriod:false }, function(err){})
+var today = new Date("2021-12-30T00:00:00")
+User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false }, function(err){})
 Class.updateMany({}, {canceled:false}, function(err){
 }) 
-
+ 
 
 /*********** All route from here ********/ 
-
+ 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",async function(req, res){
         /*****   This methods will be called only once after grading period end             *****/
