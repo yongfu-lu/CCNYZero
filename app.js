@@ -347,7 +347,7 @@ app.post("/application", function(req,res){
         emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.role, User);
     }
 
-    Applicant.updateMany({email:req.body.email, role:req.body.role},{decided:true, approved:approved, note:req.body.justification}, function(err){
+    Applicant.updateMany({_id:req.body.applicationID},{decided:true, approved:approved, note:req.body.justification}, function(err){
         if(err){
             console.log(err)
         }else{

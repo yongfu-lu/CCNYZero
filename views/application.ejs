@@ -28,6 +28,7 @@
                                     <td> <%= studentApplications[i].GPA %> </td>
                                     <td>
                                         <form action="/application" method="post">
+                                          <input type="hidden" name="applicationID" value= "<%= studentApplications[i]._id %>" >
                                             <input type="hidden" name="fullname" value= <%= studentApplications[i].fullname %> >
                                             <input type="hidden" name="email" value= <%= studentApplications[i].email %> >
                                             <input type="hidden" name="GPA" value= <%= studentApplications[i].GPA %>  >
@@ -83,6 +84,7 @@
                                     <td><%= instructorApplications[i].selfStatement %></td>
                                     <td>
                                         <form action="/application" method="post">
+                                          <input type="hidden" name="applicationID" value= "<%= instructorApplications[i].id %>"  >
                                             <input type="hidden" name="fullname" value= <%= instructorApplications[i].fullname %> >
                                             <input type="hidden" name="email" value= <%= instructorApplications[i].email %> >
                                             <input type="hidden" name="role" value= <%= instructorApplications[i].role %>  >
