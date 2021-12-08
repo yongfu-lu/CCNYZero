@@ -2,113 +2,144 @@
 
     <div class="container" style="min-height: 80vh; text-align: center;">
         <br><br>
-        <p>Program quota: <%= programQuota%>, current total number of students: <%= totalStudents%> </p>
-        
-        <h3>New Student Applications</h3>
-        <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col" style="width:33.33%">Applicant Name</th>
-                <th scope="col" style="width:33.33%">Applicant GPA</th>
-                <th scope="col" style="width:33.33%">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-                <% for(var i = 0; i<studentApplications.length; i++){ %>
-                    <tr>
-                        <td> <%= studentApplications[i].fullname %></td>
-                        <td> <%= studentApplications[i].GPA %> </td>
-                        <td>
-                            <form action="/application" method="post">
-                                <input type="hidden" name="fullname" value= <%= studentApplications[i].fullname %> >
-                                <input type="hidden" name="email" value= <%= studentApplications[i].email %> >
-                                <input type="hidden" name="GPA" value= <%= studentApplications[i].GPA %>  >
-                                <input type="hidden" name="role" value= <%= studentApplications[i].role %>  >
-                                <textarea id="justification<%=i%>" name="justification" rows="4" cols="30" 
-                                    placeholder="Please provide justification if your decision is against student's qualification"
-                                    oninput="checkJustification(<%=i%>)"></textarea>
-                                <br>
-                                <button class="btn btn-primary" type="submit" name="decision" value="accept" id="acceptBtn<%=i%>" > Accept</button> 
-                                <button class="btn btn-primary" type="submit" name ="decision" value="reject" id="rejectBtn<%=i%>">Reject</button>
-                                
-                                <!-- check if visitor is qualified to be accept to be student and disable the button against rule-->
-                                <script type="text/javascript">
-                                    var programQuota = <%= programQuota%>;
-                                    var totalStudents = <%= totalStudents%>;
-                                    var GPA = <%= studentApplications[i].GPA %>;
-                                    if(programQuota > totalStudents && GPA > 3.0){
-                                        document.getElementById("rejectBtn<%=i%>").disabled = true;
-                                    }else{
-                                        document.getElementById("acceptBtn<%=i%>").disabled = true;
-                                    }
-                                </script>
-                            </form>
-                        </td>
-                    </tr>
-                <%}%>  
-            </tbody>
-        </table>
-        
-        <br><br><br>
-        <h3>New instructor applications</h3>
-        <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col" style="width:33.33%">Applicant Name</th>
-                <th scope="col" style="width:33.33%">Applicant Self Statement</th>
-                <th scope="col" style="width:33.33%">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-                <% for(var i = 0; i<instructorApplications.length; i++){ %>
-                    <tr>
-                        <td><%= instructorApplications[i].fullname %></td>
-                        <td><%= instructorApplications[i].selfStatement %></td>
-                        <td>
-                            <form action="/application" method="post">
-                                <input type="hidden" name="fullname" value= <%= instructorApplications[i].fullname %> >
-                                <input type="hidden" name="email" value= <%= instructorApplications[i].email %> >
-                                <input type="hidden" name="role" value= <%= instructorApplications[i].role %>  >
-                            
-                                <button class="btn btn-primary" type="submit" name="decision" value="accept" > Accept</button> 
-                                <button class="btn btn-primary" type="submit" name ="decision" value="reject" >Reject</button>
-                            </form>
-                        </td>
-                    </tr>
-                <%}%>
-            </tbody>
-        </table>
-         <br><br><br>
+        <h3>Program quota: <%= programQuota%>, current total number of students: <%= totalStudents%> </h3>
+        <!-- @@@@@@@@ -->
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <b>New Student Applications</b>
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col" style="width:33.33%">Applicant Name</th>
+                            <th scope="col" style="width:33.33%">Applicant GPA</th>
+                            <th scope="col" style="width:33.33%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i = 0; i<studentApplications.length; i++){ %>
+                                <tr>
+                                    <td> <%= studentApplications[i].fullname %></td>
+                                    <td> <%= studentApplications[i].GPA %> </td>
+                                    <td>
+                                        <form action="/application" method="post">
+                                            <input type="hidden" name="fullname" value= <%= studentApplications[i].fullname %> >
+                                            <input type="hidden" name="email" value= <%= studentApplications[i].email %> >
+                                            <input type="hidden" name="GPA" value= <%= studentApplications[i].GPA %>  >
+                                            <input type="hidden" name="role" value= <%= studentApplications[i].role %>  >
+                                            <textarea id="justification<%=i%>" name="justification" rows="4" cols="30" 
+                                                placeholder="Please provide justification if your decision is against student's qualification"
+                                                oninput="checkJustification(<%=i%>)"></textarea>
+                                            <br>
+                                            <button class="btn btn-primary" type="submit" name="decision" value="accept" id="acceptBtn<%=i%>" > Accept</button> 
+                                            <button class="btn btn-primary" type="submit" name ="decision" value="reject" id="rejectBtn<%=i%>">Reject</button>
+                                            
+                                            <!-- check if visitor is qualified to be accept to be student and disable the button against rule-->
+                                            <script type="text/javascript">
+                                                var programQuota = <%= programQuota%>;
+                                                var totalStudents = <%= totalStudents%>;
+                                                var GPA = <%= studentApplications[i].GPA %>;
+                                                if(programQuota > totalStudents && GPA > 3.0){
+                                                    document.getElementById("rejectBtn<%=i%>").disabled = true;
+                                                }else{
+                                                    document.getElementById("acceptBtn<%=i%>").disabled = true;
+                                                }
+                                            </script>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <%}%>  
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
 
-         <h3>Past Applications</h3>
-         <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col" style="width:25%">Applicant Name</th>
-                <th scope="col" style="width:25%">Apply To Be</th>
-                <th scope="col" style="width:25%">Approve/Reject</th>
-                <th scope="col" style="width:25%">Note</th>
-              </tr>
-            </thead>
-            <tbody>
-                <% for(var i = 0; i<pastApplications.length; i++){ %>
-                    <tr>
-                        <td><%= pastApplications[i].fullname %></td>
-                        <td><%= pastApplications[i].role %></td>
-                        <td> 
-                            <%if ( pastApplications[i].approved) {%>
-                                Approved
-                            <%}else{%>
-                                Rejected
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <b>New Instructor Applications</b>
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col" style="width:33.33%">Applicant Name</th>
+                            <th scope="col" style="width:33.33%">Applicant Self Statement</th>
+                            <th scope="col" style="width:33.33%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i = 0; i<instructorApplications.length; i++){ %>
+                                <tr>
+                                    <td><%= instructorApplications[i].fullname %></td>
+                                    <td><%= instructorApplications[i].selfStatement %></td>
+                                    <td>
+                                        <form action="/application" method="post">
+                                            <input type="hidden" name="fullname" value= <%= instructorApplications[i].fullname %> >
+                                            <input type="hidden" name="email" value= <%= instructorApplications[i].email %> >
+                                            <input type="hidden" name="role" value= <%= instructorApplications[i].role %>  >
+                                        
+                                            <button class="btn btn-primary" type="submit" name="decision" value="accept" > Accept</button> 
+                                            <button class="btn btn-primary" type="submit" name ="decision" value="reject" >Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
                             <%}%>
-                        </td>
-                        <td><%= pastApplications[i].note %></td>
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
 
-                    </tr>
-                <%}%>
-            </tbody>
-        </table>
-         <br>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                    <b>Past Applications</b>
+                  </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col" style="width:25%">Applicant Name</th>
+                            <th scope="col" style="width:25%">Apply To Be</th>
+                            <th scope="col" style="width:25%">Approve/Reject</th>
+                            <th scope="col" style="width:25%">Note</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i = 0; i<pastApplications.length; i++){ %>
+                                <tr>
+                                    <td><%= pastApplications[i].fullname %></td>
+                                    <td><%= pastApplications[i].role %></td>
+                                    <td> 
+                                        <%if ( pastApplications[i].approved) {%>
+                                            Approved
+                                        <%}else{%>
+                                            Rejected
+                                        <%}%>
+                                    </td>
+                                    <td><%= pastApplications[i].note %></td>
+            
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </div>
+         
     </div>
 
 
