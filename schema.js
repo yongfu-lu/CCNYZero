@@ -33,6 +33,8 @@ exports.getApplicantSchema = function(){
         decided: Boolean,   
         department:String,
         selfStatement:String,
+        approved:Boolean,
+        note:String,
     });
 
 }

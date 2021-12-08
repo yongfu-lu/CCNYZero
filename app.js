@@ -60,7 +60,7 @@ var tabooWords = []
 var gradeAnalyzed = false;
 var classAnalyzed = false;
 /**************** do testing code here **********/
-var today = new Date("2021-12-30T00:00:00")
+var today = new Date("2021-09-30T00:00:00")
 User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false }, function(err){})
 Class.updateMany({}, {canceled:false}, function(err){
 }) 
@@ -323,9 +323,11 @@ app.get("/application", async function(req,res){
     
     var studentApplications = await query.getStudentApplications(Applicant);
     var instructorApplications = await query.getInstructorApplications(Applicant);
+    var pastApplications = await query.getPastApplications(Applicant);
     var allStudents = await query.getAllStudents(User);
     res.render("application", {title:"Application",user:req.user,studentApplications:studentApplications, 
         instructorApplications:instructorApplications,
+        pastApplications, pastApplications,
         programQuota:programQuota,
         totalStudents:allStudents.length});
 })
@@ -333,13 +335,14 @@ app.get("/application", async function(req,res){
     //when admin make dicision about applications
 app.post("/application", function(req,res){
     var decision = req.body.decision;
+    var approved = !(decision == "reject")
     if(decision == "reject"){
         emailer.sendRejectEmail(req.body.email,req.body.fullname, req.body.justification);
     }else{
         emailer.sendAcceptEmail(req.body.email,req.body.fullname, req.body.role, User);
     }
 
-    Applicant.updateMany({email:req.body.email, role:req.body.role},{decided:true}, function(err){
+    Applicant.updateMany({email:req.body.email, role:req.body.role},{decided:true, approved:approved, note:req.body.justification}, function(err){
         if(err){
             console.log(err)
         }else{

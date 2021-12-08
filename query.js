@@ -47,6 +47,7 @@ exports.warnStudentsWithTooLessCourses =warnStudentsWithTooLessCourses;
 exports.cancelClassesWithTooLessStudents =cancelClassesWithTooLessStudents;
 exports.changeInstructor = changeInstructor;
 exports.getMessages = getMessages;
+exports.getPastApplications = getPastApplications;
 
 function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -128,6 +129,18 @@ async function getInstructorApplications(Applicant) {
       }
     }
   );
+  await sleep();
+  return applications;
+}
+
+async function getPastApplications(Applicant){
+  var applications;
+  Applicant.find({decided:true}, function(err, foundApplications){
+    if(err) console.log(err);
+    else{
+      applications = foundApplications;
+    }
+  })
   await sleep();
   return applications;
 }

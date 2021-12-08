@@ -78,8 +78,39 @@
                 <%}%>
             </tbody>
         </table>
+         <br><br><br>
+
+         <h3>Past Applications</h3>
+         <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" style="width:25%">Applicant Name</th>
+                <th scope="col" style="width:25%">Apply To Be</th>
+                <th scope="col" style="width:25%">Approve/Reject</th>
+                <th scope="col" style="width:25%">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% for(var i = 0; i<pastApplications.length; i++){ %>
+                    <tr>
+                        <td><%= pastApplications[i].fullname %></td>
+                        <td><%= pastApplications[i].role %></td>
+                        <td> 
+                            <%if ( pastApplications[i].approved) {%>
+                                Approved
+                            <%}else{%>
+                                Rejected
+                            <%}%>
+                        </td>
+                        <td><%= pastApplications[i].note %></td>
+
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
          <br>
     </div>
+
 
     <script type="text/javascript">
         //admin need to provide reason if he want to make decision against rule 
