@@ -55,95 +55,113 @@ function sleep() {
 }
 
 async function getTopStudents(User) {
-  var topStudents;
-  User.find({ role: "student" })
-    .limit(3)
-    .sort({ GPA: -1 })
-    .exec(async function (err, foundStudents) {
-      if (err) {
-        console.log(err);
-      } else {
-        topStudents = foundStudents;
-      }
-    });
-  await sleep();
-  return topStudents;
+  return   User.find({ role: "student" })
+  .limit(3)
+  .sort({ GPA: -1 })
+  .exec();
+  // var topStudents;
+  // User.find({ role: "student" })
+  //   .limit(3)
+  //   .sort({ GPA: -1 })
+  //   .exec(async function (err, foundStudents) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       topStudents = foundStudents;
+  //     }
+  //   });
+  // await sleep();
+  // return topStudents;
 }
 
 async function getTopClasses(Class) {
-  var topClasses;
-  Class.find({rating:{$ne:null} })
-    .limit(3)
-    .sort({ rating: -1 })
-    .exec(function (err, foundClasses) {
-      if (err) {
-        console.log(err);
-      } else {
-        topClasses = foundClasses;
-      }
-    });
-  await sleep();
-  return topClasses;
+  return   Class.find({rating:{$ne:null} })
+  .limit(3)
+  .sort({ rating: -1 })
+  .exec();
+  // var topClasses;
+  // Class.find({rating:{$ne:null} })
+  //   .limit(3)
+  //   .sort({ rating: -1 })
+  //   .exec(function (err, foundClasses) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       topClasses = foundClasses;
+  //     }
+  //   });
+  // await sleep();
+  // return topClasses;
 }
 
 async function getWorstClasses(Class) {
-  var worstClasses;
-  Class.find({rating:{$ne:null} })
-    .limit(3)
-    .sort({ rating: 1 })
-    .exec(function (err, foundClasses) {
-      if (err) {
-        console.log(err);
-      } else {
-        worstClasses = foundClasses;
-      }
-    });
-  await sleep();
-  return worstClasses;
+  return   Class.find({rating:{$ne:null} })
+  .limit(3)
+  .sort({ rating: 1 })
+  .exec();
+  // var worstClasses;
+  // Class.find({rating:{$ne:null} })
+  //   .limit(3)
+  //   .sort({ rating: 1 })
+  //   .exec(function (err, foundClasses) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       worstClasses = foundClasses;
+  //     }
+  //   });
+  // await sleep();
+  // return worstClasses;
 }
 
 async function getStudentApplications(Applicant) {
-  var applications;
-  Applicant.find(
-    { decided: false, role: "student" },
-    function (err, foundApplications) {
-      if (err) {
-        console.log(err);
-      } else {
-        applications = foundApplications;
-      }
-    }
-  );
-  await sleep();
-  return applications;
+  return Applicant.find(
+    { decided: false, role: "student" }).exec();
+  // var applications;
+  // Applicant.find(
+  //   { decided: false, role: "student" },
+  //   function (err, foundApplications) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       applications = foundApplications;
+  //     }
+  //   }
+  // );
+  // await sleep();
+  // return applications;
 }
 
 async function getInstructorApplications(Applicant) {
-  var applications;
-  Applicant.find(
-    { decided: false, role: "instructor" },
-    function (err, foundApplications) {
-      if (err) {
-        console.log(err);
-      } else {
-        applications = foundApplications;
-      }
-    }
-  );
-  await sleep();
-  return applications;
+  return   Applicant.find(
+    { decided: false, role: "instructor" }).exec();
+  // var applications;
+  // Applicant.find(
+  //   { decided: false, role: "instructor" },
+  //   function (err, foundApplications) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       applications = foundApplications;
+  //     }
+  //   }
+  // );
+  // await sleep();
+  // return applications;
 }
 
 async function getPastApplications(Applicant){
-  var applications;
-  Applicant.find({decided:true}, function(err, foundApplications){
-    if(err) console.log(err);
-    else{
-      applications = foundApplications;
-    }
-  })
-  await sleep();
-  return applications;
+  return Applicant.find({decided:true}).exec();
+
+  // var applications;
+  // Applicant.find({decided:true}, function(err, foundApplications){
+  //   if(err) console.log(err);
+  //   else{
+  //     applications = foundApplications;
+  //   }
+  // })
+  // await sleep();
+  // return applications;
 }
 
 //change user password
@@ -167,77 +185,83 @@ function changePassword(User, username, newpassword) {
 
 //get total students in program
 async function getAllStudents(User) {
-  var students;
-  User.find({ role: "student" }).exec(async function (err, foundStudents) {
-    if (err) {
-      console.log(err);
-    }
-    else{
-      students = foundStudents;
-    }
-  });
-  await sleep();
-  return students;
+  return   User.find({ role: "student" }).exec();
+
+  // var students;
+  // User.find({ role: "student" }).exec(async function (err, foundStudents) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   else{
+  //     students = foundStudents;
+  //   }
+  // });
+  // await sleep();
+  // return students;
 }
 
 async function getAvailableInstructors(User) {
-  var instructors;
-  User.find({ role: "instructor", suspended: false }).exec(async function (
-    err,
-    foundInstructors
-  ) {
-    if (err) {
-      console.log(err);
-    } else {
-      instructors = foundInstructors;
-    }
-  });
-  await sleep();
-  return instructors;
+  return   User.find({ role: "instructor", suspended: false }).exec();
+  // var instructors;
+  // User.find({ role: "instructor", suspended: false }).exec(async function (
+  //   err,
+  //   foundInstructors
+  // ) {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     instructors = foundInstructors;
+  //   }
+  // });
+  // await sleep();
+  // return instructors;
 }
 
 async function getAllInstructors(User) {
-  var instructors;
-  User.find({ role: "instructor"}).exec(async function (
-    err,
-    foundInstructors
-  ) {
-    if (err) {
-      console.log(err);
-    } else {
-      instructors = foundInstructors;
-    }
-  });
-  await sleep();
-  return instructors;
+  return   User.find({ role: "instructor"}).exec();
+  // var instructors;
+  // User.find({ role: "instructor"}).exec(async function (
+  //   err,
+  //   foundInstructors
+  // ) {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     instructors = foundInstructors;
+  //   }
+  // });
+  // await sleep();
+  // return instructors;
 }
 
 
 async function getAllCurrentClasses(Class) {
-  var classes;
-  Class.find({year:2021, semester:"Fall"}).exec(async function (err, foundClasses) {
-    if (err) {
-      console.log(err);
-    } else {
-      classes = foundClasses;
-    }
-  });
-  await sleep();
-  return classes;
+  return   Class.find({year:2021, semester:"Fall"}).exec();
+  // var classes;
+  // Class.find({year:2021, semester:"Fall"}).exec(async function (err, foundClasses) {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     classes = foundClasses;
+  //   }
+  // });
+  // await sleep();
+  // return classes;
 }
 
 async function getClassDetail(Class, ID) {
-  var newClass;
-  Class.findById(ID).exec(async function (err, foundClass) {
-    if (err) {
-      console.log(err);
-    } else {
-      newClass = foundClass;
-    }
-  });
-   await sleep();
+  return Class.findById(ID).exec();
+  // var newClass;
+  // Class.findById(ID).exec(async function (err, foundClass) {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     newClass = foundClass;
+  //   }
+  // });
+  //  await sleep();
   
-  return newClass;
+  // return newClass;
 }
 
 
@@ -270,7 +294,6 @@ async function getEnrolledSchedules(Class, ids){
         foundClass.schedule[1].startTime,
         foundClass.schedule[1].endTime,
       ]);
-      
     })
   }
   await sleep();
@@ -397,19 +420,20 @@ function createComplaint(Complaint,user,complaintAbout, complaintAboutRolo, clas
 }
 
 async function getComplaints(Complaint) {
-  var complaints;
-  Complaint.find(
-    { decided: false},
-    function (err, foundComplaints) {
-      if (err) {
-        console.log(err);
-      } else {
-        complaints = foundComplaints
-      }
-    }
-  );
-  await sleep();
-  return complaints;
+  return Complaint.find({ decided: false}).exec();
+  // var complaints;
+  // Complaint.find(
+  //   { decided: false},
+  //   function (err, foundComplaints) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       complaints = foundComplaints
+  //     }
+  //   }
+  // );
+  // await sleep();
+  // return complaints;
 }
 
 
@@ -430,19 +454,20 @@ async function deregister(User,Class, username,className){
 
 
 async function getTeachingClasses(Class, instructorName,year, semester ) {
-  var classes;
-  Class.find(
-    {year:year, semester: semester, instructor:instructorName},
-    function (err, foundClasses) {
-      if (err) {
-        console.log(err);
-      } else {
-        classes = foundClasses
-      }
-    }
-  );
-  await sleep();
-  return classes;
+  return   Class.find({year:year, semester: semester, instructor:instructorName}).exec()
+  // var classes;
+  // Class.find(
+  //   {year:year, semester: semester, instructor:instructorName},
+  //   function (err, foundClasses) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       classes = foundClasses
+  //     }
+  //   }
+  // );
+  // await sleep();
+  // return classes;
 }
  
 async function assignGrade(User, Class, studentEmail, className,classID, classCredit, grade,year, semester){
@@ -675,15 +700,16 @@ function giveHonor(User, username, reason){
 
 
 async function getGraduationApplications(GraduationApplication){
-    var applications;
-    GraduationApplication.find({decided:false}, async function(err, foundApplications){
-      if(err) console.log(err);
-      else{
-        applications = foundApplications;
-      }
-    })
-    await sleep();
-    return applications;
+  return GraduationApplication.find({decided:false}).exec()
+    // var applications;
+    // GraduationApplication.find({decided:false}, async function(err, foundApplications){
+    //   if(err) console.log(err);
+    //   else{
+    //     applications = foundApplications;
+    //   }
+    // })
+    // await sleep();
+    // return applications;
 }
 
 
@@ -787,13 +813,14 @@ function changeInstructor(Class,User, classID, oldInstructor, newInstructor){
 }
 
 async function getMessages(Message){
-  var messages;
-  Message.find({},function(err, foundMessages){
-    if(err) console.log(err);
-    else{
-      messages = foundMessages;
-    }
-  })
-  await sleep();
-  return messages;
+  return   Message.find({}).exec();
+  // var messages;
+  // Message.find({},function(err, foundMessages){
+  //   if(err) console.log(err);
+  //   else{
+  //     messages = foundMessages;
+  //   }
+  // })
+  // await sleep();
+  // return messages;
 }

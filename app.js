@@ -66,7 +66,7 @@ var today = new Date("2021-08-13T00:00:00")
 // Class.updateMany({}, {canceled:false}, function(err){
 // }) 
 console.log(time.getPeriod(today))
- 
+  
 /*********** All route from here ********/ 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",async function(req, res){
@@ -92,7 +92,6 @@ app.get("/",async function(req, res){
          topStudents = await query.getTopStudents(User);
          topClasses = await query.getTopClasses(Class);
          worstClasses = await query.getWorstClasses(Class);
-         await query.sleep();
         res.render("home",{ title:"Home",user:req.user, topStudents: topStudents, topClasses:topClasses, worstClasses:worstClasses, 
         today:today, classSetUpBegin:time.classSetUpBegin, classSetUpEnd: time.classSetUpEnd,
         courseRegistrationBegin: time.courseRegistrationBegin, courseRegistrationEnd: time.courseRegistrationEnd,

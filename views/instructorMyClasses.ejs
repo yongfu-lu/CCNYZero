@@ -33,7 +33,7 @@
                                     <td><%= teachingClasses[i].students[j].grade %></td>
                                     <td>
                                         <button type="submit" name="action" value="record" class="btn btn-primary"> Check Record </button>
-                                        <% if(period == "grading"){ %>
+                                        <% if(period == "grading" || period == "afterGrading" ){ %>
                                             <button type="submit" name="action" value="grading" class="btn btn-primary"> Grading </button>
                                         <% } %>
                                         
