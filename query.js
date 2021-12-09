@@ -59,19 +59,6 @@ async function getTopStudents(User) {
   .limit(3)
   .sort({ GPA: -1 })
   .exec();
-  // var topStudents;
-  // User.find({ role: "student" })
-  //   .limit(3)
-  //   .sort({ GPA: -1 })
-  //   .exec(async function (err, foundStudents) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       topStudents = foundStudents;
-  //     }
-  //   });
-  // await sleep();
-  // return topStudents;
 }
 
 async function getTopClasses(Class) {
@@ -79,19 +66,6 @@ async function getTopClasses(Class) {
   .limit(3)
   .sort({ rating: -1 })
   .exec();
-  // var topClasses;
-  // Class.find({rating:{$ne:null} })
-  //   .limit(3)
-  //   .sort({ rating: -1 })
-  //   .exec(function (err, foundClasses) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       topClasses = foundClasses;
-  //     }
-  //   });
-  // await sleep();
-  // return topClasses;
 }
 
 async function getWorstClasses(Class) {
@@ -99,69 +73,21 @@ async function getWorstClasses(Class) {
   .limit(3)
   .sort({ rating: 1 })
   .exec();
-  // var worstClasses;
-  // Class.find({rating:{$ne:null} })
-  //   .limit(3)
-  //   .sort({ rating: 1 })
-  //   .exec(function (err, foundClasses) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       worstClasses = foundClasses;
-  //     }
-  //   });
-  // await sleep();
-  // return worstClasses;
 }
 
 async function getStudentApplications(Applicant) {
   return Applicant.find(
     { decided: false, role: "student" }).exec();
-  // var applications;
-  // Applicant.find(
-  //   { decided: false, role: "student" },
-  //   function (err, foundApplications) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       applications = foundApplications;
-  //     }
-  //   }
-  // );
-  // await sleep();
-  // return applications;
+
 }
 
 async function getInstructorApplications(Applicant) {
   return   Applicant.find(
     { decided: false, role: "instructor" }).exec();
-  // var applications;
-  // Applicant.find(
-  //   { decided: false, role: "instructor" },
-  //   function (err, foundApplications) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       applications = foundApplications;
-  //     }
-  //   }
-  // );
-  // await sleep();
-  // return applications;
 }
 
 async function getPastApplications(Applicant){
   return Applicant.find({decided:true}).exec();
-
-  // var applications;
-  // Applicant.find({decided:true}, function(err, foundApplications){
-  //   if(err) console.log(err);
-  //   else{
-  //     applications = foundApplications;
-  //   }
-  // })
-  // await sleep();
-  // return applications;
 }
 
 //change user password
@@ -186,82 +112,23 @@ function changePassword(User, username, newpassword) {
 //get total students in program
 async function getAllStudents(User) {
   return   User.find({ role: "student" }).exec();
-
-  // var students;
-  // User.find({ role: "student" }).exec(async function (err, foundStudents) {
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  //   else{
-  //     students = foundStudents;
-  //   }
-  // });
-  // await sleep();
-  // return students;
 }
 
 async function getAvailableInstructors(User) {
   return   User.find({ role: "instructor", suspended: false }).exec();
-  // var instructors;
-  // User.find({ role: "instructor", suspended: false }).exec(async function (
-  //   err,
-  //   foundInstructors
-  // ) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     instructors = foundInstructors;
-  //   }
-  // });
-  // await sleep();
-  // return instructors;
 }
 
 async function getAllInstructors(User) {
   return   User.find({ role: "instructor"}).exec();
-  // var instructors;
-  // User.find({ role: "instructor"}).exec(async function (
-  //   err,
-  //   foundInstructors
-  // ) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     instructors = foundInstructors;
-  //   }
-  // });
-  // await sleep();
-  // return instructors;
 }
 
 
 async function getAllCurrentClasses(Class) {
   return   Class.find({year:2021, semester:"Fall"}).exec();
-  // var classes;
-  // Class.find({year:2021, semester:"Fall"}).exec(async function (err, foundClasses) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     classes = foundClasses;
-  //   }
-  // });
-  // await sleep();
-  // return classes;
 }
 
 async function getClassDetail(Class, ID) {
   return Class.findById(ID).exec();
-  // var newClass;
-  // Class.findById(ID).exec(async function (err, foundClass) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     newClass = foundClass;
-  //   }
-  // });
-  //  await sleep();
-  
-  // return newClass;
 }
 
 
@@ -421,19 +288,6 @@ function createComplaint(Complaint,user,complaintAbout, complaintAboutRolo, clas
 
 async function getComplaints(Complaint) {
   return Complaint.find({ decided: false}).exec();
-  // var complaints;
-  // Complaint.find(
-  //   { decided: false},
-  //   function (err, foundComplaints) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       complaints = foundComplaints
-  //     }
-  //   }
-  // );
-  // await sleep();
-  // return complaints;
 }
 
 
@@ -455,23 +309,9 @@ async function deregister(User,Class, username,className){
 
 async function getTeachingClasses(Class, instructorName,year, semester ) {
   return   Class.find({year:year, semester: semester, instructor:instructorName}).exec()
-  // var classes;
-  // Class.find(
-  //   {year:year, semester: semester, instructor:instructorName},
-  //   function (err, foundClasses) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       classes = foundClasses
-  //     }
-  //   }
-  // );
-  // await sleep();
-  // return classes;
 }
  
 async function assignGrade(User, Class, studentEmail, className,classID, classCredit, grade,year, semester){
-  //  console.log(studentEmail + " " + className + " " + classID + " " + classCredit + " " + grade + " " + year + " " +semester)
   var taken_class = [];
   var graded = false;
   User.findOne({username:studentEmail}, function(err, foundUser){
@@ -518,47 +358,7 @@ async function assignGrade(User, Class, studentEmail, className,classID, classCr
       })
     }
   })
-  //======
-  // User.findOne({username:studentEmail,"taken_class.course_shortname":className,"taken_class.year":year,"taken_class.semester":"kkk"},function(err,foundUser){
-  //   if(foundUser == null){
-  //     console.log("I found this class is not grade yet, I will create a new grade record");
-  //     User.findOneAndUpdate({username: studentEmail},
-  //       {$push:{taken_class:{course_shortname:className, 
-  //       year:year,
-  //       semester:semester,
-  //       credit:parseInt(classCredit),
-  //       grade:grade}}, $pull:{enrolled_class:classID}},async function(err){
-  //       if(err) console.log(err)
-  //       else{
-  //         Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
-  //           if(err) console.log(err);
-  //           else{
-  //             updateGPA(User, studentEmail);
-  //           }
-  //       })
-  //       }
-  //     })
-  //   } 
-  //   else{
-  //     console.log("I found this class already been grade")
-  //     User.findOneAndUpdate({username: studentEmail,"taken_class.course_shortname":className,"taken_class.year": year, "taken_class.semester":semester},
-  //     {$pull:{taken_class:{"course_shortname":className}}}
-  //     ,async function(err){
-  //     if(err) console.log(err)
-  //     else{
-  //       User.findOneAndUpdate({username:studentEmail},{$push:{taken_class:{course_shortname:className, year:year, semester:semester, credit:parseInt(classCredit),grade:grade}}},function(err){
-  //         if(err) console.log(err);
-  //         else{
-  //           updateGPA(User, studentEmail);
-  //         }
-  //       })
-  //       Class.findOneAndUpdate({"_id":classID,"students.email" : studentEmail},{$set:{"students.$.grade":grade} }, async function(err){
-  //         if(err) console.log(err);
-  //     })
-  //     }
-  //   })     
-  //   }
-  // })
+
   await sleep();
 }
 
@@ -701,15 +501,6 @@ function giveHonor(User, username, reason){
 
 async function getGraduationApplications(GraduationApplication){
   return GraduationApplication.find({decided:false}).exec()
-    // var applications;
-    // GraduationApplication.find({decided:false}, async function(err, foundApplications){
-    //   if(err) console.log(err);
-    //   else{
-    //     applications = foundApplications;
-    //   }
-    // })
-    // await sleep();
-    // return applications;
 }
 
 
@@ -780,6 +571,7 @@ async function cancelClassesWithTooLessStudents(Class, User, Complaint, year, se
             else console.log("Remove class Id from instructor's assign_ed class")
           })
           await sleep();
+          await sleep();
           User.findOne({fullname:foundClasses[i].instructor}, function(err, foundInstructor){
             if(err) console.log(err)
             else{
@@ -814,13 +606,4 @@ function changeInstructor(Class,User, classID, oldInstructor, newInstructor){
 
 async function getMessages(Message){
   return   Message.find({}).exec();
-  // var messages;
-  // Message.find({},function(err, foundMessages){
-  //   if(err) console.log(err);
-  //   else{
-  //     messages = foundMessages;
-  //   }
-  // })
-  // await sleep();
-  // return messages;
 }
