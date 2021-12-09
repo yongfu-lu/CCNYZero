@@ -62,11 +62,11 @@ var gradeAnalyzed = false;
 var classAnalyzed = false;
 /**************** do testing code here **********/
 var today = new Date("2021-08-13T00:00:00")
-User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false, balanceOwe:0 }, function(err){})
-Class.updateMany({}, {canceled:false}, function(err){
-}) 
+// User.updateMany({},{suspended:false, warning:[], honor:[],terminated:false, specialPeriod:false, balanceOwe:0 }, function(err){})
+// Class.updateMany({}, {canceled:false}, function(err){
+// }) 
 console.log(time.getPeriod(today))
-
+ 
 /*********** All route from here ********/ 
 //if user is not login yet, go to normal visitor homepage, otherwise go to their homepage
 app.get("/",async function(req, res){
@@ -355,7 +355,7 @@ app.post("/application", function(req,res){
         }
     })
 })
-
+ 
 
 app.get("/graduationApplication", async function(req, res){
     if(!req.isAuthenticated() || req.user.role != 'registrar')

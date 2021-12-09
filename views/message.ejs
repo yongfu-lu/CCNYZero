@@ -39,7 +39,7 @@
                                                 <input type="hidden" name="fullName" value= "<%= complaints[i].complaintAbout %>" >
                                                 <input type="hidden" name="complainter" value= "<%= complaints[i].complaintFromName %>" >
                                                 <input type="hidden" name="className" value= <%= complaints[i].className %>>
-                                                <button class="btn btn-primary" type="submit" name="decision" value="issueWarning" style="margin: 3px 0 3px 0;"> Warn Student </button> 
+                                                <button class="btn btn-primary" type="submit" name="decision" value="issueWarning" style="margin: 3px 0 3px 0;"> Send Warning </button> 
                                                 <button class="btn btn-primary" type="submit" name ="decision" value="acknowledge" style="margin: 3px 0 3px 0;"> Acknowledge </button>
                                                 <% if (complaints[i].complaintFromRole == 'instructor'){ %>
                                                     <button class="btn btn-primary" type="submit" name ="decision" value="deregister" style="margin: 3px 0 3px 0;"> De-register </button>
