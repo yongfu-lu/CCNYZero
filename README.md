@@ -1,6 +1,14 @@
 # CCNYZero
 This is a simulated graduated school program tracking system. 
 
+Inorder to run this system, you will need to install node.js and all the dependencies.
+
+To run on local server, enter command: node app.js 
+
+This system is host on heroku as well: https://ccnyzero.herokuapp.com
+
+
+# System Instruction: 
 1. This system has four periods, class setup, class registration, class running and grading period. Admin can change date of today and date of each period to switch from one period to another.
 2. Any one can apply to be a student or instructor of the program. The application will be sent to admin. Admin will decide if the applicaion is approved.
 3. If a new student or new instructor is accepted. They will received an email contains their CCNY account and password.
